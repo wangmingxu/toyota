@@ -1,0 +1,35 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "ie >= 9",
+            "safari >= 7",
+            "ios >= 9"
+          ],
+          "node": "current"
+        },
+        "modules": false,
+        "debug": false,
+        "useBuiltIns": "usage",
+        "include": [],
+        "exclude": []
+      }
+    ]
+  ],
+  "plugins": [
+    /**react热更新*/
+    "react-hot-loader/babel",
+    /**转换jsx**/
+    "transform-react-jsx",
+    /**把helper单独抽取出来**/
+    "external-helpers-2",
+    /**在模块中注入helper.js**/
+    "external-helpers-insert-require",
+    "transform-decorators-legacy",
+    "transform-class-properties"
+  ]
+}
