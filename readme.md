@@ -3,3 +3,7 @@
 因为external-helpers-insert-require做了类似以下形式的引入
 var babelHelpers = __webpack_require__(xx);
 webpack-dev-server中不能使用chunkhash,只能使用hash
+用了react-router-redux把router绑定到store,但是每次通过Link组件跳转时并没有触发相应的change action,但实际上routing state已经改变，只有在首页/的时候触发，原因不明（通过dispatch(push('/foo'))这种形式是可以正常触发action的）
+由于目前react-router-redux(router4.0)和redux-immutable还不兼容,因为syncHistoryWithStore api已经被废弃,所以放弃react-router-redux,集成redux-immutable
+用了redux-immutable之后propTypes可改为react-immutable-proptypes
+https://www.npmjs.com/package/react-immutable-proptypes

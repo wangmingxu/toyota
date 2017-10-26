@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+// import { TransitionGroup, CSSTransition, Transition } from 'react-transition-group';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 // bundle模型用来异步加载组件
 import Bundle from '../Component/Bundle';
 
@@ -27,14 +29,23 @@ const createComponent = component => props => (
 // 路由配置
 const RouteConfig = () => (
   <Router>
-    <Switch>
-      <Route exact path="/" component={Home} />
-      <Route path="/from" component={createComponent(loadFrom)} />
-      <Route path="/comment" component={createComponent(loadComment)} />
-      <Route path="/like" component={createComponent(loadLike)} />
-      <Route path="/list" component={createComponent(loadTodoList)} />
-      <Route component={NotFoundPage} />
-    </Switch>
+    <Route render={({ location }) => (
+      <ReactCSSTransitionGroup
+        transitionName="left"
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
+      >
+        <div key={location.key} name={location.pathname} style={{ height: '100%', width: '100%', position: 'absolute' }}>
+          <Route exact path="/" component={Home} location={location} />
+          <Route exact path="/from" component={createComponent(loadFrom)} location={location} />
+          <Route exact path="/comment" component={createComponent(loadComment)} location={location} />
+          <Route exact path="/like" component={createComponent(loadLike)} location={location} />
+          <Route exact path="/list" component={createComponent(loadTodoList)} location={location} />
+          {/* <Route component={NotFoundPage} /> */}
+        </div>
+      </ReactCSSTransitionGroup>
+    )}
+    />
   </Router>
 );
 

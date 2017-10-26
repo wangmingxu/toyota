@@ -37,7 +37,7 @@ function onChange(value) {
 }
 
 // class App extends Component {
-function App() {
+function App(props) {
   const name = 'youcai';
   return (
     <div className={style.app}>

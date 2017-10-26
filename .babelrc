@@ -18,7 +18,8 @@
         "include": [],
         "exclude": []
       }
-    ]
+    ],
+    "stage-0"
   ],
   "plugins": [
     /**react热更新*/
@@ -29,7 +30,7 @@
     "external-helpers-2",
     /**在模块中注入helper.js**/
     "external-helpers-insert-require",
-    "transform-decorators-legacy",
-    "transform-class-properties"
+    /**支持装饰器语法**/
+    "transform-decorators-legacy"
   ]
 }

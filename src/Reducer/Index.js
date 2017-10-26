@@ -2,25 +2,23 @@
  * 定义所有的Redux 在当前文件 进行导出
  * redux 捕获action 返回新的state
  */
+import Immutable from 'immutable';
 
-const TodoList = (state = { items: ['hello', 'world', 'click', 'me'] }, action) => {
-  let Newstate = null;
+const TodoList = (state = Immutable.List(['hello', 'world', 'click', 'me']), action) => {
   switch (action.type) {
   case 'Add': // 添加
-    Newstate = state.items.concat([prompt('Enter some text')]);
-    return { items: Newstate };
+    return state.push(prompt('Enter some text'));
   case 'Remove': // 删除
-    state.items.splice(action.index, 1);
-    return { items: state.items };
+    return state.delete(action.index);
   default:
     return state;
   }
 };
 
-const Like = (state = { like: false }, action) => {
+const Like = (state = Immutable.fromJS({ like: false }), action) => {
   switch (action.type) {
   case 'change': // 修改
-    return { like: !state.like };
+    return state.set('like', !state.get('like'));
   default:
     return state;
   }
