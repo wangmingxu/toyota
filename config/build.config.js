@@ -7,7 +7,7 @@ const VIEW_PATH = path.join(ROOT_PATH, 'views'); // 视图目录
 const DIST_PATH = path.join(ROOT_PATH, 'dist'); // 输出目录
 const SERVER_PATH = path.join(ROOT_PATH, 'server'); // 输出目录
 module.exports = {
-  isomorphic: true, // true为服务端渲染模式(同构)，false为spa模式
+  isomorphic: false, // true为ssr模式(同构)，false为spa模式
   common: {
     entry: path.resolve(SRC_PATH, 'index.js'), // js入口
     index: path.resolve(VIEW_PATH, 'tpl/index.html'), // html入口

@@ -7,8 +7,8 @@
         "targets": {
           "browsers": [
             "last 2 versions",
-            "ie >= 9",
-            "safari >= 7",
+            "ie >= 8",
+            "safari >= 5",
             "ios >= 9"
           ],
           "node": "current"

@@ -43,8 +43,8 @@ const baseConfig = {
           loader: 'babel-loader',
           options: {
             plugins: [
-              'external-helpers-2',
-              'external-helpers-insert-require',
+              // 'external-helpers-2',
+              // 'external-helpers-insert-require',
             ],
           },
         }],

@@ -1,5 +1,8 @@
 import 'babel-polyfill';
 import 'normalize.css';
+import 'lib-flexible';
+import './lib/addEventListen-polyfill';
+
 const fundebug = require('fundebug-javascript');
 
 fundebug.apikey = '294a8593da2207207c592dcd7364e84e913b366ca32bd592002dfc068c568f58';
