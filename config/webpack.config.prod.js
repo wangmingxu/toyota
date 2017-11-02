@@ -147,7 +147,6 @@ const serverConfig = {
           options: {
             presets: ['es2015', 'stage-0'],
             plugins: [
-              // ['resolver', { resolveDirs: ['src'] }],
               'transform-decorators-legacy',
             ],
           },

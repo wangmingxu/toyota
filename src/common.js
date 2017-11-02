@@ -1,7 +1,6 @@
 import 'babel-polyfill';
 import 'normalize.css';
 import 'lib-flexible';
-import './lib/addEventListen-polyfill';
 
 const fundebug = require('fundebug-javascript');
 

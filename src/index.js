@@ -1,28 +1,6 @@
-import './common';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import { Provider } from 'react-redux';
-// import App from './App';
-import App from './Route'; // 路由配置
-import configureStore from './Store';
-import { CookiesProvider } from 'react-cookie';
+import Welcome from './Welcome'
 
-const store = configureStore(window.REDUX_STATE);
+var $greet = document.getElementById('app')
+var m = new Welcome('MX')
 
-const render = (Component) => {
-  ReactDOM.hydrate(<AppContainer>
-    <Provider store={store}>
-      <CookiesProvider>
-        <Component />
-      </CookiesProvider>
-    </Provider>
-  </AppContainer>, document.getElementById('app'));
-};
-render(App);
-
-if (module.hot) {
-  module.hot.accept('./Route', () => {
-    render(App);
-  });
-}
+$greet.innerHTML = m.greet()
