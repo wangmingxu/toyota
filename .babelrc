@@ -3,6 +3,7 @@
     [
       "env",
       {
+        "loose": true,
         "targets": {
           "browsers": [
             "last 2 versions",
@@ -26,11 +27,32 @@
     "react-hot-loader/babel",
     /**转换jsx**/
     "transform-react-jsx",
-    /**把helper单独抽取出来**/
-    "external-helpers-2",
-    /**在模块中注入helper.js**/
-    "external-helpers-insert-require",
     /**支持装饰器语法**/
-    "transform-decorators-legacy"
+    "transform-decorators-legacy",
+    [
+      "react-css-modules",
+      {
+        "context": "src/styles",
+        "exclude": "node_modules",
+        "filetypes": {
+          ".less": {
+            "syntax": "postcss-less",
+          },
+        },
+        "generateScopedName": "[name]__[local]--[hash:base64:5]",
+      },
+    ],
+    [
+      "import", {
+        "libraryName": "antd",
+        "style": "css",
+      },
+    ],
+    [
+      "import", {
+        "libraryName": "antd-mobile",
+        "style": true,
+      },
+    ]
   ]
 }

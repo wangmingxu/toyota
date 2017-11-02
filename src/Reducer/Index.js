@@ -24,5 +24,14 @@ const Like = (state = Immutable.fromJS({ like: false }), action) => {
   }
 };
 
+const TestData = (state = '', action) => {
+  switch (action.type) {
+  case 'SetTestData':
+    return action.data;
+  default:
+    return state;
+  }
+};
 
-export default { TodoList, Like };
+
+export default { TodoList, Like, TestData };

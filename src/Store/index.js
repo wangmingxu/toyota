@@ -16,7 +16,7 @@ export const rootReducer = combineReducers({
 export default function configureStore(initialState) {
   const store = createStore(
     rootReducer,
-    initialState || Immutable.Map(),
+    Immutable.fromJS(initialState) || Immutable.Map(),
     compose(applyMiddleware(thunk, logger)),
   );
   if (module.hot) {

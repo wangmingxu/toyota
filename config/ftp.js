@@ -22,6 +22,7 @@ fs.src(['./dist/**'], {
 // .pipe(map(log))
   .pipe(conn.dest(`/2017/${name}`));
 
+//更新静态资源hash,需要修改project参数
 request('http://oauthbiz.lizhi.fm/changeVersion?project=base_cityfm_old_school', (error, response, body) => {
   console.log(body);
 });

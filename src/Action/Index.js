@@ -22,4 +22,19 @@ const LikeAction = (dispatch) => {
   };
 };
 
+function SetTestData(data) {
+  return { type: 'SetTestData', data };
+}
+
+export function GetTestData() {
+  return dispatch => new Promise(((resolve) => {
+    setTimeout(() => {
+      resolve('TestData');
+    }, 1000);
+  }))
+    .then((data) => {
+      dispatch(SetTestData(data));
+    });
+}
+
 export { TodoListAction, LikeAction };

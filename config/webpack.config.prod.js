@@ -1,25 +1,53 @@
 /**
  * 生产构建配置
  */
-const path = require('path');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 const baseConfig = require('./webpack.config.base');
+const info = require('./info');
+const utils = require('./utils');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-const ROOT_PATH = path.resolve(__dirname, '..'); // 项目根目录
-const DIST_PATH = path.join(ROOT_PATH, 'dist'); // 产出路径
-const config = require('./build.config');
+const { common, build, isomorphic } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
-module.exports = merge(baseConfig, {
+const clientConfig = merge(baseConfig, {
   devtool: 'source-map',
+  module: {
+    loaders: [
+      {
+        test: /\.(css|less)$/,
+        include: common.srcPath,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName: '[name]__[local]--[hash:base64:5]',
+                minimize: true, // css压缩
+                importLoaders: 2,
+              },
+            },
+            'postcss-loader',
+            'less-loader',
+          ],
+        }),
+      },
+    ],
+  },
   plugins: [
     /** 分析打包情况* */
     new BundleAnalyzerPlugin({
-      analyzerPort: config.build.analyzerPort,
-      openAnalyzer: config.build.bundleAnalyzerReport,
+      analyzerMode: 'static',
+      analyzerPort: build.analyzerPort,
+      openAnalyzer: build.bundleAnalyzerReport,
+      reportFilename: 'report.html',
     }),
     /** 启用作用域提升* */
     new webpack.optimize.ModuleConcatenationPlugin(),
@@ -55,18 +83,26 @@ module.exports = merge(baseConfig, {
         NODE_ENV: JSON.stringify('production'),
       },
     }),
+    new HtmlWebpackPlugin(Object.assign(info.app, {
+      template: common.index,
+      filename: isomorphic ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
+      isomorphic,
+    })),
     /** 把代码转成es3,有兼容性要求时使用* */
-    // new es3ifyPlugin(),
+    new Es3ifyPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       ie8: false,
       output: {
+        quote_keys: true,
         comments: false,
         beautify: false,
       },
       mangle: {
         keep_fnames: true,
+        screw_ie8: false,
       },
       compress: {
+        properties: false,
         warnings: false,
         drop_console: true,
       },
@@ -76,8 +112,77 @@ module.exports = merge(baseConfig, {
       rel: 'prefetch',
     }),
     /** 清空dist目录* */
-    new CleanWebpackPlugin([DIST_PATH], {
-      root: ROOT_PATH,
+    new CleanWebpackPlugin([common.distPath], {
+      root: common.rootPath,
     }),
   ],
 });
+
+const serverConfig = {
+  context: common.srcPath,
+  entry: { server: path.join(common.serverPath, 'server.prod') },
+  output: {
+    path: common.distPath,
+    filename: 'server/[name].js',
+    chunkFilename: 'server/chunk.[name].js',
+  },
+  target: 'node',
+  node: {
+    __filename: false,
+    __dirname: false,
+  },
+  resolve: {
+    modules: [common.srcPath, 'node_modules'],
+    extensions: [
+      '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs',
+    ], // 当requrie的模块找不到时，添加这些后缀
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015', 'stage-0'],
+            plugins: [
+              // ['resolver', { resolveDirs: ['src'] }],
+              'transform-decorators-legacy',
+            ],
+          },
+        }],
+      },
+      {
+        test: /\.(css|less)$/,
+        use: [
+          'css-loader',
+          'less-loader',
+        ],
+      },
+      {
+        test: /\.(gif|jpg|png|woff|svg|eot|ttf)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: utils.assetsPath('assets/[name].[ext]?[hash]'),
+            },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false },
+      comments: false,
+    }),
+    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
+  ],
+};
+
+const prodConfig = isomorphic ? [clientConfig, serverConfig] : clientConfig;
+
+module.exports = prodConfig;
