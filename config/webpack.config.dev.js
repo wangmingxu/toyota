@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = merge(baseConfig, {
-  devtool: 'cheap-module-source-map',
+  devtool: 'cheap-module-eval-source-map',
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',

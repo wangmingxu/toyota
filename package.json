@@ -26,7 +26,6 @@
     "fastclick": "^1.0.6",
     "fundebug-javascript": "^0.3.3",
     "immutable": "^3.8.2",
-    "jquery": "^3.2.1",
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",

@@ -31,6 +31,7 @@ require('asset-require-hook')({
 
 global.__isomorphic__ = true;
 
+require('./common.js');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -97,7 +98,7 @@ app.set('view engine', 'html');
 // app.engine('html', require('ejs').renderFile);
 app.engine('html', require('hbs').__express);
 
-app.use('*', clientRoute);
+app.use(clientRoute);
 
 app.listen(dev.port, () => {
   console.log(`Example app listening on port ${dev.port}!\n`);

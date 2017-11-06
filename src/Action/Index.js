@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const TodoListAction = (dispatch) => {
   // 定义action
   const Add = { type: 'Add' };
@@ -27,13 +29,9 @@ function SetTestData(data) {
 }
 
 export function GetTestData() {
-  return dispatch => new Promise(((resolve) => {
-    setTimeout(() => {
-      resolve('TestData');
-    }, 1000);
-  }))
-    .then((data) => {
-      dispatch(SetTestData(data));
+  return dispatch => axios.get('/oldSchool/loadNotice')
+    .then((rst) => {
+      dispatch(SetTestData(rst.data.data[0]));
     });
 }
 

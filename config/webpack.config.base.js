@@ -84,7 +84,11 @@ const baseConfig = {
           },
         ],
       },
-    ],
+    ].concat(isomorphic ? [] : {
+      test: /\.js$/,
+      include: path.join(common.srcPath, 'Page'),
+      use: ['bundle-loader?lazy', 'babel-loader'],
+    }),
   },
   plugins: [
     /** 忽略引入模块中并不需要的内容* */
@@ -107,13 +111,5 @@ const baseConfig = {
     },
   ],
 };
-
-if (!isomorphic) {
-  baseConfig.module.loaders.push({
-    test: /\.js$/,
-    include: path.join(common.srcPath, 'Page'),
-    use: ['bundle-loader?lazy', 'babel-loader'],
-  });
-}
 
 module.exports = baseConfig;

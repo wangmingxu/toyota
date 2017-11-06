@@ -17,7 +17,7 @@ import loadLike from '../Page/Like'; // 状态 Like组件
 import loadTodoList from '../Page/TodoList'; // TodoList组件
 /* eslint-enable */
 
-const Router = __isomorphic__ ? BrowserRouter : HashRouter;// eslint-disable-line
+const Router = (!__isomorphic__) && location.hash.length > 0 ? HashRouter : BrowserRouter;// eslint-disable-line
 
 // components load their module for initial visit
 // 这里只是给this.props.child传一个方法，最后在Bundle的render里面调用
