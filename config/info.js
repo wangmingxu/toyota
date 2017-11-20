@@ -6,9 +6,9 @@ const { common } = require('./build.config');
 
 module.exports = {
   app: {
-    title: 'react-starter',
-    description: 'create a new react project',
+    title: 'single-dog',
+    description: '全国单身歌手大赛',
     keywords: 'lizhi',
-    favicon: path.join(common.srcPath, 'assets/favicon.ico'),
+    favicon: path.join(common.clientPath, 'assets/favicon.ico'),
   },
 };

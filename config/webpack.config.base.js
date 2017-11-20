@@ -9,7 +9,7 @@ const { theme } = require('../package.json');
 const path = require('path');
 
 const baseConfig = {
-  context: common.srcPath,
+  context: common.clientPath,
   entry: {
     app: common.entry,
   },
@@ -25,12 +25,12 @@ const baseConfig = {
     crossOriginLoading: process.env.NODE_ENV === 'production' ? 'anonymous' : false,
   },
   resolve: {
-    modules: [common.srcPath, 'node_modules'],
+    modules: [common.clientPath, 'node_modules'],
     extensions: [
       '.js', '.jsx', '.json', '.scss', '.less',
     ], // 当requrie的模块找不到时，添加这些后缀
     alias: {
-      '@': common.srcPath,
+      '@': common.clientPath,
     },
   },
   module: {
@@ -38,7 +38,7 @@ const baseConfig = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        include: common.srcPath,
+        include: common.clientPath,
         use: [{
           loader: 'babel-loader',
           options: {
@@ -86,7 +86,7 @@ const baseConfig = {
       },
     ].concat(isomorphic ? [] : {
       test: /\.js$/,
-      include: path.join(common.srcPath, 'Page'),
+      include: path.join(common.clientPath, 'Page'),
       use: ['bundle-loader?lazy', 'babel-loader'],
     }),
   },

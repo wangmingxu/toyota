@@ -10,7 +10,7 @@ require('source-map-support').install();
 require('babel-register')({
   presets: ['es2015', 'stage-0'],
   plugins: [
-    ['resolver', { resolveDirs: ['src'] }],
+    ['resolver', { resolveDirs: ['client'] }],
     'transform-decorators-legacy',
   ],
 });
@@ -19,7 +19,7 @@ require('babel-register')({
 require('css-modules-require-hook')({
   extensions: ['.less', '.css'],
   processorOpts: { parser: lessParser },
-  generateScopedName: '[path][name]__[local]',
+  generateScopedName: '[name]__[local]--[hash:base64:5]',
 });
 
 // Image require hook
@@ -31,7 +31,7 @@ require('asset-require-hook')({
 
 global.__isomorphic__ = true;
 
-require('./common.js');
+require('./utils/axiosHook');
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -43,10 +43,16 @@ const app = express();
 const config = require('../config/webpack.config.dev');
 const { common, dev } = require('../config/build.config');
 const clientRoute = require('./middlewares/clientRoute');
-const proxyTable = require('../config/proxyTable');
-const mockTable = require('../config/mockTable');
+const proxyTable = require('../proxy/dev/proxyTable');
+const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
 const cookiesMiddleware = require('universal-cookie-express');
+const authMiddleware = require('./middlewares/auth');
+const bindStoreMiddleware = require('./middlewares/bindStore');
+const useragent = require('express-useragent');
+const promiseFinally = require('promise.prototype.finally');
+
+promiseFinally.shim();
 
 const compiler = webpack(config);
 
@@ -92,12 +98,15 @@ Object.keys(mockTable).forEach((context) => {
 });
 
 app.use(cookiesMiddleware());
+app.use(useragent.express());
 
 app.set('views', path.resolve(__dirname, '../views/dev'));
 app.set('view engine', 'html');
 // app.engine('html', require('ejs').renderFile);
 app.engine('html', require('hbs').__express);
 
+app.use(bindStoreMiddleware);
+app.use(authMiddleware);
 app.use(clientRoute);
 
 app.listen(dev.port, () => {

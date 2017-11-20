@@ -32,7 +32,7 @@
     [
       "react-css-modules",
       {
-        "context": "src/styles",
+        "context": "client/styles",
         "exclude": "node_modules",
         "filetypes": {
           ".less": {
@@ -40,12 +40,6 @@
           },
         },
         "generateScopedName": "[name]__[local]--[hash:base64:5]",
-      },
-    ],
-    [
-      "import", {
-        "libraryName": "antd",
-        "style": "css",
       },
     ],
     [

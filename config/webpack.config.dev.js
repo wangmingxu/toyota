@@ -19,7 +19,7 @@ module.exports = merge(baseConfig, {
     loaders: [
       {
         test: /\.(css|less)$/,
-        include: common.srcPath,
+        include: common.clientPath,
         use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [

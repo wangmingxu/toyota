@@ -7,3 +7,9 @@ webpack-dev-server中不能使用chunkhash,只能使用hash
 由于目前react-router-redux(router4.0)和redux-immutable还不兼容,因为syncHistoryWithStore api已经被废弃,所以放弃react-router-redux,集成redux-immutable
 用了redux-immutable之后propTypes可改为react-immutable-proptypes
 https://www.npmjs.com/package/react-immutable-proptypes
+
+使用immutable需要改动的点：
+1.创建store
+2.redux-logger需要转化
+3.reducer
+4.connect To Props的时候

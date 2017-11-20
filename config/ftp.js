@@ -2,7 +2,7 @@
 const fs = require('vinyl-fs');
 const Ftp = require('vinyl-ftp');
 const { name } = require('../package.json');
-const request = require('request');
+const http = require('http');
 
 // const log = (file, cb) => {
 //   console.log(file.path);
@@ -22,7 +22,7 @@ fs.src(['./dist/**'], {
 // .pipe(map(log))
   .pipe(conn.dest(`/2017/${name}`));
 
-//更新静态资源hash,需要修改project参数
-request('http://oauthbiz.lizhi.fm/changeVersion?project=base_cityfm_old_school', (error, response, body) => {
-  console.log(body);
+// 更新静态资源hash,根据不同的项目修改project参数
+http.get('http://oauthbiz.lizhi.fm/changeVersion?project=base_cityfm_old_school', (rst) => {
+  console.log(rst);
 });

@@ -1,2 +1,0 @@
-webpackJsonp([3],{"304":function(e,t,n){"use strict";function NotFoundPage(){return _.a.createElement("div",{"className":"App"},"404 页面")}Object.defineProperty(t,"__esModule",{"value":!0});var o=n(2),_=n.n(o),a=NotFoundPage;t["default"]=a;!function(){"undefined"!=typeof __REACT_HOT_LOADER__&&(__REACT_HOT_LOADER__.register(NotFoundPage,"NotFoundPage","/Users/mingxu/MxProject/example/src/Page/NotFoundPage.js"),__REACT_HOT_LOADER__.register(a,"default","/Users/mingxu/MxProject/example/src/Page/NotFoundPage.js"))}()}});
-//# sourceMappingURL=3.js.map?6e2980f5d0e7280e0266

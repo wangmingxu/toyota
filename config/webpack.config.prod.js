@@ -21,7 +21,7 @@ const clientConfig = merge(baseConfig, {
     loaders: [
       {
         test: /\.(css|less)$/,
-        include: common.srcPath,
+        include: common.clientPath,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -119,7 +119,7 @@ const clientConfig = merge(baseConfig, {
 });
 
 const serverConfig = {
-  context: common.srcPath,
+  context: common.clientPath,
   entry: { server: path.join(common.serverPath, 'server.prod') },
   output: {
     path: common.distPath,
@@ -132,7 +132,7 @@ const serverConfig = {
     __dirname: false,
   },
   resolve: {
-    modules: [common.srcPath, 'node_modules'],
+    modules: [common.clientPath, 'node_modules'],
     extensions: [
       '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs',
     ], // 当requrie的模块找不到时，添加这些后缀

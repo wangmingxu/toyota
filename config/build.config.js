@@ -2,17 +2,17 @@ const { name } = require('../package.json');
 const path = require('path');
 
 const ROOT_PATH = path.resolve(__dirname, '..'); // 项目根目录
-const SRC_PATH = path.join(ROOT_PATH, 'src'); // 源码目录
+const CLIENT_PATH = path.join(ROOT_PATH, 'client'); // 源码目录
 const VIEW_PATH = path.join(ROOT_PATH, 'views'); // 视图目录
 const DIST_PATH = path.join(ROOT_PATH, 'dist'); // 输出目录
 const SERVER_PATH = path.join(ROOT_PATH, 'server'); // 输出目录
 module.exports = {
-  isomorphic: true, // true为ssr模式(同构)，false为spa模式
+  isomorphic: false, // true为ssr模式(同构)，false为spa模式
   common: {
-    entry: path.resolve(SRC_PATH, 'index.js'), // js入口
+    entry: path.resolve(CLIENT_PATH, 'index.js'), // js入口
     index: path.resolve(VIEW_PATH, 'tpl/index.html'), // html入口
     rootPath: ROOT_PATH,
-    srcPath: SRC_PATH,
+    clientPath: CLIENT_PATH,
     viewPath: VIEW_PATH,
     distPath: DIST_PATH,
     serverPath: SERVER_PATH,
@@ -29,7 +29,7 @@ module.exports = {
   },
   dev: {
     port: 8080,
-    autoOpenBrowser: true,
+    autoOpenBrowser: false,
     assetsSubDirectory: 'client',
     assetsPublicPath: '/',
   },

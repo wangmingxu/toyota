@@ -4,7 +4,7 @@ const pxtorem = require('postcss-pxtorem');
 module.exports = {
   plugins: [
     pxtorem({
-      rootValue: 75,
+      rootValue: 64,
       propList: ['*'],
     }),
     autoprefixer,
