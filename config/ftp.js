@@ -23,6 +23,6 @@ fs.src(['./dist/**'], {
   .pipe(conn.dest(`/2017/${name}`));
 
 // 更新静态资源hash,根据不同的项目修改project参数
-http.get('http://oauthbiz.lizhi.fm/changeVersion?project=base_cityfm_old_school', (rst) => {
+http.get('http://oauthbiz.lizhi.fm/changeVersion?project=base_cityfm_hangzhou_single_dog', (rst) => {
   console.log(rst);
 });

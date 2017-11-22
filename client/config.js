@@ -9,7 +9,7 @@ export function wxConfig(url) {
 
   axios({
     url,
-    data: {
+    params: {
       currentURL: link,
     },
   }).then((res) => {

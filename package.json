@@ -1,7 +1,7 @@
 {
   "name": "single-dog",
   "version": "1.0.0",
-  "description": "全国单身汪歌手大赛",
+  "description": "全国单身踢馆歌手大赛",
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon ./server/server.dev.js --watch server --watch config",
     "build:dev": "cross-env NODE_ENV=development webpack --config config/webpack.config.prod.js&&node ./dist/server/server.js",

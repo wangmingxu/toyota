@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import lz from '@lizhife/lz-jssdk';
 import PropTypes from 'prop-types';
 import { GetDivision, SetDivision } from '../Action';
 import style from '../styles/App.less' // eslint-disable-line
@@ -9,6 +8,48 @@ import ActivityDetail from '../Component/ActivityDetail';
 import DivisionDialog from '../Component/DivisionDialog';
 import ShareOverlay from '../Component/ShareOverlay';
 import DownloadDialog from '../Component/DownloadDialog';
+
+const scheduleList = [
+  {
+    stage: '初赛',
+    time: '11.6-11.14',
+  },
+  {
+    stage: '赛区复赛',
+    time: '11.16-11.19',
+  },
+  {
+    stage: '半决赛',
+    time: '12.1-12.2',
+  },
+  {
+    stage: '赛区决赛',
+    time: '12.3',
+  },
+  {
+    stage: '总决赛',
+    time: '12.8',
+  },
+];
+
+const groupList = [
+  {
+    name: '单身A组',
+    url: 'lizhifm://www.lizhi.fm?clientparams=17,2636854700131801654,2585466928140083244',
+  },
+  {
+    name: '单身B组',
+    url: 'lizhifm://browser?live=2636854700131801654',
+  },
+  {
+    name: '情侣A组',
+    url: 'lizhifm://com.yibasan.lizhifm/?&action=live&liveId=2636854700131801654&radioId=2585466928140083244',
+  },
+  {
+    name: '情侣B组',
+    url: 'lizhifm://com.yibasan.lizhifm/?&action=live&liveId=2637146215184620086',
+  },
+];
 
 @connect(
   state => ({ division: state.Division }),
@@ -48,12 +89,17 @@ class Index extends React.PureComponent {
   }
   share = () => {
     if (window.isApp) {
-      lz.shareUrl(window.shareData);
+      window.lz.shareUrl(window.shareData);
     } else if (window.isWX) {
       this.setState({ showShareOverlay: true });
     } else {
       this.setState({ showDownloadDialog: true });
     }
+  }
+  toLive = (link) => {
+    try {
+      location.href = link;
+    }catch (e) { window.alert(e) ;}
   }
   render() {
     const { division, dispatch } = this.props;
@@ -63,10 +109,10 @@ class Index extends React.PureComponent {
         <ActivityDetail />
         <DivisionDialog
           showDialog={this.state.showDivisionDialog}
-          otherDivision={division === '未知'}
           onClose={() => {
             this.setState({ showDivisionDialog: false });
           }}
+          division={division}
           selectCity={(name) => {
             setTimeout(() => {
               dispatch(SetDivision(name));
@@ -88,51 +134,32 @@ class Index extends React.PureComponent {
         />
         <div styleName="theme" />
         <div styleName="schedule">
-          <div styleName="item">
-            <p styleName="stage">初赛</p>
-            <p styleName="time">11.6-11.14</p>
-          </div>
-          <div styleName="item">
-            <p styleName="stage">赛区复赛</p>
-            <p styleName="time">11.16-11.19</p>
-          </div>
-          <div styleName="item">
-            <p styleName="stage">半决赛</p>
-            <p styleName="time">11.24-11.25</p>
-          </div>
-          <div styleName="item">
-            <p styleName="stage">赛区决赛</p>
-            <p styleName="time">11.26</p>
-          </div>
-          <div styleName="item">
-            <p styleName="stage">总决赛</p>
-            <p styleName="time">12.8</p>
-          </div>
+          {scheduleList.map((item, i) => (
+            <div styleName="item" key={i}>
+              <p styleName="stage">{item.stage}</p>
+              <p styleName="time">{item.time}</p>
+            </div>
+          ))}
         </div>
         <div styleName="group">
-          <div styleName="item">
-            <div styleName="division">{division}赛区</div>
-            <div styleName="avatar single" />
-            <div styleName="name">单身A组</div>
-          </div>
-          <div styleName="item">
-            <div styleName="division">{division}赛区</div>
-            <div styleName="avatar single" />
-            <div styleName="name">单身B组</div>
-          </div>
-          <div styleName="item">
-            <div styleName="division">{division}赛区</div>
-            <div styleName="avatar cp" />
-            <div styleName="name">情侣A组</div>
-          </div>
-          <div styleName="item">
-            <div styleName="division">{division}赛区</div>
-            <div styleName="avatar cp" />
-            <div styleName="name">情侣B组</div>
-          </div>
+          {groupList.map((item, i) => (
+            <div styleName="item" key={i} onClick={() => { this.toLive(item.url); }}>
+              <div styleName="division">{division}赛区</div>
+              <div styleName="avatar" />
+              <div styleName="name">{item.name}</div>
+            </div>
+          ))}
         </div>
         <div styleName="dogs">
           <div styleName="shareBtn" onClick={this.share} />
+          <div
+            styleName="changeCityBtn"
+            onClick={() => {
+              this.setState({
+                showDivisionDialog: true,
+              });
+            }}
+          />
         </div>
       </div>
     );

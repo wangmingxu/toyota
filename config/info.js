@@ -6,8 +6,8 @@ const { common } = require('./build.config');
 
 module.exports = {
   app: {
-    title: 'single-dog',
-    description: '全国单身歌手大赛',
+    title: '全国单身踢馆歌手大赛',
+    description: '全国单身踢馆歌手大赛',
     keywords: 'lizhi',
     favicon: path.join(common.clientPath, 'assets/favicon.ico'),
   },

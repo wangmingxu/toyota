@@ -14,6 +14,8 @@ import {
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
+import lz from '@lizhife/lz-jssdk';
+import shareCover from './assets/share_cover.jpg';
 
 promiseFinally.shim();
 
@@ -23,6 +25,7 @@ fundebug.releasestage = process.env.NODE_ENV;
 
 FastClick.attach(document.body);
 
+window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
@@ -30,11 +33,13 @@ window.isWeiBo = client.isWeiBo();
 window.shareData = {
   url: window.location.href,
   link: window.location.href,
-  title: '全国单身汪踢馆歌手大赛',
+  title: '全国单身踢馆歌手大赛',
   desc: '妈耶！单身汪怎么可以手撕情侣档？画面惨不忍睹……',
-  'image-url': require('./assets/share_cover.png'),
-  imgUrl: require('./assets/share_cover.png'),
+  'image-url': shareCover,
+  imgUrl: shareCover,
 };
+
+console.log(window.shareData);
 
 if (window.isApp) {
   appConfig(lzAuthUrl);
@@ -63,3 +68,11 @@ axios.interceptors.response.use(
   error =>
     Promise.reject(error),
 );
+
+window._hmt = window._hmt || [];
+(function () {
+  const hm = document.createElement('script');
+  hm.src = 'https://hm.baidu.com/hm.js?50f7f3f779102291f22b776ad51e5893';
+  const s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(hm, s);
+}());

@@ -37,7 +37,6 @@ class App extends Component {
             lz.getToken({
               needRefresh: true,
             }).then((r3) => {
-              window.alert('r3');
               if (r3.status === 'success') {
                 cookieManager.set(tokenKey, r3.token);
                 // window.alert(client.getCookie(tokenKey))

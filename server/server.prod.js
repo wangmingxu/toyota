@@ -35,5 +35,5 @@ app.use(authMiddleware);
 app.use(clientRoute);
 
 app.listen(dev.port, () => {
-  console.log(`Example app listening on port ${dev.port}!\n`);
+  console.log(`App listening on port ${dev.port}!\n`);
 });
