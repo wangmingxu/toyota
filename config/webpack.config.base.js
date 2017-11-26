@@ -92,7 +92,9 @@ const baseConfig = {
   },
   plugins: [
     /** 忽略引入模块中并不需要的内容* */
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    /** 只引入moment的zh-cn语言包 */
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-cn/),
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
       __isomorphic__: isomorphic,
@@ -100,16 +102,11 @@ const baseConfig = {
     /** 抽取css文件* */
     new ExtractTextPlugin({ filename: utils.assetsPath('css/[name].css?[contenthash]'), allChunks: true }),
     new webpack.LoaderOptionsPlugin({
-      options: {
-        //
-      },
+      options: {},
     }),
   ],
-  externals: [
-    { // 通过script引入,不打包到一起
-      //
-    },
-  ],
+  // 通过script引入,不打包到一起
+  externals: [],
 };
 
 module.exports = baseConfig;

@@ -13,7 +13,7 @@ const { common, build, isomorphic } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const Es3ifyPlugin = require('es3ify-webpack-plugin');
+// const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
 const clientConfig = merge(baseConfig, {
   devtool: 'source-map',
@@ -88,8 +88,8 @@ const clientConfig = merge(baseConfig, {
       filename: isomorphic ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
       isomorphic,
     })),
-    /** 把代码转成es3,有兼容性要求时使用* */
-    new Es3ifyPlugin(),
+    /** 把代码转成es3* */
+    // new Es3ifyPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       ie8: false,
       output: {

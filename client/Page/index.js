@@ -39,7 +39,7 @@ const groupList = [
   },
   {
     name: '单身B组',
-    url: 'lizhifm://browser?live=2636854700131801654',
+    url: 'lizhifm://com.yibasan.lizhifm?live=2636854700131801654',
   },
   {
     name: '情侣A组',
@@ -99,7 +99,7 @@ class Index extends React.PureComponent {
   toLive = (link) => {
     try {
       location.href = link;
-    }catch (e) { window.alert(e) ;}
+    } catch (e) { window.alert(e); }
   }
   render() {
     const { division, dispatch } = this.props;

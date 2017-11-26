@@ -1,9 +1,9 @@
 const path = require('path');
 const gulp = require('gulp');
 const tingpng = require('gulp-tinypng');
-const { build } = require('./build.config');
+const { common, build } = require('./build.config');
 
-const assetsPath = path.join(build.assetsRoot, build.assetsSubDirectory, 'assets');
+const assetsPath = path.join(common.clientPath, 'assets');
 
 gulp.task('tinypng', () => {
   gulp.src([path.join(assetsPath, '*.jpg'), path.join(assetsPath, '*.png'), path.join(assetsPath, '*.jpeg')])

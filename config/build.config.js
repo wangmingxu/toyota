@@ -20,9 +20,7 @@ module.exports = {
   build: {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'client', // 单独创建一个目录存放静态资源，方便upload
-    assetsPublicPath: process.env.NODE_ENV === 'production'
-      ? `https://bizadv.lizhi.fm/static/2017/${name}/`
-      : '/',
+    assetsPublicPath: `https://bizadv.lizhi.fm/static/2017/${name}/`,
     bundleAnalyzerReport: false,
     analyzerPort: 7777,
     tinyApiKey: '6i9NPe1a2nU6YN1k5tjrTEQyK4h3-ZDU',

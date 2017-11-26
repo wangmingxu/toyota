@@ -11,7 +11,6 @@ import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import axios from 'axios';
 import get from 'lodash/get';
-import { baseUrlPath } from '../../client/constant';
 
 const router = express.Router();
 
@@ -39,7 +38,7 @@ router.use((req, res) => {
 
       const html = ReactDOMServer.renderToString(<Provider store={store}>
         <CookiesProvider cookies={req.universalCookies}>
-          <StaticRouter location={req.originalUrl} context={context} basename={baseUrlPath}>
+          <StaticRouter location={req.originalUrl} context={context}>
             <Route
               render={() => (
                 <span>

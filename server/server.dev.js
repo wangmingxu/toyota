@@ -29,8 +29,6 @@ require('asset-require-hook')({
   name: `/${utils.assetsPath('assets/[name].[ext]?[hash]')}`,
 });
 
-global.__isomorphic__ = true;
-
 require('./utils/axiosHook');
 const path = require('path');
 const fs = require('fs');
@@ -71,6 +69,11 @@ compiler.plugin('emit', (compilation, callback) => {
     }
   });
   callback();
+});
+
+// '/'会默认跳到webpack-dev-server的index.html
+app.get('/', (req, res) => {
+  res.redirect(302, '/home');
 });
 
 // Tell express to use the webpack-dev-middleware and use the webpack.config.js
