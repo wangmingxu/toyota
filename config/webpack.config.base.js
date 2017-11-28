@@ -4,7 +4,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const { common, dev, build } = require('./build.config');
 const utils = require('./utils');
 const { theme } = require('../package.json');
-const path = require('path');
 
 const { NODE_ENV, mode } = process.env;
 
@@ -84,11 +83,7 @@ const baseConfig = {
           },
         ],
       },
-    ].concat(mode === 'ssr' ? [] : {
-      test: /\.js$/,
-      include: path.join(common.clientPath, 'Page'),
-      use: ['bundle-loader?lazy', 'babel-loader'],
-    }),
+    ],
   },
   plugins: [
     /** 忽略引入模块中并不需要的内容* */

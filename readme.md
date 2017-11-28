@@ -13,6 +13,7 @@
 - [x] 支持redux
 - [x] 支持react-css-modules
 - [x] 支持tinypng图片压缩
+- [x] 支持代码分割,按需加载路由
 - [x] 支持React服务端渲染
 - [x] 支持服务端请求转发,包括token校验和user-agent校验,结合charles可轻松实现在开发环境调试App和微信
 - [x] 支持Mock Server
@@ -98,6 +99,9 @@ http://localhost:8080
 
 6. 路由过渡动画  
 react-router4基于hashchange和popstate事件实现,但是存在一个问题:浏览器的前进行为也会触发popstate事件,此时左右滑动这类路由过渡动画的切换方向就会出现问题,因此如果使用这类动画,应尽量避免使用history.forward去进行路由切换。本项目的默认使用左右滑动作为路由过渡动画,参考[client/Component/RouteWrapper.js](./client/Component/RouteWrapper.js)
+
+7. 代码分割  
+在生产环境且处于spa模式下默认启用路由按需加载功能,使用bundle-loader对client/Page目录下的js进行按需加载,如果要关闭此功能,请修改[config/build.config.js](./config/build.config.js)的codeSplit选项
 
 ### 参考文档
 [1] http://fex.baidu.com/blog/2015/05/nodejs-hot-swapping/  

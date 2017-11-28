@@ -41,7 +41,11 @@ const clientConfig = merge(baseConfig, {
           ],
         }),
       },
-    ],
+    ].concat(mode === 'spa' && build.codeSplit ? [{
+      test: /\.js$/,
+      include: path.join(common.clientPath, 'Page'),
+      use: ['bundle-loader?lazy', 'babel-loader'],
+    }] : []),
   },
   plugins: [
     /** 分析打包情况* */
