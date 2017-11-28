@@ -41,14 +41,14 @@ class App extends Component {
                 cookieManager.set(tokenKey, r3.token);
                 // window.alert(client.getCookie(tokenKey))
 
-                _t.props.toggleAuth(true);
+                _t.props.toggleAuthStatus(true);
               }
             });
           }
         });
       });
     } else {
-      _t.props.toggleAuth(true);
+      _t.props.toggleAuthStatus(true);
     }
   }
   render() {

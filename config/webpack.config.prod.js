@@ -9,11 +9,13 @@ const utils = require('./utils');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const { common, build, isomorphic } = require('./build.config');
+const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const Es3ifyPlugin = require('es3ify-webpack-plugin');
+
+const { mode } = process.env;
 
 const clientConfig = merge(baseConfig, {
   devtool: 'source-map',
@@ -85,8 +87,8 @@ const clientConfig = merge(baseConfig, {
     }),
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
-      filename: isomorphic ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
-      isomorphic,
+      filename: mode === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
+      isomorphic: mode === 'ssr',
     })),
     /** 把代码转成es3* */
     // new Es3ifyPlugin(),
@@ -141,7 +143,6 @@ const serverConfig = {
     loaders: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
         use: [{
           loader: 'babel-loader',
           options: {
@@ -182,6 +183,6 @@ const serverConfig = {
   ],
 };
 
-const prodConfig = isomorphic ? [clientConfig, serverConfig] : clientConfig;
+const prodConfig = mode === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
 
 module.exports = prodConfig;

@@ -1,12 +1,12 @@
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const {
-  common, dev, build, isomorphic,
-} = require('./build.config');
+const { common, dev, build } = require('./build.config');
 const utils = require('./utils');
 const { theme } = require('../package.json');
 const path = require('path');
+
+const { NODE_ENV, mode } = process.env;
 
 const baseConfig = {
   context: common.clientPath,
@@ -15,14 +15,14 @@ const baseConfig = {
   },
   output: {
     path: common.distPath,
-    filename: process.env.NODE_ENV === 'production'
+    filename: NODE_ENV === 'production'
       ? utils.assetsPath('js/[name].js?[chunkhash]')
       : utils.assetsPath('js/[name].js?[hash]'),
     chunkFilename: utils.assetsPath('js/[id].js?[chunkhash]'),
-    publicPath: process.env.NODE_ENV === 'production'
+    publicPath: NODE_ENV === 'production'
       ? build.assetsPublicPath
       : dev.assetsPublicPath,
-    crossOriginLoading: process.env.NODE_ENV === 'production' ? 'anonymous' : false,
+    crossOriginLoading: NODE_ENV === 'production' ? 'anonymous' : false,
   },
   resolve: {
     modules: [common.clientPath, 'node_modules'],
@@ -84,7 +84,7 @@ const baseConfig = {
           },
         ],
       },
-    ].concat(isomorphic ? [] : {
+    ].concat(mode === 'ssr' ? [] : {
       test: /\.js$/,
       include: path.join(common.clientPath, 'Page'),
       use: ['bundle-loader?lazy', 'babel-loader'],
@@ -97,7 +97,7 @@ const baseConfig = {
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-cn/),
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
-      __isomorphic__: isomorphic,
+      __isomorphic__: mode === 'ssr',
     }),
     /** 抽取css文件* */
     new ExtractTextPlugin({ filename: utils.assetsPath('css/[name].css?[contenthash]'), allChunks: true }),

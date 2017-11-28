@@ -40,7 +40,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const app = express();
 const config = require('../config/webpack.config.dev');
 const { common, dev } = require('../config/build.config');
-const clientRoute = require('./middlewares/clientRoute');
+let clientRoute = require('./middlewares/clientRoute');
 const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
@@ -49,6 +49,7 @@ const authMiddleware = require('./middlewares/auth');
 const bindStoreMiddleware = require('./middlewares/bindStore');
 const useragent = require('express-useragent');
 const promiseFinally = require('promise.prototype.finally');
+const chokidar = require('chokidar');
 
 promiseFinally.shim();
 
@@ -110,8 +111,35 @@ app.engine('html', require('hbs').__express);
 
 app.use(bindStoreMiddleware);
 app.use(authMiddleware);
-app.use(clientRoute);
+// app.use(clientRoute);
+app.use((req, res, next) => {
+  clientRoute(req, res, next);
+});
 
 app.listen(dev.port, () => {
   console.log(`Example app listening on port ${dev.port}!\n`);
+});
+
+function cleanCache(modulePath) {
+  const module = require.cache[modulePath];
+  // remove reference in module.parent
+  if (module && module.parent) {
+    module.parent.children.splice(module.parent.children.indexOf(module), 1);
+  }
+  require.cache[modulePath] = null;
+}
+
+// 和客户端复用的代码进行热更新,避免重启服务
+const watchConfig = {
+  dir: [path.join(__dirname, '../client')],
+  options: {},
+};
+chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (_path) => {
+  console.log(`${_path} changed`);
+  Object.keys(require.cache).forEach((cachePath) => {
+    if (cachePath.indexOf('/client') > -1) {
+      cleanCache(cachePath);
+    }
+  });
+  clientRoute = require('./middlewares/clientRoute');
 });

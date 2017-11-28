@@ -1,13 +1,6 @@
-export function routeAnimate(cls) {
+export function toggleAuthStatus(isLogin) {
   return {
-    type: 'routeAnimate',
-    cls,
-  };
-}
-
-export function toggleAuth(isLogin) {
-  return {
-    type: 'toggleAuth',
+    type: 'toggleAuthStatus',
     isLogin,
   };
 }

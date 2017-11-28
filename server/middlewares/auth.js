@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { tokenKey } from '../../client/constant';
-import { toggleAuth, collectErrMsg } from '../../client/Action/global';
+import { toggleAuthStatus, collectErrMsg } from '../../client/Action/global';
 
 module.exports = function (req, res, next) {
   const { store, universalCookies, useragent } = req;
@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
   req.axiosResponseHook = axios.interceptors.response.use(
     (response) => {
       if (response.status === 2) {
-        store.dispatch(toggleAuth(false));
+        store.dispatch(toggleAuthStatus(false));
       }
       if (response.msg && response.msg.length > 0) {
         store.dispatch(collectErrMsg(response.msg));

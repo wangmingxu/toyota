@@ -2,10 +2,12 @@
 const webpack = require('webpack');
 const baseConfig = require('./webpack.config.base');
 const merge = require('webpack-merge');
-const { common, isomorphic } = require('./build.config');
+const { common } = require('./build.config');
 const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const { mode } = process.env;
 
 module.exports = merge(baseConfig, {
   devtool: 'cheap-module-eval-source-map',
@@ -46,7 +48,7 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
       filename: 'index.html',
-      isomorphic,
+      isomorphic: mode === 'ssr',
     })),
     // 配置全局常量
     new webpack.DefinePlugin({
