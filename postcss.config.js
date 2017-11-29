@@ -5,7 +5,7 @@ module.exports = {
   plugins: [
     pxtorem({
       rootValue: 64,
-      propList: ['*'],
+      propList: ['*', '!font-size'],
     }),
     autoprefixer,
   ],
