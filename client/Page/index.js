@@ -10,7 +10,6 @@ import ShareOverlay from '../Component/ShareOverlay';
 import DownloadDialog from '../Component/DownloadDialog';
 import sortBy from 'lodash/sortBy';
 import classNames from 'classnames';
-import { setTimeout } from 'timers';
 
 const scheduleList = [
   {
