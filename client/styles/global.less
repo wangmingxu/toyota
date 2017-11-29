@@ -4,7 +4,23 @@
     -webkit-margin-after: 0px;
   }
   body{
-    font-family: Helvetica,Arial,"Hiragino Sans GB","Microsoft Yahei","微软雅黑",STHeiti,"华文细黑",sans-serif;
+    font-family: "Microsoft YaHei","黑体","Arial","宋体",sans-serif;
+    line-height: 1.4285;
+  }
+  [data-dpr="1"] body{
+    font-size: 12px;
+  }
+  [data-dpr="2"] body{
+    font-size: 24px;
+  }
+  [data-dpr="2.5"] body{
+    font-size: 30px;
+  }
+  [data-dpr="2.75"] body{
+    font-size: 33px;
+  }
+  [data-dpr="3"] body{
+    font-size: 36px;
   }
   .left-enter {
     z-index: 10;
@@ -123,7 +139,7 @@
       margin: 0 0 50px;
       text-indent: 40px;
       text-align: left;
-      font-size: 24px;
+      font-size: 24/64rem;
     }
     .iknowBtn {
       width: 284px;

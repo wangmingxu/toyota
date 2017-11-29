@@ -101,7 +101,13 @@ http://localhost:8080
 react-router4基于hashchange和popstate事件实现,但是存在一个问题:浏览器的前进行为也会触发popstate事件,此时左右滑动这类路由过渡动画的切换方向就会出现问题,因此如果使用这类动画,应尽量避免使用history.forward去进行路由切换。本项目的默认使用左右滑动作为路由过渡动画,参考[client/Component/RouteWrapper.js](./client/Component/RouteWrapper.js)
 
 7. 代码分割  
-在生产环境且处于spa模式下默认启用路由按需加载功能,使用bundle-loader对client/Page目录下的js进行按需加载,如果要关闭此功能,请修改[config/build.config.js](./config/build.config.js)的codeSplit选项
+在生产环境且处于spa模式下默认启用路由按需加载功能,使用bundle-loader对client/Page目录下的js进行按需加载,如果要关闭此功能,请修改[config/build.config.js](./config/build.config.js)的codeSplit选项,因为服务端渲染模式需要同步运行js,所以无法进行按需加载。如果需要更加成熟的方案,请参考[react-loadable](https://www.npmjs.com/package/react-loadable)
+
+8. 前后端渲染的html结构需保持一致  
+React16采用ReactDOM.hydrate代替ReactDOM.render,当服务端渲染出来的html和客户端渲染出来的html不一致的时候会报`Warning: Expected server HTML to contain a matching <span> in <div>.`类似的错误，出现这种错误一般有以下原因:
+- 客户端组件嵌套了高阶组件生成了其他html元素，比如ReactCSSTransitionGroup动画组件会默认生成一个span标签嵌套在组件上，这时服务端也需要增加一个span标签以保持一致
+- 客户端使用了异步加载或者页面是经过异步函数之后再显示的,比如获取授权之后,此时也会导致前后端渲染不一致,客户端应该尽量避免这种异步渲染
+
 
 ### 参考文档
 [1] http://fex.baidu.com/blog/2015/05/nodejs-hot-swapping/  

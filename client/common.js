@@ -3,6 +3,7 @@ import './styles/global.less';
 import './styles/antd-fix.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
+import getAppLink from './utils/appLink';
 import { wxConfig, appConfig } from './config';
 import {
   cookiePrefix,
@@ -29,6 +30,7 @@ window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
+window.getAppLink = getAppLink;
 
 window.shareData = {
   url: window.location.href,

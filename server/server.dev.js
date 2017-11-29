@@ -51,6 +51,8 @@ const useragent = require('express-useragent');
 const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
 
+const { mode } = process.env;
+
 promiseFinally.shim();
 
 const compiler = webpack(config);
@@ -73,7 +75,7 @@ compiler.plugin('emit', (compilation, callback) => {
 });
 
 // '/'会默认跳到webpack-dev-server的index.html
-app.get('/', (req, res) => {
+mode === 'ssr' && app.get('/', (req, res) => {
   res.redirect(302, '/home');
 });
 
