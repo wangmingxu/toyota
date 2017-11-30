@@ -41,7 +41,7 @@ window.shareData = {
   imgUrl: shareCover,
 };
 
-console.log(window.shareData);
+// console.log(window.shareData);
 
 if (window.isApp) {
   appConfig(lzAuthUrl);
