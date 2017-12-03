@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import lz from '@lizhife/lz-jssdk';
 import RouteView from './Component/RouterView';
-import { Cookies } from 'react-cookie';
+import { withCookies } from 'react-cookie';
 import { tokenKey, idKey } from './constant';
 import { connect } from 'react-redux';
 import { global } from './Action';
 import { bindActionCreators } from 'redux';
 import get from 'lodash/get';
+import axios from 'axios';
 
-const cookieManager = new Cookies();
-
+@withCookies
 @connect(
   state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
   dispatch => bindActionCreators(global, dispatch),
@@ -23,6 +23,7 @@ class App extends Component {
   }
   configReady() {
     const _t = this;
+    const { cookies } = _t.props;
     if (window.isApp) {
       lz.ready(() => {
         lz.getSessionUser().then((r1) => {
@@ -33,15 +34,14 @@ class App extends Component {
 
             lz.gotoLogin();
           } else {
-            cookieManager.set(idKey, r1.id);
+            cookies.set(idKey, r1.id);
             lz.getToken({
               needRefresh: true,
             }).then((r3) => {
               if (r3.status === 'success') {
-                cookieManager.set(tokenKey, r3.token);
-                // window.alert(client.getCookie(tokenKey))
-
+                cookies.set(tokenKey, r3.token);
                 _t.props.toggleAuthStatus(true);
+                axios.interceptors.request.use(config => Object.assign(config, { params: { token: r3.token } }));
               }
             });
           }

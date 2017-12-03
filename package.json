@@ -4,8 +4,8 @@
   "description": "全国单身踢馆歌手大赛",
   "scripts": {
     "start": "npm run dev:ssr",
-    "dev:ssr": "cross-env NODE_ENV=development mode=ssr nodemon ./server/server.dev.js --watch server --watch config",
-    "dev:spa": "cross-env NODE_ENV=development mode=spa nodemon ./server/server.dev.js --watch server --watch config",        
+    "dev:ssr": "cross-env NODE_ENV=development mode=ssr nodemon ./server/server.dev.js --watch server --watch config --watch proxy",
+    "dev:spa": "cross-env NODE_ENV=development mode=spa nodemon ./server/server.dev.js --watch server --watch config --watch proxy",        
     "pre:ssr": "cross-env NODE_ENV=development mode=ssr webpack --config config/webpack.config.prod.js&&node ./dist/server/server.js",
     "pre:spa": "cross-env NODE_ENV=development mode=spa webpack --config config/webpack.config.prod.js&&node ./server/server.pre.spa.js",
     "build:ssr": "cross-env NODE_ENV=production mode=ssr webpack --config config/webpack.config.prod.js",

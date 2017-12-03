@@ -6,7 +6,7 @@ function apiConfig(map) {
   return Object.keys(rMap).reduce((fMap, key) => {
     fMap[key] = (data) => {
       if (typeof rMap[key] === 'string') {
-        return axios({ url: rMap[key], data });
+        return axios({ url: rMap[key], params: data });
       }
       return rMap[key](data);
     };

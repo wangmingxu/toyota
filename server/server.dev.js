@@ -40,7 +40,6 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const app = express();
 const config = require('../config/webpack.config.dev');
 const { common, dev } = require('../config/build.config');
-let clientRoute = require('./middlewares/clientRoute');
 const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
@@ -115,11 +114,11 @@ app.use(bindStoreMiddleware);
 app.use(authMiddleware);
 // app.use(clientRoute);
 app.use((req, res, next) => {
-  clientRoute(req, res, next);
+  require('./middlewares/clientRoute')(req, res, next);
 });
 
 app.listen(dev.port, () => {
-  console.log(`Example app listening on port ${dev.port}!\n`);
+  console.log(`app listening on port ${dev.port}!\n`);
 });
 
 function cleanCache(modulePath) {
@@ -143,5 +142,4 @@ chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (_path) => {
       cleanCache(cachePath);
     }
   });
-  clientRoute = require('./middlewares/clientRoute');
 });

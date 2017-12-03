@@ -40,72 +40,72 @@ const groupList = [
     judge: '表哥',
     fmNo: 335577,
     liveTime: '12-3 15:00',
-    avatar: require('../assets/avatar_bj1.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_bj1.jpg'),
+    liveId: '2639250600948150326',
+    radioId: '2585422786722935296',
   },
   {
     division: '北京',
     judge: '莫小汐',
     fmNo: 3114675,
     liveTime: '12-3 15:00',
-    avatar: require('../assets/avatar_bj2.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_bj2.jpg'),
+    liveId: '2639250600948150326',
+    radioId: '2585422786722935296',
   },
   {
     division: '广州',
     judge: '林墨汁',
     fmNo: 1500642,
     liveTime: '12-3 19:00',
-    avatar: require('../assets/avatar_gz.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_gz.jpg'),
+    liveId: '2639255943505096246',
+    radioId: '2556465290311184384',
   },
   {
     division: '重庆',
     judge: '季慕白',
     fmNo: 3472739,
     liveTime: '12-3 19:00',
-    avatar: require('../assets/avatar_cq.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_cq.jpg'),
+    liveId: '2639247005676852278',
+    radioId: '2615988920444233728',
   },
   {
     division: '成都',
     judge: '罗一四',
     fmNo: 912852,
-    avatar: require('../assets/avatar_cd.jpg'),
+    avatar: require('../assets/singledog/avatar_cd.jpg'),
     liveTime: '12-3 20:00',
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    liveId: '2639251221548703286',
+    radioId: '14421928412251520',
   },
   {
     division: '武汉',
     judge: '大L',
     fmNo: 243123,
     liveTime: '12-3 20:00',
-    avatar: require('../assets/avatar_wh.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_wh.jpg'),
+    liveId: '2639263314028353078',
+    radioId: '2590453829803976704',
   },
   {
     division: '杭州',
     judge: '小丑',
     fmNo: 426544,
     liveTime: '12-3 20:00',
-    avatar: require('../assets/avatar_hz.jpg'),
-    liveId: '2638651600809614902',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_hz.jpg'),
+    liveId: '2639256010460879414',
+    radioId: '2601534665043186688',
   },
   {
     division: '长沙',
     judge: '黑呢',
     fmNo: 1504962,
     liveTime: '12-3 20:00',
-    avatar: require('../assets/avatar_cs.jpg'),
-    liveId: '2636854700131801654',
-    radioId: '2571494476067378688',
+    avatar: require('../assets/singledog/avatar_cs.jpg'),
+    liveId: '2639257743456270902',
+    radioId: '25625470864744576',
   },
 ];
 
@@ -172,9 +172,9 @@ class Index extends React.PureComponent {
     } catch (e) {
       window.alert(e);
     }
-    setTimeout(() => {
-      location.href = `https://appweb.lizhi.fm/live/share?liveId=${liveId}`;
-    }, 1500);
+    // setTimeout(() => {
+    //   location.href = `https://appweb.lizhi.fm/live/share?liveId=${liveId}`;
+    // }, 1500);
   }
   render() {
     const { division, dispatch } = this.props;

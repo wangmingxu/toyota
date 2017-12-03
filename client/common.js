@@ -1,6 +1,5 @@
 import 'babel-polyfill';
 import './styles/global.less';
-import './styles/antd-fix.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
 import getAppLink from './utils/appLink';
