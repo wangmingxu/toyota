@@ -2,6 +2,8 @@ import React from 'react';
 import Bundle from '../Component/Bundle'; // bundle模型用来异步加载组件
 
 import Index from '../Page/index';
+import Guide from '../Page/Guide';
+import Result from '../Page/Result';
 import NotFoundPage from '../Page/NotFoundPage'; // NotFoundPage
 
 // components load their module for initial visit
@@ -25,6 +27,16 @@ const routes = [
   {
     path: '/home',
     component: createComponent(Index),
+    exact: true,
+  },
+  {
+    path: '/guide',
+    component: createComponent(Guide),
+    exact: true,
+  },
+  {
+    path: '/result',
+    component: createComponent(Result),
     exact: true,
   },
   {

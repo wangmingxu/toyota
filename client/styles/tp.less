@@ -1,0 +1,107 @@
+.tp-mixin() {
+  width: 100%;
+  padding-bottom: 1134/1700*100%;
+  background-color: #e94b40;
+  position: relative;
+}
+.tp-layout-mixin() {
+  background-color: #fff;
+  box-sizing: border-box;
+  border: 4px solid #0c0306;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+}
+.tp-guide {
+  .tp-mixin;
+  .layout {
+    .tp-layout-mixin;
+    width: 1584/1700*100%;
+    padding-top: 804/1700*100%;
+    border-bottom: none;
+    bottom: 0px;
+    transform: translateX(-50%);
+  }
+  .theme {
+    position: absolute;
+    top: 285/1134*100%;
+    left: (165+710)/1700*100%;
+    transform: translate(-50%, -50%);
+    width: 1419/1700*100%;
+    padding-bottom: 502/1700*100%;
+    background: url('../assets/singledog/tp_theme.png') no-repeat;
+    background-size: 100% auto;
+    z-index: 3;
+  }
+  .guide {
+    position: absolute;
+    top: (400+363)/1134*100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1684/1700*100%;
+    padding-top: 727/1700*100%;
+    background: url('../assets/singledog/tp_guide.png') no-repeat;
+    background-size: 100% auto;
+    z-index: 4;
+  }
+}
+.tp-result {
+  .tp-mixin;
+  .theme {
+    position: absolute;
+    top: (44+192)/1134*100%;
+    left: (225+630)/1700*100%;
+    transform: translate(-50%, -50%);
+    width: 1260/1700*100%;
+    padding-bottom: 385/1700*100%;
+    background: url('../assets/singledog/tp_theme2.png') no-repeat;
+    background-size: 100% auto;
+    z-index: 3;
+  }
+  .layout {
+    .tp-layout-mixin;
+    width: 1445/1700*100%;
+    height: 763/1134*100%;
+    top: (355+382)/1134*100%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    &>div{
+        width: 100%;
+        height: 100%;
+    }
+    .item{
+        color: #fff;
+        font-size: 15/12*100%;
+        // line-height: 80*64/54px;
+        height: 80/763*100%;
+        background-color: #ae2f2f;
+        font-weight: bold;
+        position: relative;
+        width: 90%;
+        display: table;
+        border: 4px solid #0c0306;
+        box-sizing: border-box;
+        border-radius: 10px;
+        // margin-bottom: 30*64/54px;
+        margin: 0 auto 30/763*100%;
+        padding-left: 10%;
+        .msg{
+            display: table-cell;
+            vertical-align: middle;
+        }
+        img{
+            position: absolute;
+            left: 0px;
+            top: 50%;
+            height: 130%;
+            border: 2px solid #0c0306;
+            border-radius: 50% 50%;
+            transform: translate(-50%,-50%);
+        }
+        &:first-of-type{
+            margin-top: 30/763*100%;
+        }
+    }
+  }
+}
