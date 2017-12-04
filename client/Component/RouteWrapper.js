@@ -48,6 +48,7 @@ class RouteWrapper extends React.Component {
         transitionName={animateCls}
         transitionEnterTimeout={1000}
         transitionLeaveTimeout={1000}
+        component={React.Fragment}
       >
         <div key={location.pathname} className="routerWrapper" ref={(c) => { this.wrapperEle = c; }}>
           {this.props.children}

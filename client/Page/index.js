@@ -243,14 +243,6 @@ class Index extends React.PureComponent {
         </div>
         <div styleName="dogs">
           <div styleName="shareBtn" onClick={this.share} />
-          <div
-            styleName="changeCityBtn"
-            onClick={() => {
-              this.setState({
-                showDivisionDialog: true,
-              });
-            }}
-          />
         </div>
       </div>
     );

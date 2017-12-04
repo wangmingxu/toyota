@@ -105,7 +105,7 @@ http://localhost:8080
 
 8. 前后端渲染的html结构需保持一致  
 React16采用ReactDOM.hydrate代替ReactDOM.render,当服务端渲染出来的html和客户端渲染出来的html不一致的时候会报`Warning: Expected server HTML to contain a matching <span> in <div>.`类似的错误，出现这种错误一般有以下原因:
-- 客户端组件嵌套了高阶组件生成了其他html元素，比如ReactCSSTransitionGroup动画组件会默认生成一个span标签嵌套在组件上，这时服务端也需要增加一个span标签以保持一致
+- 客户端组件嵌套了高阶组件生成了其他html元素，比如ReactCSSTransitionGroup动画组件会默认生成一个span标签嵌套在组件上,这时服务端也需要增加一个span标签以保持一致(在最新的React v16.2.0中增加了React.Fragment组件,可以利用它来避免生成额外的标签)
 - 客户端使用了异步加载或者页面是经过异步函数之后再显示的,比如获取授权之后,此时也会导致前后端渲染不一致,客户端应该尽量避免这种异步渲染
 
 

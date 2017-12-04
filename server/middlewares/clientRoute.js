@@ -41,9 +41,7 @@ router.use((req, res) => {
           <StaticRouter location={req.originalUrl} context={context}>
             <Route
               render={() => (
-                <span>
-                  <div className="routerWrapper">{renderRoutes(routes)}</div>
-                </span>
+                <div className="routerWrapper">{renderRoutes(routes)}</div>
               )}
             />
           </StaticRouter>
