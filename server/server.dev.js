@@ -73,10 +73,34 @@ compiler.plugin('emit', (compilation, callback) => {
   callback();
 });
 
-// '/'会默认跳到webpack-dev-server的index.html
-mode === 'ssr' && app.get('/', (req, res) => {
-  res.redirect(302, '/home');
+// proxy api requests
+Object.keys(proxyTable).forEach((context) => {
+  const options = proxyTable[context];
+  app.use(context, proxyMiddleware(options));
 });
+
+// mock api requests
+Object.keys(mockTable).forEach((context) => {
+  app.use(context, mockTable[context]);
+});
+
+if (mode === 'ssr') {
+  app.use(cookiesMiddleware());
+  app.use(useragent.express());
+
+  app.set('views', path.resolve(__dirname, '../views/dev'));
+  app.set('view engine', 'html');
+  // app.engine('html', require('ejs').renderFile);
+  app.engine('html', require('hbs').__express);
+
+  app.use(bindStoreMiddleware);
+  app.use(authMiddleware);
+
+  // '/'会默认跳到webpack-dev-server的index.html
+  app.get('/', (req, res, next) => {
+    require('./middlewares/clientRoute')(req, res, next);
+  });
+}
 
 // Tell express to use the webpack-dev-middleware and use the webpack.config.js
 // configuration file as a base.
@@ -91,27 +115,6 @@ app.use(webpackHotMiddleware(compiler, {
   heartbeat: 10 * 1000,
 }));
 
-// proxy api requests
-Object.keys(proxyTable).forEach((context) => {
-  const options = proxyTable[context];
-  app.use(context, proxyMiddleware(options));
-});
-
-// mock api requests
-Object.keys(mockTable).forEach((context) => {
-  app.use(context, mockTable[context]);
-});
-
-app.use(cookiesMiddleware());
-app.use(useragent.express());
-
-app.set('views', path.resolve(__dirname, '../views/dev'));
-app.set('view engine', 'html');
-// app.engine('html', require('ejs').renderFile);
-app.engine('html', require('hbs').__express);
-
-app.use(bindStoreMiddleware);
-app.use(authMiddleware);
 // app.use(clientRoute);
 app.use((req, res, next) => {
   require('./middlewares/clientRoute')(req, res, next);

@@ -25,11 +25,6 @@ const routes = [
     exact: true,
   },
   {
-    path: '/home',
-    component: createComponent(Index),
-    exact: true,
-  },
-  {
     path: '/guide',
     component: createComponent(Guide),
     exact: true,
