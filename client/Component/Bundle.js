@@ -1,7 +1,8 @@
-import { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { ActivityIndicator } from 'antd-mobile';
 
-class Bundle extends Component {
+class Bundle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,7 +34,7 @@ class Bundle extends Component {
   }
 
   render() {
-    return this.state.mod ? this.props.children(this.state.mod) : null;
+    return this.state.mod ? this.props.children(this.state.mod) : (<ActivityIndicator toast text="Loading..." />);
   }
 }
 

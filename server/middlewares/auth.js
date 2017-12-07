@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
   req.axiosRequestHook = axios.interceptors.request.use(
     (config) => {
       if (token) {
-        config.data.token = token; // 转发token
+        config.params.token = token; // 转发token
       }
       config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
       return config;

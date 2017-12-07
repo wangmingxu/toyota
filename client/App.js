@@ -4,7 +4,7 @@ import RouteView from './Component/RouterView';
 import { withCookies } from 'react-cookie';
 import { tokenKey, idKey } from './constant';
 import { connect } from 'react-redux';
-import { global } from './Action';
+import * as global from './Action/global';
 import { bindActionCreators } from 'redux';
 import get from 'lodash/get';
 import axios from 'axios';
@@ -41,7 +41,10 @@ class App extends Component {
               if (r3.status === 'success') {
                 cookies.set(tokenKey, r3.token);
                 _t.props.toggleAuthStatus(true);
-                axios.interceptors.request.use(config => Object.assign(config, { params: { token: r3.token } }));
+                axios.interceptors.request.use(config =>
+                  Object.assign(config, {
+                    params: Object.assign(config.params, { token: r3.token }),
+                  }));
               }
             });
           }

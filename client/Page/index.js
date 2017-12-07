@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { GetDivision, SetDivision } from '../Action';
+import { GetDivision, SetDivision } from '../Action/division';
 import style from '../styles/App.less' // eslint-disable-line
 import Logo from '../Component/Logo';
 import ActivityDetail from '../Component/ActivityDetail';

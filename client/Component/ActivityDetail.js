@@ -11,7 +11,7 @@ class ActivityDetail extends React.Component {
   componentDidMount() {}
   render() {
     return (
-      <div>
+      <React.Fragment>
         <span
           className="activity-detail"
           onClick={() => {
@@ -26,7 +26,7 @@ class ActivityDetail extends React.Component {
             this.setState({ showDialog: false });
           }}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
