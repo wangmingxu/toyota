@@ -73,15 +73,15 @@ compiler.plugin('emit', (compilation, callback) => {
   callback();
 });
 
+// mock api requests
+Object.keys(mockTable).forEach((context) => {
+  app.use(context, mockTable[context]);
+});
+
 // proxy api requests
 Object.keys(proxyTable).forEach((context) => {
   const options = proxyTable[context];
   app.use(context, proxyMiddleware(options));
-});
-
-// mock api requests
-Object.keys(mockTable).forEach((context) => {
-  app.use(context, mockTable[context]);
 });
 
 if (mode === 'ssr') {

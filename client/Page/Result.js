@@ -1,88 +1,83 @@
 import React from 'react';
 import Logo from '../Component/Logo';
 import '../styles/tp.less';
-import avatar from '../assets/singledog/tp_avatar.png';
 import QueueAnim from 'rc-queue-anim';
-
-const items = [
-  {
-    id: 1,
-    avatar,
-    msg: '波段号 FM1111 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 2,
-    avatar,
-    msg: '波段号 FM2222 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 3,
-    avatar,
-    msg: '波段号 FM333 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 4,
-    avatar,
-    msg: '波段号 FM444 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 5,
-    avatar,
-    msg: '波段号 FM555 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 6,
-    avatar,
-    msg: '波段号 FM666 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 7,
-    avatar,
-    msg: '波段号 FM777 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 8,
-    avatar,
-    msg: '波段号 FM888 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-  {
-    id: 9,
-    avatar,
-    msg: '波段号 FM999 恭喜 “FDP”价值1588元的Beats Pill+便携式蓝牙无线音箱',
-  },
-];
+import Api from '../utils/api';
+import { matchRoutes } from 'react-router-config';
+import routes from '../Route';
 
 class Result extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: items.slice(0, 5),
+      items: [],
       show: true,
     };
   }
   componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        show: false,
-        items: items.slice(5, 9),
-      });
-    }, 2000);
+    const { location } = this.props;
+    const { match } = matchRoutes(routes, location.pathname)[0];
+    this.activityId = match.params.id;
+    this.loadData();
+    setInterval(() => {
+      this.loadData();
+    }, 5000);
   }
-  onRefresh=({ type }) => {
+  onRefresh = ({ type }) => {
     if (type === 'leave') {
-      this.setState({ show: true });
+      setTimeout(() => {
+        this.setState({ show: true });
+      }, 500);
     }
   }
+  loadData() {
+    Api.listLuckyDoy({ id: this.activityId }).then(({ data }) => {
+      const { items } = this.state;
+      if (items.length === 0) {
+        this.setState({
+          show: true,
+          items: data.slice(0, 5),
+        });
+      } else if (data.length < 5) {
+        this.setState({
+          show: false,
+          items: data,
+        });
+      } else {
+        const latestData = data.filter(item =>
+          new Date(item.lucky_time) >
+            new Date(items[items.length - 1].lucky_time));
+        const nextData = latestData.length < 5 ? latestData.concat(data) : latestData;
+        this.setState({
+          show: false,
+          items: nextData.slice(0, 5),
+        });
+      }
+    });
+  }
   render() {
-    return (<div styleName="tp-result">
-      <Logo />
-      <div styleName="theme" />
-      <div styleName="layout">
-        <QueueAnim type={['right', 'left']} onEnd={this.onRefresh}>
-          {this.state.show ? this.state.items.map(item => (<div styleName="item" key={item.id}><img src={item.avatar} alt="头像" /><div styleName="msg"><p>{item.msg}</p></div></div>)) : null}
-        </QueueAnim>
+    return (
+      <div styleName="tp-result">
+        <Logo />
+        <div styleName="theme" />
+        <div styleName="layout">
+          <QueueAnim type={['right', 'left']} onEnd={this.onRefresh}>
+            {this.state.show
+              ? this.state.items.map((item, i) => (
+                <div styleName="item" key={i}>
+                  {/* <img src={item.headImage} alt="头像" /> */}
+                  <div styleName="msg">
+                    <p>
+                        波段号 FM{item.band} 恭喜 <span styleName="keyPoint">{item.nick_name}</span> 获得<span styleName="keyPoint">{item.prize}</span>
+                    </p>
+                  </div>
+                </div>
+              ))
+              : null}
+          </QueueAnim>
+        </div>
       </div>
-    </div>);
+    );
   }
 }
 

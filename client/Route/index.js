@@ -30,7 +30,7 @@ const routes = [
     exact: true,
   },
   {
-    path: '/result',
+    path: '/result/:id',
     component: createComponent(Result),
     exact: true,
   },

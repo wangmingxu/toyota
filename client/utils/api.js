@@ -16,6 +16,7 @@ function apiConfig(map) {
 
 const API = apiConfig({
   getCity: '/hangzhou/singleDog/getCity',
+  listLuckyDoy: '/activity/listLuckyDoy',
   mineSchool: '/oldSchool/mineSchool',
   loadNotice: '/oldSchool/loadNotice',
   listFireSchool: '/oldSchool/listFireSchool',

@@ -37,13 +37,21 @@
   .guide {
     position: absolute;
     top: (400+363)/1134*100%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    right: 0px;
+    transform: translateY(-50%);
     width: 1684/1700*100%;
     padding-top: 727/1700*100%;
     background: url('../assets/singledog/tp_guide.png') no-repeat;
     background-size: 100% auto;
     z-index: 4;
+  }
+  .qrCode{
+    width: 400/1700*100%;
+    position: absolute;
+    top: 780/1134*100%;
+    left: 284/1700*100%;
+    transform: translate(-50%,-50%);
+    z-index: 5;
   }
 }
 .tp-result {
@@ -72,11 +80,11 @@
     }
     .item{
         color: #fff;
-        font-size: 15/12*100%;
+        font-size: 28/12*100%;
         // line-height: 80*64/54px;
         height: 80/763*100%;
         background-color: #ae2f2f;
-        font-weight: bold;
+        // font-weight: bold;
         position: relative;
         width: 90%;
         display: table;
@@ -85,10 +93,16 @@
         border-radius: 10px;
         // margin-bottom: 30*64/54px;
         margin: 0 auto 30/763*100%;
-        padding-left: 10%;
+        // padding-left: 10%;
+        text-align: center;
         .msg{
             display: table-cell;
             vertical-align: middle;
+            letter-spacing: 2px;
+            .keyPoint{
+              color: yellow;
+              font-weight: bold;
+            }
         }
         img{
             position: absolute;
