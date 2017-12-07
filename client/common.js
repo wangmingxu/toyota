@@ -23,6 +23,18 @@ fundebug.apikey = fundebugApiKey;
 fundebug.releasestage = process.env.NODE_ENV;
 // console.log(process.env.NODE_ENV);
 
+// 添加响应拦截器
+axios.interceptors.response.use(
+  (response) => {
+    if (response.data.status !== 0) {
+      fundebug.notifyError(new Error(response.data.msg));
+    }
+    return response.data;
+  },
+  error =>
+    Promise.reject(error),
+);
+
 FastClick.attach(document.body);
 
 window.lz = lz;
@@ -57,18 +69,6 @@ if (window.isWX) {
 if (window.isWeiBo) {
   window.location.href = `${wxAuthUrl}&cookie_key=${cookiePrefix}wbid&redirectURL=${encodeURIComponent(window.location.href)}`;
 }
-
-// 添加响应拦截器
-axios.interceptors.response.use(
-  (response) => {
-    if (response.data.status !== 0) {
-      fundebug.notifyError(new Error(response.data.msg));
-    }
-    return response.data;
-  },
-  error =>
-    Promise.reject(error),
-);
 
 window._hmt = window._hmt || [];
 (function () {
