@@ -13,12 +13,15 @@ const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CrossOriginPlugin = require('html-webpack-crossorigin-plugin');
+// const StatsPlugin = require('stats-webpack-plugin');
 // const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
 const { mode } = process.env;
 
 const clientConfig = merge(baseConfig, {
   devtool: 'source-map',
+  // profile: true, // 配合stats-webpack-plugin分析打包性能
   module: {
     loaders: [
       {
@@ -55,6 +58,8 @@ const clientConfig = merge(baseConfig, {
       openAnalyzer: build.bundleAnalyzerReport,
       reportFilename: 'report.html',
     }),
+    /** https://webpack.github.io/analyse */
+    // new StatsPlugin('stats.json', { chunkModules: true }),
     /** 启用作用域提升* */
     new webpack.optimize.ModuleConcatenationPlugin(),
     /** 把从node_modules加载的模块到移到vendor* */
@@ -94,6 +99,7 @@ const clientConfig = merge(baseConfig, {
       filename: mode === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
       isomorphic: mode === 'ssr',
     })),
+    new CrossOriginPlugin(),
     /** 把代码转成es3* */
     // new Es3ifyPlugin(),
     new webpack.optimize.UglifyJsPlugin({
