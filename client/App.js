@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import lz from '@lizhife/lz-jssdk';
 import RouteView from './Component/RouterView';
 import { withCookies } from 'react-cookie';
-import { tokenKey, idKey } from './constant';
+import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from './constant';
 import { connect } from 'react-redux';
 import * as global from './Action/global';
 import { bindActionCreators } from 'redux';
@@ -43,13 +43,17 @@ class App extends Component {
                 _t.props.toggleAuthStatus(true);
                 axios.interceptors.request.use(config =>
                   Object.assign(config, {
-                    params: Object.assign(config.params, { token: r3.token }),
+                    params: Object.assign(config.params || {}, { token: r3.token }),
                   }));
               }
             });
           }
         });
       });
+    } else if (window.isWX && !cookies.get(wxidKey)) {
+      window.location.href = `${wxAuthUrl}&cookie_key=${wxidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    } else if (window.isWeiBo && !cookies.get(wbidKey)) {
+      window.location.href = `${wxAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
     } else {
       _t.props.toggleAuthStatus(true);
     }

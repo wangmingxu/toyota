@@ -6,7 +6,7 @@ module.exports = {
     pxtorem({
       rootValue: 64,
       propList: ['*'],
-      selectorBlackList: [/body$/],
+      selectorBlackList: [/\s+body$/],
     }),
     autoprefixer,
   ],

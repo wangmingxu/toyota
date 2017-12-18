@@ -66,10 +66,6 @@ if (window.isWX) {
   });
 }
 
-if (window.isWeiBo) {
-  window.location.href = `${wxAuthUrl}&cookie_key=${cookiePrefix}wbid&redirectURL=${encodeURIComponent(window.location.href)}`;
-}
-
 window._hmt = window._hmt || [];
 (function () {
   const hm = document.createElement('script');
