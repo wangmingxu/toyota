@@ -5,17 +5,16 @@ import client from './utils/ua';
 import getAppLink from './utils/appLink';
 import { wxConfig, appConfig } from './config';
 import {
-  cookiePrefix,
   lzAuthUrl,
   wxJsConfUrl,
   fundebugApiKey,
-  wxAuthUrl,
 } from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 import lz from '@lizhife/lz-jssdk';
 import shareCover from './assets/share_cover.jpg';
+import first from 'lodash/first';
 
 promiseFinally.shim();
 
@@ -65,6 +64,27 @@ if (window.isWX) {
     wx.onMenuShareTimeline(window.shareData);
   });
 }
+
+const observer = new MutationObserver(((mutations) => {
+  mutations.forEach((mutation) => {
+    console.log(mutation.type);
+    if (mutation.type === 'childList') {
+      const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
+      const pageEle = _wrapperEle.firstChild;
+      const wrapperHeight = _wrapperEle.clientHeight;
+      const pageHeight = pageEle.clientHeight;
+      const offsetHeight = Math.abs(pageHeight - wrapperHeight);
+      if (offsetHeight > 150) return;
+      const scale = wrapperHeight / pageHeight;
+      pageEle.style['transform-origin'] = '0 0';
+      pageEle.style.transform = `scaleY(${scale})`;
+    }
+  });
+}));
+observer.observe(document.getElementById('app'), {
+  childList: true,
+  subtree: true,
+});
 
 window._hmt = window._hmt || [];
 (function () {
