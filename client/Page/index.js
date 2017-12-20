@@ -5,6 +5,6 @@ export default class Index extends React.Component {
     super(props);
   }
   render() {
-    return (<div>Index</div>);
+    return (<div>如需查看demo项目，请切换分支到singleDog分支</div>);
   }
 }
