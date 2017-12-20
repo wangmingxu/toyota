@@ -16,7 +16,7 @@ const RouterView = () => (
       render={props => (
         <RouteWrapper {...props}>
           <Switch {...props}>
-            {renderRoutes(routes, { ...props })}
+            {renderRoutes(routes)}
           </Switch>
         </RouteWrapper>
       )}

@@ -2,9 +2,6 @@ import React from 'react';
 import Bundle from '../Component/Bundle'; // bundle模型用来异步加载组件
 
 import Index from '../Page/index';
-import Guide from '../Page/Guide';
-import Result from '../Page/Result';
-import NotFoundPage from '../Page/NotFoundPage'; // NotFoundPage
 
 // components load their module for initial visit
 // 这里只是给this.props.child传一个方法，最后在Bundle的render里面调用
@@ -23,19 +20,6 @@ const routes = [
     path: '/',
     component: createComponent(Index),
     exact: true,
-  },
-  {
-    path: '/guide',
-    component: createComponent(Guide),
-    exact: true,
-  },
-  {
-    path: '/result/:id',
-    component: createComponent(Result),
-    exact: true,
-  },
-  {
-    component: createComponent(NotFoundPage),
   },
 ];
 export default routes;
