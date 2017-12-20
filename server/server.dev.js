@@ -116,7 +116,7 @@ app.use(webpackHotMiddleware(compiler, {
 }));
 
 // app.use(clientRoute);
-app.use((req, res, next) => {
+mode === 'ssr' && app.use((req, res, next) => {
   require('./middlewares/clientRoute')(req, res, next);
 });
 
