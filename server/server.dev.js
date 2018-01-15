@@ -12,6 +12,7 @@ require('babel-register')({
   plugins: [
     ['resolver', { resolveDirs: ['client'] }],
     'transform-decorators-legacy',
+    'dynamic-import-webpack',
   ],
 });
 

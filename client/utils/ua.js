@@ -88,6 +88,18 @@ function isLizhiFM() {
   return false;
 }
 
+function whichPlatform() {
+  if (isIPhone()) {
+    if (screen.height === 812 && screen.width === 375) {
+      return 'IPhoneX';
+    }
+    return 'IPhone';
+  } else if (screen.width < 768) {
+    return 'Android';
+  }
+  return 'Desktop';
+}
+
 export default {
   ua,
   lang,
@@ -107,4 +119,5 @@ export default {
   isQQ,
   isSafari,
   isLizhiFM,
+  whichPlatform,
 };

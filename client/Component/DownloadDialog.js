@@ -3,7 +3,7 @@ import { Modal } from 'antd-mobile';
 import downloadIcon from '../assets/download_icon.png';
 
 const download = () => {
-  _hmt.push(['_trackEvent', '按钮', '点击', '去下载荔枝FM']);
+  _hmt.push(['_trackEvent', '按钮', '点击', '去下载荔枝']);
   window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.yibasan.lizhifm&g_f=991784#opened';
 };
 
@@ -16,9 +16,9 @@ const DownloadDialog = (props) => {
       maskClosable={false}
     >
       <div className="download-dialog">
-        <img src={downloadIcon} className="download-icon" alt="下载荔枝FM" />
+        <img src={downloadIcon} className="download-icon" alt="下载荔枝" />
         <div className="ft">
-          <div className="btn download" onClick={download}>下载荔枝FM</div>
+          <div className="btn download" onClick={download}>下载荔枝</div>
           <div className="btn cancel" onClick={onClose}>取消</div>
         </div>
       </div>

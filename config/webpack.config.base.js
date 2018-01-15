@@ -39,7 +39,7 @@ const baseConfig = {
         exclude: /node_modules/,
         include: common.clientPath,
         use: [{
-          loader: 'babel-loader',
+          loader: 'babel-loader?cacheDirectory',
           options: {
             plugins: [
               'external-helpers-2',

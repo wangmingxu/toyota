@@ -1,6 +1,7 @@
 {
   "name": "single-dog",
   "version": "1.0.0",
+  "versionToken": "base_cityfm_hangzhou_single_dog",
   "description": "全国单身踢馆歌手大赛",
   "scripts": {
     "start": "npm run dev:ssr",
@@ -11,7 +12,8 @@
     "build:ssr": "cross-env NODE_ENV=production mode=ssr webpack --config config/webpack.config.prod.js",
     "build:spa": "cross-env NODE_ENV=production mode=spa webpack --config config/webpack.config.prod.js",
     "upload": "node config/ftp.js",
-    "tinypng": "gulp --gulpfile config/tinypng.js tinypng"
+    "tinypng": "gulp --gulpfile config/tinypng.js tinypng",
+    "upload:map": "node config/mapFileUpload.js"
   },
   "author": "MX <wangmingxu@lizhi.fm>",
   "license": "MIT",
@@ -26,6 +28,7 @@
     "axios": "^0.17.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
+    "eruda": "^1.4.0",
     "fastclick": "^1.0.6",
     "fundebug-javascript": "^0.3.3",
     "lib-flexible": "^0.3.2",
@@ -55,6 +58,7 @@
     "autoprefixer": "^7.1.5",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-dynamic-import-webpack": "^1.0.2",
     "babel-plugin-external-helpers-2": "^6.3.13",
     "babel-plugin-external-helpers-insert-require": "^1.0.2",
     "babel-plugin-import": "^1.6.2",

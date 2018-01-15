@@ -2,12 +2,12 @@ import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
-import getAppLink from './utils/appLink';
 import { wxConfig, appConfig } from './config';
 import {
   lzAuthUrl,
   wxJsConfUrl,
   fundebugApiKey,
+  baiduTongjiID,
 } from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
@@ -40,7 +40,10 @@ window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
-window.getAppLink = getAppLink;
+window.platform = client.whichPlatform();
+document.documentElement.setAttribute('data-platform', window.platform);
+window.debug = location.search.includes('debug');
+window.debug && import('eruda').then((eruda) => { eruda.init(); });
 
 window.shareData = {
   url: window.location.href,
@@ -67,7 +70,7 @@ if (window.isWX) {
 
 const observer = new MutationObserver(((mutations) => {
   mutations.forEach((mutation) => {
-    console.log(mutation.type);
+    // console.log(mutation.type);
     if (mutation.type === 'childList') {
       const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
       const pageEle = _wrapperEle.firstChild;
@@ -89,7 +92,7 @@ observer.observe(document.getElementById('app'), {
 window._hmt = window._hmt || [];
 (function () {
   const hm = document.createElement('script');
-  hm.src = 'https://hm.baidu.com/hm.js?50f7f3f779102291f22b776ad51e5893';
+  hm.src = `https://hm.baidu.com/hm.js?${baiduTongjiID}`;
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(hm, s);
 }());
