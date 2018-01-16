@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route } from 'react-router-dom';
 import routes from '../Route';
 import RouteWrapper from './RouteWrapper';
 import { renderRoutes } from 'react-router-config';
@@ -15,9 +15,7 @@ const RouterView = () => (
     <Route
       render={props => (
         <RouteWrapper {...props}>
-          <Switch {...props}>
-            {renderRoutes(routes)}
-          </Switch>
+          {renderRoutes(routes)}
         </RouteWrapper>
       )}
     />
