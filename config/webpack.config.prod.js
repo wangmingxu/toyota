@@ -84,6 +84,9 @@ const clientConfig = merge(baseConfig, {
         count >= 2
       ),
     }),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 20000, // Minimum number of characters
+    }),
     // new webpack.EnvironmentPlugin({
     //   NODE_ENV: 'production',
     //   DEBUG: false
