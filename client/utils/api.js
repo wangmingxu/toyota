@@ -6,14 +6,18 @@ function apiConfig(rMap) {
       if (typeof rMap[key] === 'string') {
         return axios({ url: rMap[key], params: data });
       }
-      return axios(data);
+      return axios(Object.assign(rMap[key], { data }));
     };
     return fMap;
   }, {});
 }
 
 const API = apiConfig({
-  getCity: '/hangzhou/singleDog/getCity',
+  // getCity: '/hangzhou/singleDog/getCity',//get
+  getCity: {
+    url: '/hangzhou/singleDog/getCity', // post
+    method: 'post',
+  },
   listLuckyDoy: '/activity/listLuckyDoy',
   trans: '//oauthbiz.lizhi.fm/checkAppTrans',
 });
