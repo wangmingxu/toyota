@@ -2,7 +2,7 @@
  * 生产构建配置
  */
 const merge = require('webpack-merge');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const baseConfig = require('./webpack.config.base');
 const info = require('./info');
 const utils = require('./utils');
@@ -12,37 +12,63 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CrossOriginPlugin = require('html-webpack-crossorigin-plugin');
-// const StatsPlugin = require('stats-webpack-plugin');
+// const CrossOriginPlugin = require('html-webpack-crossorigin-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
 const { mode } = process.env;
 
 const clientConfig = merge(baseConfig, {
+  mode: 'production',
+  optimization: {
+    runtimeChunk: {
+      name: 'manifest',
+    },
+    minimize: true, // [new UglifyJsPlugin({...})]
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'initial',
+          name: 'vendor',
+        },
+        'async-vendor': {
+          test: /[\\/]node_modules[\\/]/,
+          minChunks: 2,
+          chunks: 'async',
+          name: 'async-vendor',
+        },
+        // styles: {
+        //   name: 'styles',
+        //   test: /\.less|css$/,
+        //   chunks: 'all', // merge all the css chunk to one file
+        //   enforce: true,
+        // },
+      },
+    },
+  },
   devtool: 'source-map',
   // profile: true, // 配合stats-webpack-plugin分析打包性能
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(css|less)$/,
         include: common.clientPath,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-                minimize: true, // css压缩
-                importLoaders: 2,
-              },
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]',
+              minimize: true, // css压缩
+              importLoaders: 2,
             },
-            'postcss-loader',
-            'less-loader',
-          ],
-        }),
+          },
+          'postcss-loader',
+          'less-loader',
+        ],
       },
     ].concat(mode === 'spa' && build.codeSplit ? [{
       test: /\.js$/,
@@ -51,78 +77,14 @@ const clientConfig = merge(baseConfig, {
     }] : []),
   },
   plugins: [
-    /** 分析打包情况* */
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      analyzerPort: build.analyzerPort,
-      openAnalyzer: build.bundleAnalyzerReport,
-      reportFilename: 'report.html',
-    }),
-    /** https://webpack.github.io/analyse */
-    // new StatsPlugin('stats.json', { chunkModules: true }),
-    /** 启用作用域提升* */
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    /** 把从node_modules加载的模块到移到vendor* */
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: ({ resource }) => (
-        resource &&
-            resource.indexOf('node_modules') >= 0 &&
-            resource.match(/\.js$/)
-      ),
-    }),
-    /** 把webpack运行时代码移到mainifest,避免重新打包时vendor的hash改变* */
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'mainifest'],
-      chunks: ['vendor'],
-      minChunks: Infinity,
-    }),
-    /** 把异步加载的chunk中的公共部分提取出来* */
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'used-twice',
-      minChunks: (module, count) => (
-        count >= 2
-      ),
-    }),
-    new webpack.optimize.MinChunkSizePlugin({
-      minChunkSize: 20000, // Minimum number of characters
-    }),
-    // new webpack.EnvironmentPlugin({
-    //   NODE_ENV: 'production',
-    //   DEBUG: false
-    // }),
-    /** 配置全局常量,也可以用上面那种方式* */
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production'),
-      },
-    }),
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
       filename: mode === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
       isomorphic: mode === 'ssr',
     })),
-    new CrossOriginPlugin(),
+    // new CrossOriginPlugin(),
     /** 把代码转成es3* */
     // new Es3ifyPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      ie8: false,
-      output: {
-        quote_keys: true,
-        comments: false,
-        beautify: false,
-      },
-      mangle: {
-        keep_fnames: true,
-        screw_ie8: false,
-      },
-      compress: {
-        properties: false,
-        warnings: false,
-        drop_console: true,
-      },
-      sourceMap: true,
-    }),
     new PreloadWebpackPlugin({
       rel: 'prefetch',
     }),
@@ -130,10 +92,22 @@ const clientConfig = merge(baseConfig, {
     new CleanWebpackPlugin([common.distPath], {
       root: common.rootPath,
     }),
-  ],
+  ].concat(build.bundleAnalyzerReport ? [
+    /** 分析打包情况* */
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      analyzerPort: build.analyzerPort,
+      openAnalyzer: false,
+      reportFilename: 'report.html',
+    }),
+  ] : []),
 });
 
 const serverConfig = {
+  mode: 'production',
+  optimization: {
+    minimize: false,
+  },
   context: common.clientPath,
   entry: { server: path.join(common.serverPath, 'server.prod') },
   output: {
@@ -153,7 +127,7 @@ const serverConfig = {
     ], // 当requrie的模块找不到时，添加这些后缀
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         use: [{
@@ -188,13 +162,6 @@ const serverConfig = {
       },
     ],
   },
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false },
-      comments: false,
-    }),
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') }),
-  ],
 };
 
 const prodConfig = mode === 'ssr' ? [clientConfig, serverConfig] : clientConfig;

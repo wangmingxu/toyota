@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const { common, dev, build } = require('./build.config');
 const utils = require('./utils');
@@ -17,7 +17,7 @@ const baseConfig = {
     filename: NODE_ENV === 'production'
       ? utils.assetsPath('js/[name].js?[chunkhash]')
       : utils.assetsPath('js/[name].js?[hash]'),
-    chunkFilename: utils.assetsPath('js/[id].js?[chunkhash]'),
+    chunkFilename: utils.assetsPath('js/[name].js?[chunkhash]'),
     publicPath: NODE_ENV === 'production'
       ? build.assetsPublicPath
       : dev.assetsPublicPath,
@@ -33,7 +33,7 @@ const baseConfig = {
     },
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -51,25 +51,23 @@ const baseConfig = {
       {
         test: /\.(css|less)$/,
         include: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true, // css压缩
-                importLoaders: 2,
-              },
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true, // css压缩
+              importLoaders: 2,
             },
-            'postcss-loader',
-            {
-              loader: 'less-loader',
-              options: {
-                modifyVars: theme,
-              },
+          },
+          'postcss-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              modifyVars: theme,
             },
-          ],
-        }),
+          },
+        ],
       },
       {
         test: /\.(gif|jpg|jpeg|png|woff|svg|eot|ttf)$/, // 这些资源包括在js中import或在css中background url引入都会被处理
@@ -95,7 +93,7 @@ const baseConfig = {
       __isomorphic__: mode === 'ssr',
     }),
     /** 抽取css文件* */
-    new ExtractTextPlugin({ filename: utils.assetsPath('css/[name].css?[contenthash]'), allChunks: true }),
+    new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].css?[hash]'), allChunks: true }),
     new webpack.LoaderOptionsPlugin({
       options: {},
     }),

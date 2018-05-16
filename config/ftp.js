@@ -2,7 +2,7 @@
 const fs = require('vinyl-fs');
 const Ftp = require('vinyl-ftp');
 const { name, versionToken } = require('../package.json');
-const http = require('http');
+const axios = require('axios');
 
 // const log = (file, cb) => {
 //   console.log(file.path);
@@ -23,6 +23,6 @@ fs.src(['./dist/**'], {
   .pipe(conn.dest(`/2017/${name}`));
 
 // 更新静态资源hash,根据不同的项目修改project参数
-http.get(`http://oauthbiz.lizhi.fm/changeVersion?project=${versionToken}`, (rst) => {
+axios.get(`http://oauthbiz.lizhi.fm/changeVersion?project=${versionToken}`, (rst) => {
   console.log(rst);
 });

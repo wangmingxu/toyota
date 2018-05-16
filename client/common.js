@@ -12,7 +12,6 @@ import {
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
-import lz from '@lizhife/lz-jssdk';
 import shareCover from './assets/share_cover.jpg';
 import first from 'lodash/first';
 
@@ -36,7 +35,7 @@ axios.interceptors.response.use(
 
 FastClick.attach(document.body);
 
-window.lz = lz;
+// window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
@@ -57,15 +56,31 @@ window.shareData = {
 // console.log(window.shareData);
 
 if (window.isApp) {
-  appConfig(lzAuthUrl);
+  import('@lizhife/lz-jssdk').then((lz) => {
+    window.lz = lz.default;
+    appConfig(lzAuthUrl);
+  });
 }
 
 if (window.isWX) {
-  wxConfig(wxJsConfUrl);
-  wx.ready(() => {
-    wx.onMenuShareAppMessage(window.shareData);
-    wx.onMenuShareTimeline(window.shareData);
-  });
+  const cs = document.createElement('script');
+  cs.src = '//res.wx.qq.com/open/js/jweixin-1.2.0.js';
+  const s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(cs, s);
+  function onBridgeReady() {
+    wxConfig(wxJsConfUrl);
+    wx.ready(() => {
+      wx.onMenuShareAppMessage(window.shareData);
+      wx.onMenuShareTimeline(window.shareData);
+    });
+  }
+  cs.onload = () => {
+    if (typeof WeixinJSBridge === 'undefined') {
+      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+    } else {
+      onBridgeReady();
+    }
+  };
 }
 
 const observer = new MutationObserver(((mutations) => {

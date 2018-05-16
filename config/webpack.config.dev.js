@@ -5,11 +5,12 @@ const merge = require('webpack-merge');
 const { common } = require('./build.config');
 const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const { mode } = process.env;
 
 module.exports = merge(baseConfig, {
+  mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   entry: [
     'react-hot-loader/patch',
@@ -18,26 +19,24 @@ module.exports = merge(baseConfig, {
     baseConfig.entry.app,
   ],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(css|less)$/,
         include: common.clientPath,
-        use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName: '[name]__[local]--[hash:base64:5]',
-                minimize: true, // css压缩
-                importLoaders: 2,
-              },
+        use: ['css-hot-loader'].concat([
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[name]__[local]--[hash:base64:5]',
+              minimize: true, // css压缩
+              importLoaders: 2,
             },
-            'postcss-loader',
-            'less-loader',
-          ],
-        })),
+          },
+          'postcss-loader',
+          'less-loader',
+        ]),
       },
     ],
   },
@@ -50,11 +49,5 @@ module.exports = merge(baseConfig, {
       filename: 'index.html',
       isomorphic: mode === 'ssr',
     })),
-    // 配置全局常量
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-      },
-    }),
   ],
 });

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import lz from '@lizhife/lz-jssdk';
 
 export function wxConfig(url) {
   const {
@@ -67,7 +66,7 @@ export function wxConfig(url) {
 }
 
 export function appConfig(url) {
-  lz.config({
+  window.lz.config({
     debug: false,
     url,
     apiList: [
