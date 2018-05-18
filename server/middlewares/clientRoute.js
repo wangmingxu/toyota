@@ -30,7 +30,7 @@ router.use((req, res) => {
   Promise
     .all(promises)
     .then(() => {
-      const errMsg = get(store.getState(), 'Global', 'errMsg');
+      const errMsg = get(store.getState(), ['Global', 'errMsg']);
       if (errMsg && errMsg.length > 0) {
         return Promise.reject(new Error(JSON.stringify(errMsg)));
       }

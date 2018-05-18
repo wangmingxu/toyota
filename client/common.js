@@ -2,6 +2,7 @@ import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
+import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
 import {
   lzAuthUrl,
@@ -35,7 +36,7 @@ axios.interceptors.response.use(
 
 FastClick.attach(document.body);
 
-// window.lz = lz;
+window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
@@ -56,10 +57,7 @@ window.shareData = {
 // console.log(window.shareData);
 
 if (window.isApp) {
-  import('@lizhife/lz-jssdk').then((lz) => {
-    window.lz = lz.default;
-    appConfig(lzAuthUrl);
-  });
+  appConfig(lzAuthUrl);
 }
 
 if (window.isWX) {
@@ -87,13 +85,13 @@ const observer = new MutationObserver(((mutations) => {
   mutations.forEach((mutation) => {
     // console.log(mutation.type);
     if (mutation.type === 'childList') {
+      const docHeight = document.documentElement.clientHeight;
       const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
       const pageEle = _wrapperEle.firstChild;
-      const wrapperHeight = _wrapperEle.clientHeight;
       const pageHeight = pageEle.clientHeight;
-      const offsetHeight = Math.abs(pageHeight - wrapperHeight);
+      const offsetHeight = Math.abs(pageHeight - docHeight);
       if (offsetHeight > 150) return;
-      const scale = wrapperHeight / pageHeight;
+      const scale = docHeight / pageHeight;
       pageEle.style['transform-origin'] = '0 0';
       pageEle.style.transform = `scaleY(${scale})`;
     }

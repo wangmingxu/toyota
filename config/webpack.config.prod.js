@@ -2,7 +2,6 @@
  * 生产构建配置
  */
 const merge = require('webpack-merge');
-// const webpack = require('webpack');
 const baseConfig = require('./webpack.config.base');
 const info = require('./info');
 const utils = require('./utils');
@@ -12,7 +11,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
-// const CrossOriginPlugin = require('html-webpack-crossorigin-plugin');
+const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // const Es3ifyPlugin = require('es3ify-webpack-plugin');
@@ -82,7 +81,7 @@ const clientConfig = merge(baseConfig, {
       filename: mode === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
       isomorphic: mode === 'ssr',
     })),
-    // new CrossOriginPlugin(),
+    new CrossOriginPlugin(),
     /** 把代码转成es3* */
     // new Es3ifyPlugin(),
     new PreloadWebpackPlugin({
@@ -130,13 +129,13 @@ const serverConfig = {
     rules: [
       {
         test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
         use: [{
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'stage-0'],
             plugins: [
               'transform-decorators-legacy',
-              'dynamic-import-webpack',
             ],
           },
         }],

@@ -21,7 +21,7 @@ const baseConfig = {
     publicPath: NODE_ENV === 'production'
       ? build.assetsPublicPath
       : dev.assetsPublicPath,
-    crossOriginLoading: NODE_ENV === 'production' ? 'anonymous' : false,
+    crossOriginLoading: NODE_ENV === 'production' ? 'anonymous' : false, // 只有按需加载chunk时才会加这个属性
   },
   resolve: {
     modules: [common.clientPath, 'node_modules'],
@@ -84,10 +84,8 @@ const baseConfig = {
     ],
   },
   plugins: [
-    /** 忽略引入模块中并不需要的内容* */
-    // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    /** 只引入moment的zh-cn语言包 */
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /zh-cn/),
+    /** 只引入zh-cn语言包 */
+    new webpack.ContextReplacementPlugin(/^\.\/locale$/, /zh-cn/),
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
       __isomorphic__: mode === 'ssr',
