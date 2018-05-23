@@ -1,18 +1,26 @@
 import React from 'react';
 import lz from '@lizhife/lz-jssdk';
-import { withCookies } from 'react-cookie';
+import { withCookies,Cookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
 import { connect } from 'react-redux';
 import * as global from '../Action/global';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators,Dispatch } from 'redux';
 import axios from 'axios';
-import get from 'lodash/get';
-import PropTypes from 'prop-types';
+import get from 'lodash-es/get';
+import PropTypes,{instanceOf} from 'prop-types';
+import {AppStoreType} from '../Reducer';
 
-const withLogin = (Component) => {
-  class withLoginComponent extends React.Component {
+interface withLoginProps{
+  isLogin: boolean;
+  cookies: Cookies;
+  toggleAuthStatus: Function
+}
+
+const withLogin = (Wrapped: React.ComponentType<any>)=>{
+  class withLoginComponent extends React.Component<withLoginProps> {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
+      cookies: instanceOf(Cookies).isRequired
     }
     constructor(props) {
       super(props);
@@ -23,7 +31,7 @@ const withLogin = (Component) => {
     configReady() {
       const _t = this;
       const { cookies } = _t.props;
-      if (window.isApp) {
+      if ((window as any).isApp) {
         lz.ready(() => {
           lz.getSessionUser().then((r1) => {
             if (!r1.id) {
@@ -51,9 +59,9 @@ const withLogin = (Component) => {
             }
           });
         });
-      } else if (window.isWX && !cookies.get(wxidKey)) {
+      } else if ((window as any).isWX && !cookies.get(wxidKey)) {
         window.location.href = `${wxAuthUrl}&cookie_key=${wxidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
-      } else if (window.isWeiBo && !cookies.get(wbidKey)) {
+      } else if ((window as any).isWeiBo && !cookies.get(wbidKey)) {
         window.location.href = `${wxAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
       } else {
         _t.props.toggleAuthStatus(true);
@@ -61,13 +69,13 @@ const withLogin = (Component) => {
     }
     render() {
       const { isLogin } = this.props;
-      return isLogin ? <Component {...this.props} /> : null;
+      return isLogin ? <Wrapped {...this.props} /> : null;
     }
   }
-  return connect(
-    state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
-    dispatch => bindActionCreators(global, dispatch),
-  )(withCookies(withLoginComponent));
+  return withCookies(connect(
+    (state:AppStoreType) => ({ isLogin: state.Global.isLogin }),
+    (dispatch: Dispatch) => bindActionCreators(global, dispatch),
+  )(withLoginComponent));
 };
 
 export default withLogin;

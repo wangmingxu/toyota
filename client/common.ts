@@ -13,8 +13,7 @@ import {
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
-import shareCover from './assets/share_cover.jpg';
-import first from 'lodash/first';
+import first from 'lodash-es/first';
 
 promiseFinally.shim();
 
@@ -36,47 +35,47 @@ axios.interceptors.response.use(
 
 FastClick.attach(document.body);
 
-window.lz = lz;
-window.isApp = client.isLizhiFM();
-window.isWX = client.isWeiXin();
-window.isWeiBo = client.isWeiBo();
-window.platform = client.whichPlatform();
-document.documentElement.setAttribute('data-platform', window.platform);
-window.debug = location.search.includes('debug');
-window.debug && import('eruda').then((eruda) => { eruda.init(); });
+(window as any).lz = lz;
+(window as any).isApp = client.isLizhiFM();
+(window as any).isWX = client.isWeiXin();
+(window as any).isWeiBo = client.isWeiBo();
+(window as any).platform = client.whichPlatform();
+document.documentElement.setAttribute('data-platform', (window as any).platform);
+(window as any).debug = location.search.includes('debug');
+(window as any).debug && import('eruda').then((eruda) => { eruda.init(); });
 
-window.shareData = {
+(window as any).shareData = {
   url: window.location.href,
   link: window.location.href,
   title: '全国单身踢馆歌手大赛',
   desc: '妈耶！单身汪怎么可以手撕情侣档？画面惨不忍睹……',
-  'image-url': shareCover,
-  imgUrl: shareCover,
+  'image-url': require('./assets/share_cover.jpg'),
+  imgUrl: require('./assets/share_cover.jpg'),
 };
 
 // console.log(window.shareData);
 
-if (window.isApp) {
+if ((window as any).isApp) {
   appConfig(lzAuthUrl);
 }
 
-if (window.isWX) {
+function onWXBridgeReady() {
+  wxConfig(wxJsConfUrl);
+  wx.ready(() => {
+    wx.onMenuShareAppMessage((window as any).shareData);
+    wx.onMenuShareTimeline((window as any).shareData);
+  });
+}
+if ((window as any).isWX) {
   const cs = document.createElement('script');
   cs.src = '//res.wx.qq.com/open/js/jweixin-1.2.0.js';
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(cs, s);
-  function onBridgeReady() {
-    wxConfig(wxJsConfUrl);
-    wx.ready(() => {
-      wx.onMenuShareAppMessage(window.shareData);
-      wx.onMenuShareTimeline(window.shareData);
-    });
-  }
   cs.onload = () => {
     if (typeof WeixinJSBridge === 'undefined') {
-      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+      document.addEventListener('WeixinJSBridgeReady', onWXBridgeReady, false);
     } else {
-      onBridgeReady();
+      onWXBridgeReady();
     }
   };
 }
@@ -87,13 +86,13 @@ const observer = new MutationObserver(((mutations) => {
     if (mutation.type === 'childList') {
       const docHeight = document.documentElement.clientHeight;
       const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
-      const pageEle = _wrapperEle.firstChild;
+      const pageEle = _wrapperEle.firstElementChild;
       const pageHeight = pageEle.clientHeight;
       const offsetHeight = Math.abs(pageHeight - docHeight);
       if (offsetHeight > 150) return;
       const scale = docHeight / pageHeight;
-      pageEle.style['transform-origin'] = '0 0';
-      pageEle.style.transform = `scaleY(${scale})`;
+      (pageEle as any).style['transform-origin'] = '0 0';
+      (pageEle as any).style.transform = `scaleY(${scale})`;
     }
   });
 }));
@@ -102,7 +101,7 @@ observer.observe(document.getElementById('app'), {
   subtree: true,
 });
 
-window._hmt = window._hmt || [];
+(window as any)._hmt = (window as any)._hmt || [];
 (function () {
   const hm = document.createElement('script');
   hm.src = `https://hm.baidu.com/hm.js?${baiduTongjiID}`;

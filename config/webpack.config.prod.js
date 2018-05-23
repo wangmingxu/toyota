@@ -122,7 +122,7 @@ const serverConfig = {
   resolve: {
     modules: [common.clientPath, 'node_modules'],
     extensions: [
-      '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs',
+      '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs', 'ts', 'tsx',
     ], // 当requrie的模块找不到时，添加这些后缀
   },
   module: {
@@ -139,6 +139,11 @@ const serverConfig = {
             ],
           },
         }],
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        use: 'awesome-typescript-loader',
+        exclude: /node_modules/,
       },
       {
         test: /\.(css|less)$/,

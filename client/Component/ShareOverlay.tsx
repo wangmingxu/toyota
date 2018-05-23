@@ -1,7 +1,12 @@
 import React from 'react';
-import shareOverlayIcon from '../assets/share_overlay_icon.png';
+const shareOverlayIcon:any = require('../assets/share_overlay_icon.png');
 
-class ShareOverlay extends React.Component {
+interface ShareOverlayPropType{
+  show: boolean;
+  onClose: ()=>void;
+}
+
+class ShareOverlay extends React.PureComponent<ShareOverlayPropType> {
   constructor(props) {
     super(props);
   }

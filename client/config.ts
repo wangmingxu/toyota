@@ -13,7 +13,6 @@ export function wxConfig(url) {
     },
   }).then((res) => {
     const { data } = res;
-    const { wx } = window;
 
     if (!data) {
       return;
@@ -66,7 +65,7 @@ export function wxConfig(url) {
 }
 
 export function appConfig(url) {
-  window.lz.config({
+  (window as any).lz.config({
     debug: false,
     url,
     apiList: [

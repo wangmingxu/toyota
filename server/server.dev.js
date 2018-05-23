@@ -1,13 +1,22 @@
 const lessParser = require('postcss-less').parse;
 const utils = require('../config/utils');
+const path = require('path');
 // Provide custom regenerator runtime and core-js
 require('babel-polyfill');
 
 // Node babel source map support
 require('source-map-support').install();
 
+// Typescript require hook
+require('ts-node').register({
+  compilerOptions: {
+    module: 'commonjs',
+  },
+});
+
 // Javascript require hook
 require('babel-register')({
+  extensions: ['.jsx', '.js'],
   presets: ['es2015', 'stage-0'],
   plugins: [
     ['resolver', { resolveDirs: ['client'] }],
@@ -31,7 +40,6 @@ require('asset-require-hook')({
 });
 
 require('./utils/axiosHook');
-const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const webpack = require('webpack');

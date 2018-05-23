@@ -8,7 +8,7 @@ const DIST_PATH = path.join(ROOT_PATH, 'dist'); // 输出目录
 const SERVER_PATH = path.join(ROOT_PATH, 'server'); // 输出目录
 module.exports = {
   common: {
-    entry: path.resolve(CLIENT_PATH, 'index.js'), // js入口
+    entry: path.resolve(CLIENT_PATH, 'index.tsx'), // js入口
     index: path.resolve(VIEW_PATH, 'tpl/index.html'), // html入口
     rootPath: ROOT_PATH,
     clientPath: CLIENT_PATH,
@@ -26,7 +26,7 @@ module.exports = {
     tinyApiKey: '6i9NPe1a2nU6YN1k5tjrTEQyK4h3-ZDU',
   },
   dev: {
-    port: 8080,
+    port: 8081,
     autoOpenBrowser: false,
     assetsSubDirectory: 'client',
     assetsPublicPath: '/',

@@ -1,8 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { ActivityIndicator } from 'antd-mobile';
 
-class Bundle extends React.Component {
+interface BundlePropType{
+  load: (args:any)=>void;
+  children: (args:React.ComponentType)=>JSX.Element;
+}
+
+interface BundleStateType{
+  mod: React.ComponentType;
+}
+
+class Bundle extends React.Component<BundlePropType,BundleStateType> {
+  static propTypes = {
+    load: PropTypes.func.isRequired,
+    children: PropTypes.func.isRequired,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -20,12 +33,12 @@ class Bundle extends React.Component {
     }
   }
 
-  load(props) {
+  load(di:BundlePropType) {
     this.setState({
       mod: null,
     });
     // 加载完bundle-loader之后cb
-    props.load((mod) => {
+    di.load((mod) => {
       this.setState({
         // handle both es imports and cjs
         mod: mod.default ? mod.default : mod,
@@ -37,11 +50,5 @@ class Bundle extends React.Component {
     return this.state.mod ? this.props.children(this.state.mod) : (<ActivityIndicator toast text="Loading..." />);
   }
 }
-
-Bundle.propTypes = {
-  load: PropTypes.func.isRequired,
-  children: PropTypes.func.isRequired,
-};
-
 
 export default Bundle;

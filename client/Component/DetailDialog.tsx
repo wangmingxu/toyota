@@ -1,7 +1,12 @@
 import React from 'react';
 import { Modal } from 'antd-mobile';
 
-const DetailDialog = (props) => {
+interface DetailDialogPropType{
+  showDialog: boolean;
+  onClose: ()=>void;
+}
+
+const DetailDialog = (props:DetailDialogPropType) => {
   const { showDialog, onClose } = props;
   return (
     <Modal

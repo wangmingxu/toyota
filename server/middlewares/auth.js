@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { tokenKey } from '../../client/constant';
-import { toggleAuthStatus, collectErrMsg } from '../../client/Action/global';
+import { tokenKey } from '../../client/constant.ts';
+import { toggleAuthStatus, collectErrMsg } from '../../client/Action/global.ts';
 
 module.exports = function (req, res, next) {
   const { store, universalCookies, useragent } = req;

@@ -1,5 +1,5 @@
 const ua = navigator.userAgent;
-const lang = (navigator.browserLanguage || navigator.language).toLowerCase();
+const lang = navigator.language.toLowerCase();
 
 function isIE() {
   // IE内核
@@ -81,7 +81,7 @@ function isLizhiFM() {
   if (ua.match(/LizhiFM/i) !== null) {
     return true;
   }
-  if (typeof window.LizhiJSBridge !== 'undefined') {
+  if (typeof (window as any).LizhiJSBridge !== 'undefined') {
     return true;
   }
 

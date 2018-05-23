@@ -1,17 +1,14 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, compose } from 'redux';
+// import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
-import reducers from '../Reducer';
+import rootReducer from '../Reducer';
 
 const logger = createLogger();
 
-export const rootReducer = combineReducers({
-  ...reducers,
-});
+// const middleware = [thunk].concat(process.env.NODE_ENV === 'development' ? [logger] : []);
+const middleware = [logger];
 
-const middleware = [thunk].concat(process.env.NODE_ENV === 'development' ? [logger] : []);
-
-const initState = typeof window === 'object' ? window.REDUX_STATE : {};
+const initState = typeof window === 'object' ? (window as any).REDUX_STATE : {};
 
 export const configureStore = (state) => {
   const store = createStore(

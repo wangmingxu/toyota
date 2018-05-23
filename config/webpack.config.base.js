@@ -26,7 +26,7 @@ const baseConfig = {
   resolve: {
     modules: [common.clientPath, 'node_modules'],
     extensions: [
-      '.js', '.jsx', '.json', '.scss', '.less',
+      '.js', '.jsx', '.json', '.scss', '.less', '.tsx', '.ts',
     ], // 当requrie的模块找不到时，添加这些后缀
     alias: {
       '@': common.clientPath,
@@ -47,6 +47,13 @@ const baseConfig = {
             ],
           },
         }],
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        use: [
+          'awesome-typescript-loader',
+        ],
+        exclude: /node_modules/,
       },
       {
         test: /\.(css|less)$/,

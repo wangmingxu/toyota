@@ -1,16 +1,15 @@
 const express = require('express');
 
-import React from 'react';
+import * as React from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from '../../client/Store';
-import ReactDOMServer from 'react-dom/server';
+import { configureStore } from '../../client/Store/index.ts';
+import * as ReactDOMServer from 'react-dom/server';
 import { StaticRouter, Route, Switch } from 'react-router';
-import routes from '../../client/Route';
+import routes from '../../client/Route/index.tsx';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import axios from 'axios';
-import get from 'lodash/get';
 
 const router = express.Router();
 
@@ -30,7 +29,7 @@ router.use((req, res) => {
   Promise
     .all(promises)
     .then(() => {
-      const errMsg = get(store.getState(), ['Global', 'errMsg']);
+      const { errMsg } = store.getState().Global;
       if (errMsg && errMsg.length > 0) {
         return Promise.reject(new Error(JSON.stringify(errMsg)));
       }

@@ -1,7 +1,11 @@
 import React from 'react';
 import DetailDialog from './DetailDialog';
 
-class ActivityDetail extends React.Component {
+interface ActivityDetailType{
+  showDialog: boolean;
+}
+
+class ActivityDetail extends React.Component<{},ActivityDetailType> {
   constructor(props) {
     super(props);
     this.state = {

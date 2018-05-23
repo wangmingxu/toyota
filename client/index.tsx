@@ -5,20 +5,20 @@ import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import App from './App';
 // import App from './Component/RouteWrapper';
-import store from './Store';
+import store from './Store/index';
 import { CookiesProvider } from 'react-cookie';
 
 const render = (Component) => {
-  const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render // eslint-disable-line
+  const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render
   rcRender(
     <AppContainer>
-      <Provider store={store}>
-        <CookiesProvider>
-          <Component />
-        </CookiesProvider>
-      </Provider>
+      <CookiesProvider>
+        <Provider store={store}>
+            <Component />
+        </Provider>
+      </CookiesProvider>
     </AppContainer>,
-    document.getElementById('app'),
+    document.getElementById('app') as HTMLElement,
   );
 };
 render(App);
