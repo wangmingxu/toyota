@@ -1,7 +1,7 @@
 require('babel-register')({
-  presets: ['es2015'],
+  presets: ['@babel/preset-typescript', '@babel/preset-env'],
 });
-const { fundebugApiKey } = require('../client/constant');
+const { fundebugApiKey } = require('../client/constant.ts');
 
 const { exec } = require('child_process');
 

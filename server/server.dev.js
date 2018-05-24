@@ -7,21 +7,18 @@ require('babel-polyfill');
 // Node babel source map support
 require('source-map-support').install();
 
-// Typescript require hook
-require('ts-node').register({
-  compilerOptions: {
-    module: 'commonjs',
-  },
-});
-
 // Javascript require hook
-require('babel-register')({
-  extensions: ['.jsx', '.js'],
-  presets: ['es2015', 'stage-0'],
+require('@babel/register')({
+  extensions: ['.jsx', '.js', '.tsx', '.ts'],
+  presets: [['@babel/preset-typescript', {
+    jsxPragma: 'preserve',
+  }], ['@babel/preset-env', {
+    modules: 'commonjs',
+  }], ['@babel/preset-stage-0', {
+    decoratorsLegacy: true,
+  }]],
   plugins: [
-    ['resolver', { resolveDirs: ['client'] }],
-    'transform-decorators-legacy',
-    'dynamic-import-webpack',
+    // ['resolver', { resolveDirs: ['client'] }],
   ],
 });
 

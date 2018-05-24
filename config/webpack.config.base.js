@@ -51,7 +51,14 @@ const baseConfig = {
       {
         test: /\.(ts|tsx)$/,
         use: [
-          'awesome-typescript-loader',
+          'babel-loader?cacheDirectory',
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              // disable type checker - we will use it in fork plugin
+              transpileOnly: true,
+            },
+          },
         ],
         exclude: /node_modules/,
       },

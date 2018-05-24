@@ -1,5 +1,5 @@
 import React from 'react';
-const shareOverlayIcon:any = require('../assets/share_overlay_icon.png');
+import shareOverlayIcon from '../assets/share_overlay_icon.png';
 
 interface ShareOverlayPropType{
   show: boolean;

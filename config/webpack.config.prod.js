@@ -13,6 +13,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
@@ -87,6 +88,9 @@ const clientConfig = merge(baseConfig, {
     new PreloadWebpackPlugin({
       rel: 'prefetch',
     }),
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: '../tsconfig.json',
+    }),
     /** 清空dist目录* */
     new CleanWebpackPlugin([common.distPath], {
       root: common.rootPath,
@@ -105,7 +109,7 @@ const clientConfig = merge(baseConfig, {
 const serverConfig = {
   mode: 'production',
   optimization: {
-    minimize: false,
+    minimize: true,
   },
   context: common.clientPath,
   entry: { server: path.join(common.serverPath, 'server.prod') },
@@ -122,7 +126,7 @@ const serverConfig = {
   resolve: {
     modules: [common.clientPath, 'node_modules'],
     extensions: [
-      '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs', 'ts', 'tsx',
+      '.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs', '.ts', '.tsx',
     ], // 当requrie的模块找不到时，添加这些后缀
   },
   module: {
@@ -133,16 +137,26 @@ const serverConfig = {
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'stage-0'],
-            plugins: [
-              'transform-decorators-legacy',
-            ],
+            presets: [['@babel/preset-env', {
+              modules: 'commonjs',
+            }], ['@babel/preset-stage-0', {
+              decoratorsLegacy: true,
+            }]],
           },
         }],
       },
       {
         test: /\.(ts|tsx)$/,
-        use: 'awesome-typescript-loader',
+        use: [
+          'babel-loader?cacheDirectory',
+          {
+            loader: 'awesome-typescript-loader',
+            options: {
+              // disable type checker - we will use it in fork plugin
+              transpileOnly: true,
+            },
+          },
+        ],
         exclude: /node_modules/,
       },
       {
@@ -166,6 +180,11 @@ const serverConfig = {
       },
     ],
   },
+  plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: '../tsconfig.json',
+    }),
+  ],
 };
 
 const prodConfig = mode === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
