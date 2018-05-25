@@ -6,7 +6,13 @@ type ApiMap = {
   trans: string | Object;
 };
 
-type axiosMap<T> = { [P in keyof T]?: (args: any) => AxiosPromise<any> };
+type CustomResponse = {
+  code: number;
+  data: any;
+  msg: string;
+}
+
+type axiosMap<T> = { [P in keyof T]?: (args: any) => AxiosPromise<CustomResponse> };
 
 function apiConfig<T>(rMap: T) {
   return Object.keys(rMap).reduce<axiosMap<T>>((fMap, key) => {

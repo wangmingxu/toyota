@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
-import client from './utils/ua';
+import client from 'utils/ua';
 import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
 import {
@@ -27,7 +27,7 @@ axios.interceptors.response.use(
     if (response.data.status !== 0) {
       fundebug.notifyError(new Error(response.data.msg));
     }
-    return response.data;
+    return response;
   },
   error =>
     Promise.reject(error),

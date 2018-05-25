@@ -18,7 +18,10 @@ require('@babel/register')({
     decoratorsLegacy: true,
   }]],
   plugins: [
-    // ['resolver', { resolveDirs: ['client'] }],
+    ['module-resolver', {
+      extensions: ['.jsx', '.js', '.tsx', '.ts'],
+      root: ['client'],
+    }],
   ],
 });
 

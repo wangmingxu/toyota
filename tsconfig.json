@@ -3,7 +3,7 @@
     "noImplicitAny": false,
     "module": "esnext",
     "target": "es5",
-    "jsx": "react",
+    "jsx": "preserve",
     "allowJs": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -17,5 +17,9 @@
         "es2017",
         "dom"
     ],
+    "baseUrl": "client/",
+    "paths": {
+      "@/*": [ "client/*" ],
+    }
   }
 }
