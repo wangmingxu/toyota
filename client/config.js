@@ -8,7 +8,7 @@ export function wxConfig() {
   const link = `${protocol}//${host}${pathname}${search}`;
 
   axios({
-    wxJsConfUrl,
+    url: wxJsConfUrl,
     params: {
       currentURL: link,
     },
