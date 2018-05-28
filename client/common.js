@@ -1,15 +1,11 @@
+import babelHelpers from 'script-loader!../helpers.js';//eslint-disable-line
 import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
 import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
-import {
-  lzAuthUrl,
-  wxJsConfUrl,
-  fundebugApiKey,
-  baiduTongjiID,
-} from './constant';
+import { fundebugApiKey, baiduTongjiID } from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
@@ -57,7 +53,7 @@ window.shareData = {
 // console.log(window.shareData);
 
 if (window.isApp) {
-  appConfig(lzAuthUrl);
+  appConfig();
 }
 
 if (window.isWX) {
@@ -66,7 +62,7 @@ if (window.isWX) {
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(cs, s);
   function onBridgeReady() {
-    wxConfig(wxJsConfUrl);
+    wxConfig();
     wx.ready(() => {
       wx.onMenuShareAppMessage(window.shareData);
       wx.onMenuShareTimeline(window.shareData);

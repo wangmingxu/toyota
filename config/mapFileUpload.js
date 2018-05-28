@@ -1,5 +1,5 @@
-require('babel-register')({
-  presets: ['es2015'],
+require('@babel/register')({
+  presets: ['@babel/preset-env'],
 });
 const { fundebugApiKey } = require('../client/constant');
 

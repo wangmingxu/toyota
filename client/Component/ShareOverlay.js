@@ -1,5 +1,5 @@
 import React from 'react';
-import shareOverlayIcon from '../assets/share_overlay_icon.png';
+import shareOverlayIcon from 'assets/share_overlay_icon.png';
 
 class ShareOverlay extends React.Component {
   constructor(props) {

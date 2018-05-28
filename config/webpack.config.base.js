@@ -42,8 +42,7 @@ const baseConfig = {
           loader: 'babel-loader?cacheDirectory',
           options: {
             plugins: [
-              'external-helpers-2',
-              'external-helpers-insert-require',
+              'external-helpers',
             ],
           },
         }],

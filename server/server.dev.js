@@ -7,12 +7,17 @@ require('babel-polyfill');
 require('source-map-support').install();
 
 // Javascript require hook
-require('babel-register')({
-  presets: ['es2015', 'stage-0'],
+require('@babel/register')({
+  presets: [['@babel/preset-env', {
+    modules: 'commonjs',
+  }], ['@babel/preset-stage-0', {
+    decoratorsLegacy: true,
+  }]],
   plugins: [
-    ['resolver', { resolveDirs: ['client'] }],
-    'transform-decorators-legacy',
-    'dynamic-import-webpack',
+    ['module-resolver', {
+      extensions: ['.jsx', '.js', '.tsx', '.ts'],
+      root: ['client'],
+    }],
   ],
 });
 

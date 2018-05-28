@@ -11,6 +11,13 @@
     "node": true,
     "es6": true
   },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "config/webpack.config.base.js"
+      }
+    }
+  },
   "rules": {
     "indent": ["error", 2],
     "react/jsx-filename-extension": [1, {
@@ -42,6 +49,7 @@
     "no-useless-escape": 0
   },
   "globals": {
-    "wx": true
+    "wx": true,
+    "_hmt": true
   }
 }

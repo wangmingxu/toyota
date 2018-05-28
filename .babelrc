@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "loose": true,
         "targets": {
@@ -20,15 +20,15 @@
         "exclude": []
       }
     ],
-    "stage-0"
+    ["@babel/preset-stage-0",{
+      "decoratorsLegacy": true
+    }]
   ],
   "plugins": [
     /**react热更新*/
     "react-hot-loader/babel",
     /**转换jsx**/
     "transform-react-jsx",
-    /**支持装饰器语法**/
-    "transform-decorators-legacy",
     [
       "react-css-modules",
       {

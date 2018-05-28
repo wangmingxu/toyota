@@ -1,9 +1,9 @@
 import React from 'react';
 import lz from '@lizhife/lz-jssdk';
 import { withCookies } from 'react-cookie';
-import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
+import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from 'constant';
 import { connect } from 'react-redux';
-import * as global from '../Action/global';
+import * as global from 'Action/global';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import get from 'lodash/get';

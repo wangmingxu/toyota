@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { wxConfig } from '../config';
-import { wxJsConfUrl } from '../constant';
+import { wxConfig } from 'config';
 
 /**
  * 1.添加路由过渡动画
@@ -13,7 +12,7 @@ class RouteWrapper extends React.Component {
   }
   componentDidUpdate() {
     if (window.isWX) {
-      wxConfig(wxJsConfUrl); // spa跳转之后重新获取wx-sdk授权
+      wxConfig(); // spa跳转之后重新获取wx-sdk授权
     }
   }
   render() {

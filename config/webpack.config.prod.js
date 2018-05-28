@@ -122,7 +122,7 @@ const serverConfig = {
   resolve: {
     modules: [common.clientPath, 'node_modules'],
     extensions: [
-      '.js', '.jsx', '.json', '.scss', '.less', '.html', 'ejs',
+      '.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs',
     ], // 当requrie的模块找不到时，添加这些后缀
   },
   module: {
@@ -133,10 +133,11 @@ const serverConfig = {
         use: [{
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'stage-0'],
-            plugins: [
-              'transform-decorators-legacy',
-            ],
+            presets: [['@babel/preset-env', {
+              modules: 'commonjs',
+            }], ['@babel/preset-stage-0', {
+              decoratorsLegacy: true,
+            }]],
           },
         }],
       },

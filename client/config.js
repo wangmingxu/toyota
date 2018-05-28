@@ -1,13 +1,14 @@
 import axios from 'axios';
+import { lzAuthUrl, wxJsConfUrl } from './constant';
 
-export function wxConfig(url) {
+export function wxConfig() {
   const {
     protocol, host, pathname, search,
   } = window.location;
   const link = `${protocol}//${host}${pathname}${search}`;
 
   axios({
-    url,
+    wxJsConfUrl,
     params: {
       currentURL: link,
     },
@@ -65,10 +66,10 @@ export function wxConfig(url) {
   });
 }
 
-export function appConfig(url) {
+export function appConfig() {
   window.lz.config({
     debug: false,
-    url,
+    url: lzAuthUrl,
     apiList: [
       'getToken',
       'getSessionUser',

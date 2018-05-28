@@ -1,5 +1,5 @@
 import React from 'react';
-import API from '../utils/api';
+import API from 'utils/api';
 
 export default class Index extends React.Component {
   constructor(props) {

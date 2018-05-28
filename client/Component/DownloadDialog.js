@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'antd-mobile';
-import downloadIcon from '../assets/download_icon.png';
+import downloadIcon from 'assets/download_icon.png';
 
 const download = () => {
   _hmt.push(['_trackEvent', '按钮', '点击', '去下载荔枝']);
