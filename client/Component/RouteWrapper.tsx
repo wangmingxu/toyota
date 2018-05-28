@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { wxConfig } from '../config';
-import { wxJsConfUrl } from '../constant';
 import {Location,History} from 'history';
 
 interface RouteWrapperPropType{
@@ -20,7 +19,7 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   }
   componentDidUpdate() {
     if ((window as any).isWX) {
-      wxConfig(wxJsConfUrl); // spa跳转之后重新获取wx-sdk授权
+      wxConfig(); // spa跳转之后重新获取wx-sdk授权
     }
   }
   render() {

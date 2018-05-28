@@ -38,15 +38,7 @@ const baseConfig = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         include: common.clientPath,
-        use: [{
-          loader: 'babel-loader?cacheDirectory',
-          options: {
-            plugins: [
-              'external-helpers-2',
-              'external-helpers-insert-require',
-            ],
-          },
-        }],
+        loader: 'babel-loader?cacheDirectory',
       },
       {
         test: /\.(ts|tsx)$/,

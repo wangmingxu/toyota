@@ -4,12 +4,7 @@ import FastClick from 'fastclick';
 import client from 'utils/ua';
 import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
-import {
-  lzAuthUrl,
-  wxJsConfUrl,
-  fundebugApiKey,
-  baiduTongjiID,
-} from './constant';
+import {fundebugApiKey,baiduTongjiID} from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
@@ -56,11 +51,11 @@ document.documentElement.setAttribute('data-platform', (window as any).platform)
 // console.log(window.shareData);
 
 if ((window as any).isApp) {
-  appConfig(lzAuthUrl);
+  appConfig();
 }
 
 function onWXBridgeReady() {
-  wxConfig(wxJsConfUrl);
+  wxConfig();
   wx.ready(() => {
     wx.onMenuShareAppMessage((window as any).shareData);
     wx.onMenuShareTimeline((window as any).shareData);

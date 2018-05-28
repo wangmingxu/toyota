@@ -1,4 +1,4 @@
-require('babel-register')({
+require('@babel/register')({
   presets: ['@babel/preset-typescript', '@babel/preset-env'],
 });
 const { fundebugApiKey } = require('../client/constant.ts');
