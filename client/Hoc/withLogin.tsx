@@ -4,7 +4,7 @@ import { withCookies,Cookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
 import { connect } from 'react-redux';
 import * as global from '../Action/global';
-import { bindActionCreators,Dispatch } from 'redux';
+import { bindActionCreators,Dispatch,compose } from 'redux';
 import axios from 'axios';
 import get from 'lodash-es/get';
 import PropTypes,{instanceOf} from 'prop-types';
@@ -72,10 +72,13 @@ const withLogin = (Wrapped: React.ComponentType<any>)=>{
       return isLogin ? <Wrapped {...this.props} /> : null;
     }
   }
-  return withCookies(connect(
-    (state:AppStoreType) => ({ isLogin: state.Global.isLogin }),
-    (dispatch: Dispatch) => bindActionCreators(global, dispatch),
-  )(withLoginComponent));
+  return compose(
+    withCookies,
+    connect(
+      (state:AppStoreType) => ({ isLogin: state.Global.isLogin }),
+      (dispatch: Dispatch) => bindActionCreators(global, dispatch),
+    )
+  )(withLoginComponent)
 };
 
 export default withLogin;
