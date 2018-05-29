@@ -4,7 +4,7 @@ import { withCookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from 'constant';
 import { connect } from 'react-redux';
 import * as global from 'Action/global';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import axios from 'axios';
 import get from 'lodash/get';
 import PropTypes from 'prop-types';
@@ -64,10 +64,13 @@ const withLogin = (Component) => {
       return isLogin ? <Component {...this.props} /> : null;
     }
   }
-  return connect(
-    state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
-    dispatch => bindActionCreators(global, dispatch),
-  )(withCookies(withLoginComponent));
+  return compose(
+    withCookies,
+    connect(
+      state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
+      dispatch => bindActionCreators(global, dispatch),
+    ),
+  )(withLoginComponent);
 };
 
 export default withLogin;
