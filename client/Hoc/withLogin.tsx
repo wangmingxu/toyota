@@ -16,8 +16,8 @@ interface withLoginProps{
   toggleAuthStatus: Function
 }
 
-const withLogin = (Wrapped: React.ComponentType<any>)=>{
-  class withLoginComponent extends React.Component<withLoginProps> {
+const withLogin = (Wrapped:React.ComponentClass)=>{
+  class withLoginComponent extends (Wrapped as React.ComponentClass<withLoginProps>) {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
       cookies: instanceOf(Cookies).isRequired
@@ -28,37 +28,29 @@ const withLogin = (Wrapped: React.ComponentType<any>)=>{
     componentDidMount() {
       this.configReady();
     }
-    configReady() {
+    async configReady() {
       const _t = this;
       const { cookies } = _t.props;
       if ((window as any).isApp) {
-        lz.ready(() => {
-          lz.getSessionUser().then((r1) => {
-            if (!r1.id) {
-              lz.on('user:login', () => {
-                window.location.reload();
-              });
-
-              lz.gotoLogin();
-            } else {
-              cookies.set(idKey, r1.id);
-              lz
-                .getToken({
-                  needRefresh: true,
-                })
-                .then((r3) => {
-                  if (r3.status === 'success') {
-                    cookies.set(tokenKey, r3.token);
-                    _t.props.toggleAuthStatus(true);
-                    axios.interceptors.request.use(config =>
-                      Object.assign(config, {
-                        params: Object.assign(config.params || {}, { token: r3.token }),
-                      }));
-                  }
-                });
-            }
+        await new Promise((resolve)=>{lz.ready(resolve)});
+        const r1 = await lz.getSessionUser();
+        if (!r1.id) {
+          lz.on('user:login', () => {
+            window.location.reload();
           });
-        });
+          lz.gotoLogin();
+        } else {
+          cookies.set(idKey, r1.id);
+          const r2 = await lz.getToken({needRefresh: true})
+          if (r2.status === 'success') {
+            cookies.set(tokenKey, r2.token);
+            _t.props.toggleAuthStatus(true);
+            axios.interceptors.request.use(config =>
+              Object.assign(config, {
+                params: Object.assign(config.params || {}, { token: r2.token }),
+              }));
+          }
+        }
       } else if ((window as any).isWX && !cookies.get(wxidKey)) {
         window.location.href = `${wxAuthUrl}&cookie_key=${wxidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
       } else if ((window as any).isWeiBo && !cookies.get(wbidKey)) {
@@ -69,7 +61,11 @@ const withLogin = (Wrapped: React.ComponentType<any>)=>{
     }
     render() {
       const { isLogin } = this.props;
-      return isLogin ? <Wrapped {...this.props} /> : null;
+      if(isLogin){
+        return super.render();
+      } else {
+        return null;
+      }
     }
   }
   return compose(
