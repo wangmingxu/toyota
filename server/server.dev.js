@@ -56,7 +56,7 @@ const useragent = require('express-useragent');
 const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
 
-const { mode } = process.env;
+const { RENDER_MODE } = process.env;
 
 promiseFinally.shim();
 
@@ -90,7 +90,7 @@ Object.keys(proxyTable).forEach((context) => {
   app.use(context, proxyMiddleware(options));
 });
 
-if (mode === 'ssr') {
+if (RENDER_MODE === 'ssr') {
   app.use(cookiesMiddleware());
   app.use(useragent.express());
 
@@ -122,7 +122,7 @@ app.use(webpackHotMiddleware(compiler, {
 }));
 
 // app.use(clientRoute);
-mode === 'ssr' && app.use((req, res, next) => {
+RENDER_MODE === 'ssr' && app.use((req, res, next) => {
   require('./middlewares/clientRoute')(req, res, next);
 });
 

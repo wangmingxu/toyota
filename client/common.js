@@ -11,12 +11,20 @@ import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 import shareCover from './assets/share_cover.jpg';
 import first from 'lodash/first';
+import store from 'Store';
+import get from 'lodash/get';
 
 promiseFinally.shim();
 
 fundebug.apikey = fundebugApiKey;
 fundebug.releasestage = process.env.NODE_ENV;
 // console.log(process.env.NODE_ENV);
+
+// 添加请求拦截器
+axios.interceptors.request.use(config =>
+  Object.assign(config, {
+    params: Object.assign(config.params || {}, { token: get(store.getState(), ['Global', 'token']) }),
+  }));
 
 // 添加响应拦截器
 axios.interceptors.response.use(

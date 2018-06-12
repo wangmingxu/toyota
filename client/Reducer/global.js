@@ -14,6 +14,11 @@ const Global = (state = initState, action) => {
       ...state,
       errMsg: [...state.errMsg, action.msg],
     };
+  case 'setToken':
+    return {
+      ...state,
+      token: action.token,
+    };
   default:
     return state;
   }
