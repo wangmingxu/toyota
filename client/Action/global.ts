@@ -11,3 +11,10 @@ export function collectErrMsg(msg) {
     msg,
   };
 }
+
+export function setToken(token) {
+  return {
+    type: 'setToken',
+    token,
+  };
+}

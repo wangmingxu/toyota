@@ -5,7 +5,7 @@ const { common, dev, build } = require('./build.config');
 const utils = require('./utils');
 const { theme } = require('../package.json');
 
-const { NODE_ENV, mode } = process.env;
+const { NODE_ENV, RENDER_MODE } = process.env;
 
 const baseConfig = {
   context: common.clientPath,
@@ -94,7 +94,7 @@ const baseConfig = {
     new webpack.ContextReplacementPlugin(/^\.\/locale$/, /zh-cn/),
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
-      __isomorphic__: mode === 'ssr',
+      __isomorphic__: RENDER_MODE === 'ssr',
     }),
     /** 抽取css文件* */
     new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].css?[hash]'), allChunks: true }),

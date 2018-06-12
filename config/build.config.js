@@ -26,7 +26,7 @@ module.exports = {
     tinyApiKey: '6i9NPe1a2nU6YN1k5tjrTEQyK4h3-ZDU',
   },
   dev: {
-    port: 8081,
+    port: 8080,
     autoOpenBrowser: false,
     assetsSubDirectory: 'client',
     assetsPublicPath: '/',

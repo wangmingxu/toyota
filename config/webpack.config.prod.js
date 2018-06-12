@@ -15,9 +15,8 @@ const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-// const Es3ifyPlugin = require('es3ify-webpack-plugin');
 
-const { mode } = process.env;
+const { RENDER_MODE } = process.env;
 
 const clientConfig = merge(baseConfig, {
   mode: 'production',
@@ -70,7 +69,7 @@ const clientConfig = merge(baseConfig, {
           'less-loader',
         ],
       },
-    ].concat(mode === 'spa' && build.codeSplit ? [{
+    ].concat(RENDER_MODE === 'spa' && build.codeSplit ? [{
       test: /\.js$/,
       include: path.join(common.clientPath, 'Page'),
       use: ['bundle-loader?lazy', 'babel-loader'],
@@ -79,12 +78,10 @@ const clientConfig = merge(baseConfig, {
   plugins: [
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
-      filename: mode === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
-      isomorphic: mode === 'ssr',
+      filename: RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
+      isomorphic: RENDER_MODE === 'ssr',
     })),
     new CrossOriginPlugin(),
-    /** 把代码转成es3* */
-    // new Es3ifyPlugin(),
     new PreloadWebpackPlugin({
       rel: 'prefetch',
     }),
@@ -187,6 +184,6 @@ const serverConfig = {
   ],
 };
 
-const prodConfig = mode === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
+const prodConfig = RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
 
 module.exports = prodConfig;

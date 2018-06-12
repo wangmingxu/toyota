@@ -4,17 +4,25 @@ import FastClick from 'fastclick';
 import client from 'utils/ua';
 import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
-import {fundebugApiKey,baiduTongjiID} from './constant';
+import { fundebugApiKey, baiduTongjiID } from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 import first from 'lodash-es/first';
+import store from 'Store';
+import get from 'lodash-es/get';
 
 promiseFinally.shim();
 
 fundebug.apikey = fundebugApiKey;
 fundebug.releasestage = process.env.NODE_ENV;
 // console.log(process.env.NODE_ENV);
+
+// 添加请求拦截器
+axios.interceptors.request.use(config =>
+  Object.assign(config, {
+    params: Object.assign(config.params || {}, { token: get(store.getState(), ['Global', 'token']) }),
+  }));
 
 // 添加响应拦截器
 axios.interceptors.response.use(

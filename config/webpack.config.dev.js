@@ -7,7 +7,7 @@ const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const { mode } = process.env;
+const { RENDER_MODE } = process.env;
 
 module.exports = merge(baseConfig, {
   mode: 'development',
@@ -47,7 +47,7 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
       filename: 'index.html',
-      isomorphic: mode === 'ssr',
+      isomorphic: RENDER_MODE === 'ssr',
     })),
   ],
 });

@@ -5,15 +5,14 @@ import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
 import { connect } from 'react-redux';
 import * as global from '../Action/global';
 import { bindActionCreators,Dispatch,compose } from 'redux';
-import axios from 'axios';
-import get from 'lodash-es/get';
-import PropTypes,{instanceOf} from 'prop-types';
-import {AppStoreType} from '../Reducer';
+import PropTypes,{ instanceOf } from 'prop-types';
+import { AppStoreType } from '../Reducer';
 
 interface withLoginProps{
   isLogin: boolean;
   cookies: Cookies;
-  toggleAuthStatus: Function
+  toggleAuthStatus: Function;
+  setToken: Function;
 }
 
 const withLogin = (Wrapped:React.ComponentClass)=>{
@@ -45,10 +44,7 @@ const withLogin = (Wrapped:React.ComponentClass)=>{
           if (r2.status === 'success') {
             cookies.set(tokenKey, r2.token);
             _t.props.toggleAuthStatus(true);
-            axios.interceptors.request.use(config =>
-              Object.assign(config, {
-                params: Object.assign(config.params || {}, { token: r2.token }),
-              }));
+            _t.props.setToken(r2.token);
           }
         }
       } else if ((window as any).isWX && !cookies.get(wxidKey)) {
