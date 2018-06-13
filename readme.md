@@ -1,6 +1,9 @@
-#基于React16\React-Router4\Webpack3的前后端同构项目脚手架
+#基于React16\React-Router4\Webpack4的前后端同构项目脚手架
 
 **适用场景：该脚手架集成了react开发常用技术栈,且针对城市FM项目做了部分定制改动,但业务代码和脚手架代码已经做了良好的隔离,普遍适用于其他项目,有需要的小伙伴可以根据自己的项目情况进行配置和文件改动**
+
+#### 写给Javascript使用者
+本项目是Typescript版本,如果有需要使用js版本,请切换到分支master
 
 #### Features Overview
 本脚手架主要实现了以下功能:
@@ -17,6 +20,7 @@
 - [x] 支持React服务端渲染
 - [x] 支持服务端请求转发,包括token校验和user-agent校验,结合charles可轻松实现在开发环境调试App和微信
 - [x] 支持Mock Server
+- [x] 支持PWA离线应用
 - [x] 客户端代码可在服务端复用,实现前后端同构
 
 #### Installation 教程
@@ -47,6 +51,7 @@ http://localhost:8080
 │   ├── babelHelpers.js //babel-helper抽离
 │   ├── Actions //redux action
 │   ├── Reducer //redux reducer
+│   ├── HOC //高阶组件
 │   ├── Page //Page组件
 │   ├── Components //公共组件React组件
 │   │   ├── Bundle.js //异步加载js组件,配合bundle-loader使用
