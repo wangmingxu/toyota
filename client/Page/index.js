@@ -23,7 +23,7 @@ class Index extends React.Component {
   }
   render() {
     const { position } = this.props;
-    return (<div styleName="demo">你当前所在的城市为:{position}</div>);
+    return (<div styleName="demo">当前所在的城市为:{position}</div>);
   }
 }
 

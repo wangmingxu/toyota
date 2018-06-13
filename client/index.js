@@ -7,6 +7,7 @@ import App from './App';
 // import App from './Component/RouteWrapper';
 import store from './Store';
 import { CookiesProvider } from 'react-cookie';
+import registerServiceWorker from './registerServiceWorker';
 
 const render = (Component) => {
   const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render // eslint-disable-line
@@ -22,6 +23,8 @@ const render = (Component) => {
   );
 };
 render(App);
+
+registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept('./App', () => {
