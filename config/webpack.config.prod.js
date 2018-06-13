@@ -97,7 +97,7 @@ const clientConfig = merge(baseConfig, {
       openAnalyzer: false,
       reportFilename: 'report.html',
     }),
-  ] : []).concat(build.usePWA ? [
+  ] : []).concat(RENDER_MODE === 'spa' && build.usePWA ? [
     new WorkboxPlugin.GenerateSW({
       swDest: 'service-worker.js',
       importWorkboxFrom: 'local',
