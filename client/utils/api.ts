@@ -33,8 +33,8 @@ function apiConfig<T>(rMap: T) {
 }
 
 const API = apiConfig<ApiMap>({
-  getCity: 'POST /hangzhou/singleDog/getCity',
-  listLuckyDoy: 'GET /activity/listLuckyDoy',
+  getCity: 'GET /hangzhou/singleDog/getCity',
+  listLuckyDoy: 'POST /activity/listLuckyDoy',
   trans: 'GET //oauthbiz.lizhi.fm/checkAppTrans',
 });
 

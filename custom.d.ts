@@ -1,4 +1,5 @@
 declare var __isomorphic__: Boolean;
+declare var PUBLIC_URL: string;
 
 declare var module: NodeModule;
 

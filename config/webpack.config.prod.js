@@ -14,6 +14,7 @@ const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const { RENDER_MODE } = process.env;
@@ -26,7 +27,7 @@ const clientConfig = merge(baseConfig, {
     },
     minimize: true, // [new UglifyJsPlugin({...})]
     splitChunks: {
-      cacheGroups: {
+      cacheGroups: Object.assign({
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           chunks: 'initial',
@@ -38,17 +39,17 @@ const clientConfig = merge(baseConfig, {
           chunks: 'async',
           name: 'async-vendor',
         },
-        // styles: {
-        //   name: 'styles',
-        //   test: /\.less|css$/,
-        //   chunks: 'all', // merge all the css chunk to one file
-        //   enforce: true,
-        // },
-      },
+      }, build.mergeCssChunks ? {
+        styles: {
+          name: 'styles',
+          test: /\.less|css$/,
+          chunks: 'all', // merge all the css chunk to one file
+          enforce: true,
+        },
+      } : {}),
     },
   },
   devtool: 'source-map',
-  // profile: true, // 配合stats-webpack-plugin分析打包性能
   module: {
     rules: [
       {
@@ -100,6 +101,25 @@ const clientConfig = merge(baseConfig, {
       openAnalyzer: false,
       reportFilename: 'report.html',
     }),
+  ] : []).concat(RENDER_MODE === 'spa' && build.usePWA ? [
+    new WorkboxPlugin.GenerateSW({
+      swDest: 'service-worker.js',
+      importWorkboxFrom: 'local',
+      clientsClaim: true,
+      skipWaiting: true,
+      exclude: [/\.map\?\w+/],
+      dontCacheBustUrlsMatching: /\?\w{8,20}$/, // 不用插件的revision,而是通过URL中的版本戳进行唯一版本化,减少precache带来的带宽消耗
+      runtimeCaching: [
+        {
+          urlPattern: build.cacheApiRegular, // 匹配url
+          handler: 'networkFirst', // 网络优先
+        },
+        {
+          urlPattern: /\.(js|css)\?\w+/, // 匹配url
+          handler: 'networkFirst', // 网络优先
+        },
+      ],
+    }),
   ] : []),
 });
 
@@ -136,6 +156,7 @@ const serverConfig = {
           options: {
             presets: [['@babel/preset-env', {
               modules: 'commonjs',
+              useBuiltIns: 'usage',
             }], ['@babel/preset-stage-0', {
               decoratorsLegacy: true,
             }]],

@@ -7,6 +7,8 @@ const { theme } = require('../package.json');
 
 const { NODE_ENV, RENDER_MODE } = process.env;
 
+const publicPath = NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
+
 const baseConfig = {
   context: common.clientPath,
   entry: {
@@ -18,9 +20,7 @@ const baseConfig = {
       ? utils.assetsPath('js/[name].js?[chunkhash]')
       : utils.assetsPath('js/[name].js?[hash]'),
     chunkFilename: utils.assetsPath('js/[name].js?[chunkhash]'),
-    publicPath: NODE_ENV === 'production'
-      ? build.assetsPublicPath
-      : dev.assetsPublicPath,
+    publicPath,
     crossOriginLoading: NODE_ENV === 'production' ? 'anonymous' : false, // 只有按需加载chunk时才会加这个属性
   },
   resolve: {
@@ -95,9 +95,10 @@ const baseConfig = {
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
       __isomorphic__: RENDER_MODE === 'ssr',
+      PUBLIC_URL: JSON.stringify(publicPath.slice(0, -1)),
     }),
     /** 抽取css文件* */
-    new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].css?[hash]'), allChunks: true }),
+    new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].css?[contenthash]'), allChunks: true }),
     new webpack.LoaderOptionsPlugin({
       options: {},
     }),
