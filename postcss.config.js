@@ -4,7 +4,7 @@ const pxtorem = require('postcss-pxtorem');
 module.exports = {
   plugins: [
     pxtorem({
-      rootValue: 64,
+      rootValue: 75,
       propList: ['*'],
       selectorBlackList: [/\s+body$/],
     }),

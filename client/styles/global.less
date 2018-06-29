@@ -86,6 +86,7 @@
     height: 100%;
     width: 100%;
     position: absolute;
+    overflow: auto;
   }
   .lz-logo {
     position: absolute;
@@ -101,7 +102,7 @@
     text-decoration: underline;
     color: #fff;
   }
-  .share-overlay {
+  .mask {
     position: fixed;
     top: 0;
     left: 0;
@@ -109,12 +110,12 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.57);
     z-index: 10;
-    .share-icon {
-      position: absolute;
-      right: 50px;
-      top: 50px;
-      width: 209px;
-    }
+  }
+  .share-guide {
+    position: absolute;
+    right: 50px;
+    top: 50px;
+    width: 209px;
   }
   .download-dialog {
     .download-icon{

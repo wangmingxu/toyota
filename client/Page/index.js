@@ -1,5 +1,5 @@
 import React from 'react';
-import API from 'utils/api';
+import api from 'utils/api';
 import { connect } from 'react-redux';
 import * as demoAction from 'Action/demo';
 import '../styles/demo.less';
@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 )
 class Index extends React.Component {
   static loadData = async (dispatch) => {
-    const { data: position } = await API.getCity({ test: 1 });
+    const { data: position } = await api.getCity({ test: 1 });
     dispatch(demoAction.setPosition(position));
   }
   static propTypes = {
