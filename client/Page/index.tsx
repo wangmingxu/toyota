@@ -1,5 +1,5 @@
 import * as React from 'react';
-import API from 'utils/api';
+import api from 'utils/api';
 import '../styles/test.less';
 
 class Index extends React.Component {
@@ -7,7 +7,7 @@ class Index extends React.Component {
     super(props);
   }
   componentDidMount() {
-    API.getCity({ test: 1 }).then(({data:rst})=>{
+    api.getCity({ test: 1 }).then(({data:rst})=>{
       console.log(rst.data);
     });
   }

@@ -21,8 +21,8 @@ class ShareOverlay extends React.PureComponent<ShareOverlayPropType> {
   render() {
     const { show } = this.props;
     return show ? (
-      <div className="share-overlay">
-        <img src={shareOverlayIcon} className="share-icon" alt="请点击右上角分享" />
+      <div className="mask">
+        <img src={shareOverlayIcon} className="share-guide" alt="请点击右上角分享" />
       </div>
     ) : null;
   }

@@ -20,7 +20,7 @@ module.exports = {
     codeSplit: true, // 是否启用路由按需加载
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'client', // 单独创建一个目录存放静态资源，方便upload
-    assetsPublicPath: `https://bizadv.lizhi.fm/static/2017/${name}/`,
+    assetsPublicPath: `https://bizadv.lizhi.fm/festatic/${name}/`,
     bundleAnalyzerReport: true,
     analyzerPort: 7777,
     tinyApiKey: '6i9NPe1a2nU6YN1k5tjrTEQyK4h3-ZDU',

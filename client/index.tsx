@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import App from './App';
-// import App from './Component/RouteWrapper';
 import store from 'Store/index';
 import { CookiesProvider } from 'react-cookie';
 import registerServiceWorker from './registerServiceWorker';

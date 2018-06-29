@@ -14,7 +14,7 @@ import axios from 'axios';
 const router = express.Router();
 
 router.use((req, res) => {
-  const currentRoute = matchRoutes(routes, req.originalUrl);
+  const currentRoute = matchRoutes(routes, req.originalUrl.replace(/\?((\w+)\=(\w+)\&?)+/g, ''));
   // console.log(currentRoute);
 
   const store = req.store || configureStore();
@@ -22,7 +22,7 @@ router.use((req, res) => {
   // 通过组件上的loadData静态方法获取数据
   const promises = currentRoute.map(({ route, match }) =>
     (route.component.loadData
-      ? route.component.loadData(store.dispatch, match)
+      ? route.component.loadData(store.dispatch, match, req.query)
       : Promise.resolve(null)));
   // console.log(promises);
 
