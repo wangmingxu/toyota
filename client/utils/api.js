@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+// 添加响应拦截器
+axios.interceptors.response.use(
+  response => Promise.resolve(response.data), // 避免每次都要写res.data.xxx
+  error => Promise.reject(error),
+);
+
 const HttpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 
 function apiConfig(rMap) {

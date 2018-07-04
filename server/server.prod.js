@@ -11,7 +11,6 @@ const { dev } = require('../config/build.config');
 const authMiddleware = require('./middlewares/auth');
 const bindStoreMiddleware = require('./middlewares/bindStore');
 const promiseFinally = require('promise.prototype.finally');
-require('./utils/axiosHook');
 
 promiseFinally.shim();
 

@@ -10,7 +10,6 @@ import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
 import shareCover from './assets/share_cover.jpg';
-import first from 'lodash/first';
 import store from 'Store';
 import get from 'lodash/get';
 
@@ -25,18 +24,6 @@ axios.interceptors.request.use(config =>
   Object.assign(config, {
     params: Object.assign(config.params || {}, { token: get(store.getState(), ['Global', 'token']) }),
   }));
-
-// 添加响应拦截器
-axios.interceptors.response.use(
-  (response) => {
-    if (response.data.status !== 0) {
-      fundebug.notifyError(new Error(response.data.msg));
-    }
-    return response.data;
-  },
-  error =>
-    Promise.reject(error),
-);
 
 FastClick.attach(document.body);
 
@@ -84,27 +71,6 @@ if (window.isWX) {
     }
   };
 }
-
-const observer = new MutationObserver(((mutations) => {
-  mutations.forEach((mutation) => {
-    // console.log(mutation.type);
-    if (mutation.type === 'childList') {
-      const docHeight = document.documentElement.clientHeight;
-      const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
-      const pageEle = _wrapperEle.firstChild;
-      const pageHeight = pageEle.clientHeight;
-      const offsetHeight = Math.abs(pageHeight - docHeight);
-      if (offsetHeight > 150) return;
-      const scale = docHeight / pageHeight;
-      pageEle.style['transform-origin'] = '0 0';
-      pageEle.style.transform = `scaleY(${scale})`;
-    }
-  });
-}));
-observer.observe(document.getElementById('app'), {
-  childList: true,
-  subtree: true,
-});
 
 window._hmt = window._hmt || [];
 (function () {
