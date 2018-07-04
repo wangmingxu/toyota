@@ -39,7 +39,6 @@ require('asset-require-hook')({
   name: `/${utils.assetsPath('assets/[name].[ext]?[hash]')}`,
 });
 
-require('./utils/axiosHook');
 const fs = require('fs');
 const express = require('express');
 const webpack = require('webpack');

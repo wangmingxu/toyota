@@ -1,4 +1,10 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosPromise, AxiosResponse, AxiosError } from 'axios';
+
+// 添加响应拦截器
+axios.interceptors.response.use(
+  (response: AxiosResponse) => Promise.resolve(response.data), // 避免每次都要写res.data.xxx
+  (error: AxiosError) => Promise.reject(error),
+);
 
 const HttpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 

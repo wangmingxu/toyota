@@ -25,9 +25,9 @@ const withLogin = (Wrapped:React.ComponentClass)=>{
       super(props);
     }
     componentDidMount() {
-      this.configReady();
+      this.applyLogin();
     }
-    async configReady() {
+    async applyLogin() {
       const _t = this;
       const { cookies } = _t.props;
       if ((window as any).isApp) {

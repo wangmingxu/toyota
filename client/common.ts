@@ -8,7 +8,6 @@ import { fundebugApiKey, baiduTongjiID } from './constant';
 import fundebug from 'fundebug-javascript';
 import axios from 'axios';
 import promiseFinally from 'promise.prototype.finally';
-import first from 'lodash-es/first';
 import store from 'Store';
 import get from 'lodash-es/get';
 
@@ -23,18 +22,6 @@ axios.interceptors.request.use(config =>
   Object.assign(config, {
     params: Object.assign(config.params || {}, { token: get(store.getState(), ['Global', 'token']) }),
   }));
-
-// 添加响应拦截器
-axios.interceptors.response.use(
-  (response) => {
-    if (response.data.status !== 0) {
-      fundebug.notifyError(new Error(response.data.msg));
-    }
-    return response;
-  },
-  error =>
-    Promise.reject(error),
-);
 
 FastClick.attach(document.body);
 
@@ -82,27 +69,6 @@ if ((window as any).isWX) {
     }
   };
 }
-
-const observer = new MutationObserver(((mutations) => {
-  mutations.forEach((mutation) => {
-    // console.log(mutation.type);
-    if (mutation.type === 'childList') {
-      const docHeight = document.documentElement.clientHeight;
-      const _wrapperEle = first(document.querySelectorAll('.routerWrapper'));
-      const pageEle = _wrapperEle.firstElementChild;
-      const pageHeight = pageEle.clientHeight;
-      const offsetHeight = Math.abs(pageHeight - docHeight);
-      if (offsetHeight > 150) return;
-      const scale = docHeight / pageHeight;
-      (pageEle as any).style['transform-origin'] = '0 0';
-      (pageEle as any).style.transform = `scaleY(${scale})`;
-    }
-  });
-}));
-observer.observe(document.getElementById('app'), {
-  childList: true,
-  subtree: true,
-});
 
 (window as any)._hmt = (window as any)._hmt || [];
 (function () {
