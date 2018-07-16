@@ -13,7 +13,7 @@ export function wxConfig() {
       currentURL: link,
     },
   }).then((res) => {
-    const { data } = res;
+    const { data } = res.data;
     const { wx } = window;
 
     if (!data) {
@@ -67,7 +67,7 @@ export function wxConfig() {
 }
 
 export function appConfig() {
-  window.lz.config({
+  lz.config({
     debug: false,
     url: lzAuthUrl,
     apiList: [

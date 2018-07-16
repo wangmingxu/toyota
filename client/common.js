@@ -3,11 +3,10 @@ import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
-import lz from '@lizhife/lz-jssdk';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
 import fundebug from 'fundebug-javascript';
-import axios from 'axios';
+import { axiosInstance } from 'utils/api';
 import promiseFinally from 'promise.prototype.finally';
 import shareCover from './assets/share_cover.jpg';
 import store from 'Store';
@@ -19,43 +18,42 @@ fundebug.apikey = fundebugApiKey;
 fundebug.releasestage = process.env.NODE_ENV;
 // console.log(process.env.NODE_ENV);
 
-// 添加请求拦截器
-axios.interceptors.request.use(config =>
-  Object.assign(config, {
-    params: Object.assign(config.params || {}, { token: get(store.getState(), ['Global', 'token']) }),
-  }));
-
 FastClick.attach(document.body);
 
-window.lz = lz;
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
 window.platform = client.whichPlatform();
+document.documentElement.setAttribute('data-lizhi', window.isApp);
 document.documentElement.setAttribute('data-platform', window.platform);
 window.debug = location.search.includes('debug');
-window.debug && import('eruda').then((eruda) => { eruda.init(); });
+
+// 添加请求拦截器
+axiosInstance.interceptors.request.use((config) => {
+  if (window.isApp) {
+    const { method } = config;
+    const dataKey = method === 'get' ? 'params' : 'data';
+    return Object.assign(config, {
+      [dataKey]: Object.assign(config[dataKey] || {}, { token: get(store.getState(), ['Global', 'token']) }),
+    });
+  }
+  return config;
+});
 
 window.shareData = {
   url: window.location.href,
   link: window.location.href,
-  title: '全国单身踢馆歌手大赛',
-  desc: '妈耶！单身汪怎么可以手撕情侣档？画面惨不忍睹……',
+  title: '声音气质报告',
+  desc: '快来测试一下',
   'image-url': shareCover,
   imgUrl: shareCover,
 };
-
-// console.log(window.shareData);
 
 if (window.isApp) {
   appConfig();
 }
 
 if (window.isWX) {
-  const cs = document.createElement('script');
-  cs.src = '//res.wx.qq.com/open/js/jweixin-1.2.0.js';
-  const s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(cs, s);
   function onBridgeReady() {
     wxConfig();
     wx.ready(() => {
@@ -63,13 +61,11 @@ if (window.isWX) {
       wx.onMenuShareTimeline(window.shareData);
     });
   }
-  cs.onload = () => {
-    if (typeof WeixinJSBridge === 'undefined') {
-      document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-    } else {
-      onBridgeReady();
-    }
-  };
+  if (typeof WeixinJSBridge === 'undefined') {
+    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+  } else {
+    onBridgeReady();
+  }
 }
 
 window._hmt = window._hmt || [];

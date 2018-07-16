@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const axiosInstance = axios.create();
+
 // 添加响应拦截器
-axios.interceptors.response.use(
+axiosInstance.interceptors.response.use(
   response => Promise.resolve(response.data), // 避免每次都要写res.data.xxx
   error => Promise.reject(error),
 );
@@ -14,11 +16,11 @@ function apiConfig(rMap) {
       if (typeof rMap[key] === 'string') {
         if (HttpMethods.some(v => rMap[key].startsWith(v))) {
           const [method, url] = rMap[key].split(' ');
-          return axios({ url, method, [method.toUpperCase() === 'GET' ? 'params' : 'data']: data });
+          return axiosInstance({ url, method, [method.toUpperCase() === 'GET' ? 'params' : 'data']: data });
         }
-        return axios({ url: rMap[key], params: data });
+        return axiosInstance({ url: rMap[key], params: data });
       }
-      return axios(Object.assign(rMap[key], { data }));
+      return axiosInstance(Object.assign(rMap[key], { data }));
     };
     return fMap;
   }, {});

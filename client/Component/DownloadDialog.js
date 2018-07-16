@@ -1,29 +1,57 @@
 import React from 'react';
-import { Modal } from 'antd-mobile';
+import { openWithAction, getDownloadUrl } from 'utils/openApp';
+import OpenBrowserGuide from 'Component/OpenBrowserGuide';
 import downloadIcon from 'assets/download_icon.png';
 
 const download = () => {
   _hmt.push(['_trackEvent', '按钮', '点击', '去下载荔枝']);
-  window.location.href = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.yibasan.lizhifm&g_f=991784#opened';
+  window.location.href = getDownloadUrl();
 };
 
-const DownloadDialog = (props) => {
-  const { showDialog, onClose } = props;
-  return (
-    <Modal
-      visible={showDialog}
-      transparent
-      maskClosable={false}
-    >
-      <div className="download-dialog">
-        <img src={downloadIcon} className="download-icon" alt="下载荔枝" />
-        <div className="ft">
-          <div className="btn download" onClick={download}>下载荔枝</div>
-          <div className="btn cancel" onClick={onClose}>取消</div>
+class DownloadDialog extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showBrowserGuide: false,
+    };
+  }
+  openApp = (action) => {
+    _hmt.push(['_trackEvent', '按钮', '点击', '打开荔枝']);
+    const result = openWithAction(action);
+    if (!result) {
+      this.setState({
+        showBrowserGuide: true,
+      });
+    }
+  }
+  closeGuide = () => {
+    this.setState({ showBrowserGuide: false });
+  }
+  render() {
+    const { status, action, onClose } = this.props;
+    const { showBrowserGuide } = this.state;
+    return status ? [showBrowserGuide ? null : (
+      <div className="mask" key="download-dialog">
+        <div className="common-dialog download-dialog">
+          <div className="btn-close" onClick={onClose} />
+          <div className="content-box">
+            <div className="msg">
+              <img src={downloadIcon} className="download-icon" alt="下载荔枝" />
+            </div>
+            <div className="ft">
+              <div className="btn download" onClick={download}>下载荔枝APP</div>
+              <div
+                className="btn open"
+                onClick={() => {
+                  this.openApp(action);
+                }}
+              >打开荔枝APP</div>
+            </div>
+          </div>
         </div>
       </div>
-    </Modal>
-  );
-};
+    ), <OpenBrowserGuide status={showBrowserGuide} onClose={this.closeGuide} key="guide" />] : null;
+  }
+}
 
 export default DownloadDialog;

@@ -25,6 +25,7 @@
     }],
     "jsx-a11y/anchor-is-valid": 0,
     "react/jsx-closing-tag-location": 0,
+    "react/no-did-mount-set-state": 0,
     "react/no-array-index-key": 0,
     "no-console": 0,
     "import/no-extraneous-dependencies": 0,
@@ -46,10 +47,12 @@
     "import/prefer-default-export": 0,
     "global-require": 0,
     "no-inner-declarations": 0,
-    "no-useless-escape": 0
+    "no-useless-escape": 0,
+    "class-methods-use-this": 0
   },
   "globals": {
     "wx": true,
+    "lz": true,
     "_hmt": true
   }
 }

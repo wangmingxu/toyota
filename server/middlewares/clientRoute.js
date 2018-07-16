@@ -9,7 +9,7 @@ import routes from '../../client/Route';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
-import axios from 'axios';
+import { axiosInstance } from '../../client/utils/api';
 import get from 'lodash/get';
 
 const router = express.Router();
@@ -66,8 +66,8 @@ router.use((req, res) => {
       res.render('index', { root: null, store: serialize(store.getState()) });
     })
     .finally(() => {
-      axios.interceptors.request.eject(req.axiosRequestHook);
-      axios.interceptors.response.eject(req.axiosResponseHook);
+      axiosInstance.interceptors.request.eject(req.axiosRequestHook);
+      axiosInstance.interceptors.response.eject(req.axiosResponseHook);
     });
 });
 
