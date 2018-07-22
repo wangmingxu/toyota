@@ -53,6 +53,7 @@
   "globals": {
     "wx": true,
     "lz": true,
-    "_hmt": true
+    "_hmt": true,
+    "LizhiJSBridge": true
   }
 }

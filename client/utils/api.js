@@ -12,13 +12,16 @@ const HttpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 
 function apiConfig(rMap) {
   return Object.keys(rMap).reduce((fMap, key) => {
-    fMap[key] = (data) => {
+    fMap[key] = (data, config = {}) => {
       if (typeof rMap[key] === 'string') {
         if (HttpMethods.some(v => rMap[key].startsWith(v))) {
           const [method, url] = rMap[key].split(' ');
-          return axiosInstance({ url, method, [method.toUpperCase() === 'GET' ? 'params' : 'data']: data });
+          return axiosInstance(Object.assign(
+            config,
+            { url, method, [method.toUpperCase() === 'GET' ? 'params' : 'data']: data },
+          ));
         }
-        return axiosInstance({ url: rMap[key], params: data });
+        return axiosInstance(Object.assign(config, { url: rMap[key], params: data }));
       }
       return axiosInstance(Object.assign(rMap[key], { data }));
     };

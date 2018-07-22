@@ -4,17 +4,21 @@ const defaultOpt = {
   minRecordTime: 5 * 1000,
   maxRecordTime: 60 * 1000,
   immediateUpload: false,
+  lzRecordType: 1,
   onRecordTimeChange: () => {},
   onRecordStatusChange: () => {},
   onUploadFinish: () => {},
+  onUploadStart: () => {},
   isShowWXProgressTips: 1,
   onError: () => {},
 };
 
 export const ErrorType = {
-  TIME_SHORT: 1,
-  UPLOAD_FAIL: 2,
-  RECORD_FAIL: 3, // app端是监听recordState整个过程的失败
+  NO_PERMISSION: 1,
+  RECORD_SAVE_FAIL: 2,
+  UPLOAD_FAIL: 3,
+  TIME_SHORT: 4,
+  CALL_RECORD_FAIL: 5,
 };
 
 export const RecordStatus = {
@@ -48,16 +52,17 @@ class RecordManage {
         },
       });
     } else if (window.isApp) {
-      this.recordStateChangeCallbackId = window.lz.on('recordStateChange', (ret) => {
+      this.recordStateChangeCallbackId = lz.on('recordStateChange', (ret) => {
         // console.log(ret);
         if (ret && ret.status) {
           switch (ret.status) {
           case 'uploadStart':
+            this.$options.onUploadStart();
             console.log('正在上传音频');
             break;
-
           case 'uploadFinish':
             console.log('音频上传完成！');
+            console.log(ret.uploadId);
             // window.alert(ret.uploadId);
             this.uploadId = ret.uploadId;
             this.$options.onUploadFinish(ret.uploadId);
@@ -72,7 +77,7 @@ class RecordManage {
             console.log('回放录音完成');
             break;
           case 'failed':
-            this.throwError(ErrorType.RECORD_FAIL);
+            this.throwError(ret.errorCode);
             break;
           default:
             break;
@@ -89,7 +94,7 @@ class RecordManage {
         await promisify(wx.startRecord);
         wx.stopRecord();
       } else if (window.isApp) {
-        await lz.startRecordVoice({ type: 2 });
+        await lz.startRecordVoice({ type: this.$options.lzRecordType });// 活动类型，由H5指定
         lz.stopRecordVoice({
           isNeedUpload: false,
           isNeedSave: false,
@@ -112,17 +117,21 @@ class RecordManage {
     }, 50);
   }
   startRecord = async () => {
-    if (window.isApp) {
-      await lz.startRecordVoice({ type: 2 });
-    } else if (window.isWX) {
-      await promisify(wx.startRecord);
-    } else {
-      // return
+    try {
+      if (window.isApp) {
+        await lz.startRecordVoice({ type: this.$options.lzRecordType });
+      } else if (window.isWX) {
+        await promisify(wx.startRecord);
+      } else {
+        // return
+      }
+      this.runTimer();
+      this.changeRecordStatus(RecordStatus.RECORD_START);
+    } catch (error) {
+      this.throwError(ErrorType.CALL_RECORD_FAIL);
     }
-    this.runTimer();
-    this.changeRecordStatus(RecordStatus.RECORD_START);
   }
-  endRecord = () => {
+  endRecord = async () => {
     clearInterval(this.sTimer);
     if (this.recordingTime < this.$options.minRecordTime) {
       this.throwError(ErrorType.TIME_SHORT);
@@ -140,11 +149,10 @@ class RecordManage {
     this.changeRecordStatus(RecordStatus.RECORD_FINISH);
     this.duration = this.recordingTime / 1000;
     if (window.isApp) {
-      lz.stopRecordVoice({
-        isNeedUpload: false,
+      await lz.stopRecordVoice({
+        isNeedUpload: this.$options.immediateUpload,
         isNeedSave: true,
       });
-      this.$options.immediateUpload && this.uploadAudio();
     } else if (window.isWX) {
       wx.stopRecord({
         success: ({ localId }) => {
@@ -156,6 +164,7 @@ class RecordManage {
   }
   uploadAudio = () => {
     if (window.isWX) {
+      this.$options.onUploadStart();
       wx.uploadVoice({
         localId: this.localId, // 需要上传的音频的本地ID，由stopRecord接口获得
         isShowProgressTips: this.$options.isShowWXProgressTips, // 默认为1，显示进度提示
@@ -167,9 +176,10 @@ class RecordManage {
           this.throwError(ErrorType.UPLOAD_FAIL);
         },
       });
-    } else if (window.isApp) {
-      lz.uploadRecordVoice();
     }
+    // else if (window.isApp) {
+    //   lz.uploadRecordVoice();
+    // }
   }
   changeRecordStatus = (status) => {
     this.status = status;

@@ -89,19 +89,18 @@ Object.keys(proxyTable).forEach((context) => {
   app.use(context, proxyMiddleware(options));
 });
 
-// Tell express to use the webpack-dev-middleware and use the webpack.config.js
-// configuration file as a base.
-app.get(`/${dev.assetsSubDirectory}/*`, webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-  hot: true,
-  noInfo: true,
-}));
-
 app.use(webpackHotMiddleware(compiler, {
   path: '/__webpack_hmr',
   heartbeat: 10 * 1000,
 }));
 
+// Tell express to use the webpack-dev-middleware and use the webpack.config.js
+// configuration file as a base.
+app.get('/:path?/:filename(*.*)', webpackDevMiddleware(compiler, {
+  publicPath: config.output.publicPath,
+  hot: true,
+  noInfo: true,
+}));
 
 if (RENDER_MODE === 'ssr') {
   app.use(cookiesMiddleware());

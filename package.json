@@ -66,14 +66,14 @@
     "url": "http://github.com/wangmingxu/react-starter.git"
   },
   "dependencies": {
-    "@lizhife/lz-jssdk": "^1.0.2",
     "antd-mobile": "^2.0.0",
     "axios": "^0.17.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
-    "eruda": "^1.4.0",
+    "clipboard": "^2.0.1",
     "fastclick": "^1.0.6",
-    "fundebug-javascript": "^0.3.3",
+    "fundebug-javascript": "^1.1.2",
+    "jshashes": "^1.0.7",
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.4",
     "promise.prototype.finally": "^3.1.0",
@@ -92,7 +92,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "serialize-javascript": "^1.4.0",
-    "universal-cookie-express": "^2.1.0"
+    "universal-cookie-express": "^2.1.0",
+    "url-search-params-polyfill": "^4.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.47",

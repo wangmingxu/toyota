@@ -23,10 +23,11 @@ FastClick.attach(document.body);
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
-window.platform = client.whichPlatform();
+window.platform = client.selectPlatform();
 document.documentElement.setAttribute('data-lizhi', window.isApp);
 document.documentElement.setAttribute('data-platform', window.platform);
 window.debug = location.search.includes('debug');
+window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
 // 添加请求拦截器
 axiosInstance.interceptors.request.use((config) => {
@@ -41,7 +42,7 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 window.shareData = {
-  url: window.location.href,
+  url: window.location.href.replace(location.hash, ''),
   link: window.location.href,
   title: '声音气质报告',
   desc: '快来测试一下',
@@ -51,6 +52,16 @@ window.shareData = {
 
 if (window.isApp) {
   appConfig();
+  lz.ready(() => {
+    LizhiJSBridge.call('configShareUrl', {
+      url: window.shareData.url, // 分享的url
+      title: window.shareData.title, // 分享标题
+      desc: window.shareData.desc, // 分享的描述
+      'image-url': window.shareData.imgUrl, // 分享的图片
+    }, (ret) => {
+      console.log(ret);
+    });
+  });
 }
 
 if (window.isWX) {

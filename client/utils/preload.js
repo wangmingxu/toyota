@@ -4,7 +4,7 @@ export function imgPreload(srcList) {
     img.style.width = 0;
     img.style.height = 0;
     img.style.visibility = 'hidden';
-    window.document.body.appendChild(img);
+    document.body.appendChild(img);
     return new Promise((resolve, reject) => {
       img.onload = function () {
         img.onload = null;
