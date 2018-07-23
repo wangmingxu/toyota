@@ -10,15 +10,34 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api';
-import get from 'lodash/get';
+import { tokenKey } from '../../client/constant';
+import { dev } from '../../config/build.config';
+import { setToken, collectErrMsg } from '../../client/Action/global';
 
 const router = express.Router();
 
 router.use((req, res) => {
+  const store = req.store || configureStore();
+  const { universalCookies, useragent } = req;
+  const token = universalCookies.get(tokenKey);
+  axiosInstance.defaults.baseURL = `${req.protocol}://${req.hostname}:${dev.port}`;// 兼容客户端以相对路径进行请求的情况
+  const axiosRequestHook = axiosInstance.interceptors.request.use(
+    (config) => {
+      const dataKey = config.method === 'get' ? 'params' : 'data';
+      if (token) {
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+        });// 转发token
+        store.dispatch(setToken(token));// 同步token回客户端
+      }
+      config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
+      return config;
+    },
+    err => Promise.reject(err),
+  );
+
   const currentRoute = matchRoutes(routes, req.originalUrl.replace(/\?((\w+)\=(\w+)\&?)+/g, ''));
   // console.log(currentRoute);
-
-  const store = req.store || configureStore();
 
   // 通过组件上的loadData静态方法获取数据
   const promises = currentRoute.map(({ route, match }) =>
@@ -30,10 +49,6 @@ router.use((req, res) => {
   Promise
     .all(promises)
     .then(() => {
-      const errMsg = get(store.getState(), ['Global', 'errMsg']);
-      if (errMsg && errMsg.length > 0) {
-        return Promise.reject(new Error(JSON.stringify(errMsg)));
-      }
       const context = {};
 
       const html = ReactDOMServer.renderToString(<Provider store={store}>
@@ -63,11 +78,11 @@ router.use((req, res) => {
     })
     .catch((error) => {
       console.log(error);
+      store.dispatch(collectErrMsg(error));// 同步错误信息到客户端
       res.render('index', { root: null, store: serialize(store.getState()) });
     })
     .finally(() => {
-      axiosInstance.interceptors.request.eject(req.axiosRequestHook);
-      axiosInstance.interceptors.response.eject(req.axiosResponseHook);
+      axiosInstance.interceptors.request.eject(axiosRequestHook);
     });
 });
 

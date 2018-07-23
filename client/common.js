@@ -34,7 +34,7 @@ axiosInstance.interceptors.request.use((config) => {
   if (window.isApp) {
     const { method } = config;
     const dataKey = method === 'get' ? 'params' : 'data';
-    return Object.assign(config, {
+    Object.assign(config, {
       [dataKey]: Object.assign(config[dataKey] || {}, { token: get(store.getState(), ['Global', 'token']) }),
     });
   }

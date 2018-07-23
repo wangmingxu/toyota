@@ -9,7 +9,7 @@ import withLogin from 'Hoc/withLogin';
 const Router = location.hash.length > 0 ? HashRouter : BrowserRouter;
 
 const basename = location.hash.length > 0 ? '' : baseUrlPath;
-@withLogin
+@withLogin(true)
 class App extends React.Component {
   constructor(props) {
     super(props);

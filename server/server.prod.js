@@ -8,8 +8,6 @@ const proxyTable = require('../proxy/prod/proxyTable');
 
 const app = express();
 const { dev } = require('../config/build.config');
-const authMiddleware = require('./middlewares/auth');
-const bindStoreMiddleware = require('./middlewares/bindStore');
 const promiseFinally = require('promise.prototype.finally');
 
 promiseFinally.shim();
@@ -30,8 +28,6 @@ app.set('views', path.resolve(__dirname, '../../views/prod'));
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
-app.use(bindStoreMiddleware);
-app.use(authMiddleware);
 app.use(clientRoute);
 
 app.listen(dev.port, () => {

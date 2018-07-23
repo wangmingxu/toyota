@@ -49,8 +49,6 @@ const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
 const cookiesMiddleware = require('universal-cookie-express');
-const authMiddleware = require('./middlewares/auth');
-const bindStoreMiddleware = require('./middlewares/bindStore');
 const useragent = require('express-useragent');
 const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
@@ -111,11 +109,12 @@ if (RENDER_MODE === 'ssr') {
   // app.engine('html', require('ejs').renderFile);
   app.engine('html', require('hbs').__express);
 
-  app.use(bindStoreMiddleware);
-  app.use(authMiddleware);
-
   app.use((req, res, next) => {
     require('./middlewares/clientRoute')(req, res, next);
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(common.viewPath, 'dev', 'index.html'));
   });
 }
 
