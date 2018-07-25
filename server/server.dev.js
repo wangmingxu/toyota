@@ -52,8 +52,6 @@ const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
 const cookiesMiddleware = require('universal-cookie-express');
-const authMiddleware = require('./middlewares/auth');
-const bindStoreMiddleware = require('./middlewares/bindStore');
 const useragent = require('express-useragent');
 const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
@@ -92,6 +90,20 @@ Object.keys(proxyTable).forEach((context) => {
   app.use(context, proxyMiddleware(options));
 });
 
+
+app.use(webpackHotMiddleware(compiler, {
+  path: '/__webpack_hmr',
+  heartbeat: 10 * 1000,
+}));
+
+// Tell express to use the webpack-dev-middleware and use the webpack.config.js
+// configuration file as a base.
+app.get('/:path?/:filename(*.*)', webpackDevMiddleware(compiler, {
+  publicPath: config.output.publicPath,
+  hot: true,
+  noInfo: true,
+}));
+
 if (RENDER_MODE === 'ssr') {
   app.use(cookiesMiddleware());
   app.use(useragent.express());
@@ -101,32 +113,15 @@ if (RENDER_MODE === 'ssr') {
   // app.engine('html', require('ejs').renderFile);
   app.engine('html', require('hbs').__express);
 
-  app.use(bindStoreMiddleware);
-  app.use(authMiddleware);
-
   // '/'会默认跳到webpack-dev-server的index.html
-  app.get('/', (req, res, next) => {
+  app.use((req, res, next) => {
     require('./middlewares/clientRoute')(req, res, next);
   });
+} else {
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(common.viewPath, 'dev', 'index.html'));
+  });
 }
-
-// Tell express to use the webpack-dev-middleware and use the webpack.config.js
-// configuration file as a base.
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-  hot: true,
-  noInfo: true,
-}));
-
-app.use(webpackHotMiddleware(compiler, {
-  path: '/__webpack_hmr',
-  heartbeat: 10 * 1000,
-}));
-
-// app.use(clientRoute);
-RENDER_MODE === 'ssr' && app.use((req, res, next) => {
-  require('./middlewares/clientRoute')(req, res, next);
-});
 
 app.listen(dev.port, () => {
   console.log(`app listening on port ${dev.port}!\n`);

@@ -7,8 +7,8 @@ class Index extends React.Component {
     super(props);
   }
   componentDidMount() {
-    api.getCity({ test: 1 }).then(({data:rst})=>{
-      console.log(rst.data);
+    api.getCity({ test: 1 }).then((res)=>{
+      console.log(res.data);
     });
   }
   render() {

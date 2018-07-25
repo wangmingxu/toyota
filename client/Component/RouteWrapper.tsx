@@ -21,7 +21,7 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
-      if ((window as any).isWX) {
+      if (window.isWX) {
         wxConfig(); // spa跳转之后重新获取wx-sdk授权
       }
     }

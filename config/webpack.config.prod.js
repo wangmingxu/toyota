@@ -20,6 +20,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const { RENDER_MODE } = process.env;
 
 const clientConfig = merge(baseConfig, {
+  entry: build.usePWA ? { registerSW: path.resolve(common.clientPath, 'registerServiceWorker.js') } : {},
   mode: 'production',
   optimization: {
     runtimeChunk: {

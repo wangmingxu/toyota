@@ -66,7 +66,7 @@ export function wxConfig() {
 }
 
 export function appConfig() {
-  (window as any).lz.config({
+  lz.config({
     debug: false,
     url:lzAuthUrl,
     apiList: [

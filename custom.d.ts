@@ -3,6 +3,24 @@ declare var PUBLIC_URL: string;
 
 declare var module: NodeModule;
 
+declare var process: any;
+
+declare var lz: any;
+
+declare var LizhiJSBridge: any;
+
+interface Window{
+  lz: any;
+  isApp: boolean;
+  isWX: boolean;
+  isWeiBo: boolean;
+  platform: string;
+  debug: boolean;
+  isPre: boolean;
+  shareData: any;
+  _hmt: any;
+  REDUX_STATE: any;
+}
 interface NodeModule {
   id: string;
   hot: any
