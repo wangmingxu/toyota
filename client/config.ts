@@ -13,7 +13,7 @@ export function wxConfig() {
       currentURL: link,
     },
   }).then((res) => {
-    const { data } = res;
+    const { data } = res.data;
 
     if (!data) {
       return;
