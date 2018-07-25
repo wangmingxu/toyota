@@ -81,7 +81,7 @@ function isLizhiFM() {
   if (ua.match(/LizhiFM/i) !== null) {
     return true;
   }
-  if (typeof window.LizhiJSBridge !== 'undefined') {
+  if (typeof LizhiJSBridge !== 'undefined') {
     return true;
   }
 
@@ -90,7 +90,7 @@ function isLizhiFM() {
 
 function selectPlatform() {
   if (isIPhone()) {
-    if ((screen.height === 812 || screen.height === 724) && screen.width === 375) {
+    if ([812, 724, 690].includes(screen.height) && screen.width === 375) {
       return 'IPhoneX';
     }
     return 'IPhone';
