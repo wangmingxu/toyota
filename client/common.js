@@ -4,7 +4,7 @@ import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
 import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, baiduTongjiID } from './constant';
+import { fundebugApiKey, baiduTongjiID, wxidKey } from './constant';
 import fundebug from 'fundebug-javascript';
 import { axiosInstance } from 'utils/api';
 import promiseFinally from 'promise.prototype.finally';
@@ -31,11 +31,17 @@ window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
 // 添加请求拦截器
 axiosInstance.interceptors.request.use((config) => {
+  const { method } = config;
+  const dataKey = method === 'get' ? 'params' : 'data';
   if (window.isApp) {
-    const { method } = config;
-    const dataKey = method === 'get' ? 'params' : 'data';
+    const token = get(store.getState(), ['Global', 'token']);
     Object.assign(config, {
-      [dataKey]: Object.assign(config[dataKey] || {}, { token: get(store.getState(), ['Global', 'token']) }),
+      [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+    });
+  } else if (window.isWX) {
+    const openid = localStorage.getItem(wxidKey);
+    Object.assign(config, {
+      [dataKey]: Object.assign(config[dataKey] || {}, { openid }),
     });
   }
   return config;

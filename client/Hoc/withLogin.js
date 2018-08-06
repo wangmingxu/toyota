@@ -1,6 +1,6 @@
 import React from 'react';
 import { Cookies } from 'react-cookie';
-import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from 'constant';
+import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl, wbAuthUrl } from 'constant';
 import { connect } from 'react-redux';
 import * as global from 'Action/global';
 import { bindActionCreators } from 'redux';
@@ -13,6 +13,9 @@ import PropTypes from 'prop-types';
  */
 export const applyLogin = async (force) => {
   const cookies = new Cookies();
+  const qs = new URLSearchParams(location.search);
+  const openid = qs.get('openid');
+  openid && localStorage.setItem(wxidKey, openid);
   if (window.isApp) {
     await new Promise((resolve) => { lz.ready(resolve); });
     const r1 = await lz.getSessionUser();
@@ -29,12 +32,15 @@ export const applyLogin = async (force) => {
       cookies.set(tokenKey, r2.token);
       return r2.token;
     }
-  } else if (window.isWX && !cookies.get(wxidKey)) {
-    window.location.href = `${wxAuthUrl}&cookie_key=${wxidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
+  } else if (window.isWX && !localStorage.getItem(wxidKey)) {
+    window.location.href = `${wxAuthUrl}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    return Promise.reject(new Error('Need Auth'));
   } else if (window.isWeiBo && !cookies.get(wbidKey)) {
-    window.location.href = `${wxAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    window.location.href = `${wbAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    return Promise.reject(new Error('Need Auth'));
+  } else {
+    return '';// 默认返回空的token
   }
-  return '';// 默认返回空的token
 };
 
 /**

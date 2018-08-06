@@ -14,7 +14,7 @@ export default Wrapper => class onePage extends Wrapper {
   }
   componentDidMount() {
     const docHeight = document.documentElement.clientHeight;
-    const pageEle = findDOMNode(this.pageRef.current); //eslint-disable-line
+    const pageEle = findDOMNode(this); //eslint-disable-line
     const pageHeight = pageEle.clientHeight;
     const offsetHeight = Math.abs(pageHeight - docHeight);
     if (offsetHeight <= threshold) {
@@ -23,6 +23,6 @@ export default Wrapper => class onePage extends Wrapper {
     }
   }
   render() {
-    return <Wrapper {...this.props} {...this.state} ref={this.pageRef} />;
+    return this.props.render(this.state);
   }
 };

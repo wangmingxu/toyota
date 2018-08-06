@@ -89,18 +89,15 @@ class RecordManage {
     }
   }
   authorize = async () => {
-    if (!localStorage.rainAllowRecord || localStorage.rainAllowRecord !== 'true') {
-      if (window.isWX) {
-        await promisify(wx.startRecord);
-        wx.stopRecord();
-      } else if (window.isApp) {
-        await lz.startRecordVoice({ type: this.$options.lzRecordType });// 活动类型，由H5指定
-        lz.stopRecordVoice({
-          isNeedUpload: false,
-          isNeedSave: false,
-        });
-      }
-      localStorage.rainAllowRecord = 'true';
+    if (window.isWX) {
+      await promisify(wx.startRecord);
+      wx.stopRecord();
+    } else if (window.isApp) {
+      await lz.startRecordVoice({ type: this.$options.lzRecordType });// 活动类型，由H5指定
+      lz.stopRecordVoice({
+        isNeedUpload: false,
+        isNeedSave: false,
+      });
     }
   }
   runTimer = () => {
@@ -143,7 +140,6 @@ class RecordManage {
           isNeedSave: false,
         });
       }
-      // this.remakeRecord();
       return;
     }
     this.changeRecordStatus(RecordStatus.RECORD_FINISH);
@@ -176,10 +172,9 @@ class RecordManage {
           this.throwError(ErrorType.UPLOAD_FAIL);
         },
       });
+    } else if (window.isApp) {
+      lz.uploadRecordVoice();
     }
-    // else if (window.isApp) {
-    //   lz.uploadRecordVoice();
-    // }
   }
   changeRecordStatus = (status) => {
     this.status = status;
