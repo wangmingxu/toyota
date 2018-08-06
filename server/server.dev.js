@@ -14,8 +14,6 @@ require('@babel/register')({
     jsxPragma: 'preserve',
   }], ['@babel/preset-env', {
     modules: 'commonjs',
-  }], ['@babel/preset-stage-0', {
-    decoratorsLegacy: true,
   }]],
   plugins: [
     ['module-resolver', {

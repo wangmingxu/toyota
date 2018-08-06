@@ -3,7 +3,7 @@ declare var PUBLIC_URL: string;
 
 declare var module: NodeModule;
 
-declare var process: any;
+declare var process: NodeJS.Process;
 
 declare var lz: any;
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import lz from '@lizhife/lz-jssdk';
 import { Cookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
 import { connect } from 'react-redux';
