@@ -5,9 +5,10 @@ export const sleep = time =>
     }, time);
   });
 
-const promisify = func =>
+const promisify = (func,opt) =>
   new Promise((resolve, reject) => {
     func({
+      ...(opt || {}),
       success(res) {
         resolve(res);
       },

@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const PreloadWebpackPlugin = require('preload-webpack-plugin-fork');
 const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -84,9 +84,9 @@ const clientConfig = merge(baseConfig, {
       isomorphic: RENDER_MODE === 'ssr',
     })),
     new CrossOriginPlugin(),
-    // new PreloadWebpackPlugin({
-    //   rel: 'prefetch',
-    // }),
+    new PreloadWebpackPlugin({
+      rel: 'prefetch',
+    }),
     new ForkTsCheckerWebpackPlugin({
       tsconfig: '../tsconfig.json',
     }),
