@@ -1,5 +1,5 @@
 import React from 'react';
-import { openWithAction, getDownloadUrl } from 'utils/openApp';
+import { openWithAction, getDownloadUrl, checkCallAction } from 'utils/openApp';
 import OpenBrowserGuide from 'Component/OpenBrowserGuide';
 import downloadIcon from 'assets/download_icon.png';
 import { axiosInstance } from 'utils/api';
@@ -43,8 +43,9 @@ class DownloadDialog extends React.PureComponent {
   }
   openApp = (action) => {
     _hmt.push(['_trackEvent', '按钮', '点击', '打开荔枝']);
-    const result = openWithAction(action);
-    if (!result) {
+    if (checkCallAction()) {
+      openWithAction(action);
+    } else {
       this.setState({
         showBrowserGuide: true,
       });

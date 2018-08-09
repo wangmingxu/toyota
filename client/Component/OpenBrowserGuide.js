@@ -9,7 +9,6 @@ class GuideOverlay extends React.PureComponent {
     this.timer = null;
   }
   componentWillReceiveProps(newProps) {
-    const { onClose } = this.props;
     if (newProps.status) {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
