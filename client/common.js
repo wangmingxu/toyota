@@ -1,11 +1,9 @@
-import babelHelpers from 'script-loader!../helpers.js';//eslint-disable-line
-import 'babel-polyfill';
+import babelHelpers from 'script-loader!../helpers.js'; //eslint-disable-line
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID, wxidKey } from './constant';
-import fundebug from 'fundebug-javascript';
 import { axiosInstance } from 'utils/api';
 import promiseFinally from 'promise.prototype.finally';
 import shareCover from './assets/share_cover.jpg';
@@ -14,9 +12,28 @@ import get from 'lodash/get';
 
 promiseFinally.shim();
 
-fundebug.apikey = fundebugApiKey;
-fundebug.releasestage = process.env.NODE_ENV;
-// console.log(process.env.NODE_ENV);
+import('fundebug-javascript').then((fundebug) => {
+  fundebug.apikey = fundebugApiKey;
+  fundebug.releasestage = process.env.NODE_ENV;
+  fundebug.sampleRate = 0.3;
+  fundebug.silentHttp = true;
+  fundebug.filters = [
+    {
+      message: /^Script error\.$/,
+    },
+    {
+      message: /Network Error/,
+    },
+    {
+      message: /JSBridge/,
+    },
+    {
+      target: {
+        tagName: /^IMG$/,
+      },
+    },
+  ];
+});
 
 FastClick.attach(document.body);
 
@@ -59,14 +76,18 @@ window.shareData = {
 if (window.isApp) {
   appConfig();
   lz.ready(() => {
-    LizhiJSBridge.call('configShareUrl', {
-      url: window.shareData.url, // 分享的url
-      title: window.shareData.title, // 分享标题
-      desc: window.shareData.desc, // 分享的描述
-      'image-url': window.shareData.imgUrl, // 分享的图片
-    }, (ret) => {
-      console.log(ret);
-    });
+    LizhiJSBridge.call(
+      'configShareUrl',
+      {
+        url: window.shareData.url, // 分享的url
+        title: window.shareData.title, // 分享标题
+        desc: window.shareData.desc, // 分享的描述
+        'image-url': window.shareData.imgUrl, // 分享的图片
+      },
+      (ret) => {
+        console.log(ret);
+      },
+    );
   });
 }
 
