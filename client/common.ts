@@ -14,7 +14,25 @@ promiseFinally.shim();
 
 fundebug.apikey = fundebugApiKey;
 fundebug.releasestage = process.env.NODE_ENV;
-// console.log(process.env.NODE_ENV);
+fundebug.sampleRate = 0.3;
+fundebug.silentHttp = true;
+fundebug.filters = [
+  {
+    message: /^Script error\.$/,
+  },
+  {
+    message: /Network Error/,
+  },
+  {
+    message: /JSBridge/,
+  },
+  {
+    target: {
+      tagName: /^IMG$/,
+    },
+  },
+];
+
 
 FastClick.attach(document.body);
 
