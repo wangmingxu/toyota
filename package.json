@@ -143,7 +143,7 @@
     "postcss-less": "^1.1.1",
     "postcss-loader": "^2.0.8",
     "postcss-pxtorem": "^4.0.1",
-    "preload-webpack-plugin-fork": "^3.0.1",
+    "preload-webpack-plugin-fork": "^3.0.3",
     "progress-bar-webpack-plugin": "^1.10.0",
     "proxy-middleware": "^0.15.0",
     "react-css-modules": "^4.7.2",
