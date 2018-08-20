@@ -1,9 +1,7 @@
 import React from 'react';
-import { openWithAction, getDownloadUrl, checkCallAction } from 'utils/openApp';
+import { openWithAction, getDownloadUrl, checkCallAction, loadCommand } from 'utils/openApp';
 import OpenBrowserGuide from 'Component/OpenBrowserGuide';
 import downloadIcon from 'assets/download_icon.png';
-import { axiosInstance } from 'utils/api';
-import md5 from 'md5';
 import Clipboard from 'clipboard';
 
 const download = () => {
@@ -16,29 +14,16 @@ class DownloadDialog extends React.PureComponent {
     super(props);
     this.state = {
       showBrowserGuide: false,
-      command: '',
+      commandCode: '',
     };
   }
   async componentWillReceiveProps(newProps) {
     if (newProps.status) {
-      const url = window.isPre ? 'https://commandpre.lizhi.fm/get_command_code' : 'https://command.lizhi.fm/get_command_code';
       const { action } = newProps;
-      const requestId = md5(action.url || action.id);
-      const rst = await axiosInstance.get(url, {
-        params: {
-          requestId,
-          commandType: action.type,
-          commandContent: action.type === 7 ? JSON.stringify(action) : action.id,
-          commandAddUser: 'custom',
-          commandAddTime: new Date().getTime(),
-        },
+      const commandCode = await loadCommand(action);
+      this.setState({ commandCode }, () => {
+        new Clipboard('#downloadApp');
       });
-      if (rst.rcode === 0) {
-        this.setState({ command: rst.data.commandCode }, () => {
-          new Clipboard('#downloadApp');
-          new Clipboard('#openApp');
-        });
-      }
     }
   }
   openApp = (action) => {
@@ -56,7 +41,7 @@ class DownloadDialog extends React.PureComponent {
   }
   render() {
     const { status, action, onClose } = this.props;
-    const { showBrowserGuide, command } = this.state;
+    const { showBrowserGuide, commandCode } = this.state;
     return status ? [showBrowserGuide ? null : (
       <div className="mask" key="download-dialog">
         <div className="common-dialog download-dialog">
@@ -66,10 +51,10 @@ class DownloadDialog extends React.PureComponent {
               <img src={downloadIcon} className="download-icon" alt="下载荔枝" />
             </div>
             <div className="ft">
-              <div className="btn download" onClick={download} data-clipboard-text={command} id="downloadApp">下载荔枝APP</div>
+              <div className="btn download" onClick={download} data-clipboard-text={commandCode} id="downloadApp">下载荔枝APP</div>
               <div
                 id="openApp"
-                data-clipboard-text={command}
+                data-clipboard-text={commandCode}
                 className="btn open"
                 onClick={() => {
                   this.openApp(action);
