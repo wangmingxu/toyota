@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import Global,{GlobalStateType} from './global';
+import Global, { GlobalStateType } from './global';
 
-export interface AppStoreType{
-  Global: GlobalStateType
+export interface AppStoreType {
+  Global: GlobalStateType;
 }
 
 const rootReducer = combineReducers({

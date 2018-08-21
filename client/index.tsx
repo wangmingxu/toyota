@@ -8,7 +8,7 @@ import store from 'Store/index';
 import { CookiesProvider } from 'react-cookie';
 
 const render = (Component) => {
-  const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render
+  const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render;
   rcRender(
     <AppContainer>
       <CookiesProvider>

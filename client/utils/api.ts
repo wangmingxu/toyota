@@ -37,11 +37,11 @@ axiosInstance.interceptors.response.use(
 
 const HttpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 
-type CustomResponse = {
+interface CustomResponse {
   code: number;
   data: any;
   msg: string;
-};
+}
 
 type axiosMap<T> = { [P in keyof T]?: (args: any) => AxiosPromise<CustomResponse> };
 
@@ -71,9 +71,9 @@ const fMap = {
   getCity: 'GET /hangzhou/singleDog/getCity',
   listLuckyDoy: 'POST /activity/listLuckyDoy',
   trans: 'GET //oauthbiz.lizhi.fm/checkAppTrans',
-}
+};
 
-type ApiMap = typeof fMap
+type ApiMap = typeof fMap;
 
 const API = apiConfig<ApiMap>(fMap);
 

@@ -18,7 +18,7 @@ function isWebKit() {
 
 function isFireFox() {
   // 火狐内核
-  return ua.indexOf('Gecko') > -1 && ua.indexOf('KHTML') == -1;
+  return ua.indexOf('Gecko') > -1 && ua.indexOf('KHTML') === -1;
 }
 
 function isMobile() {
@@ -48,7 +48,7 @@ function isIPad() {
 
 function isWebApp() {
   // web应该程序，没有头部与底部
-  return ua.indexOf('Safari') == -1;
+  return ua.indexOf('Safari') === -1;
 }
 
 function isWeiBo() {

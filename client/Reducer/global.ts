@@ -4,7 +4,7 @@ export interface GlobalStateType {
   token: string;
 }
 
-const initState:GlobalStateType = {
+const initState: GlobalStateType = {
   isLogin: typeof exports === 'object', // 如果是服务端渲染则设置初始值为true,在服务端获取api失败时置为false
   errMsg: [],
   token: ''

@@ -36,7 +36,7 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
         transitionLeaveTimeout={1000}
         component={React.Fragment}
       >
-        <div key={location.pathname} className="routerWrapper">
+        <div key={location.pathname} className='routerWrapper'>
           {React.cloneElement(this.props.children, { location })}
         </div>
       </ReactCSSTransitionGroup>

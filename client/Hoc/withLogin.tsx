@@ -7,7 +7,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import PropTypes from 'prop-types';
 import { AppStoreType } from '../Reducer';
 
-interface withLoginProps {
+interface WithLoginProps {
   isLogin: boolean;
   toggleAuthStatus: Function;
   setToken: Function;
@@ -57,7 +57,7 @@ export const applyLogin = async force => {
  * @param {*} force 是否强制跳转登录页面
  */
 const withLogin = (force = true) => (Wrapped: React.ComponentClass) => {
-  class withLoginComponent extends (Wrapped as React.ComponentClass<withLoginProps>) {
+  class WithLoginComponent extends (Wrapped as React.ComponentClass<WithLoginProps>) {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
     };
@@ -77,7 +77,7 @@ const withLogin = (force = true) => (Wrapped: React.ComponentClass) => {
   return connect(
     (state: AppStoreType) => ({ isLogin: state.Global.isLogin }),
     (dispatch: Dispatch) => bindActionCreators(global, dispatch),
-  )(withLoginComponent);
+  )(WithLoginComponent);
 };
 
 export default withLogin;

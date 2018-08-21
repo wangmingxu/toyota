@@ -1,11 +1,11 @@
 import React from 'react';
 import DetailDialog from './DetailDialog';
 
-interface ActivityDetailType{
+interface ActivityDetailType {
   showDialog: boolean;
 }
 
-class ActivityDetail extends React.Component<{},ActivityDetailType> {
+class ActivityDetail extends React.Component<{}, ActivityDetailType> {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,7 +17,7 @@ class ActivityDetail extends React.Component<{},ActivityDetailType> {
     return (
       <React.Fragment>
         <span
-          className="activity-detail"
+          className='activity-detail'
           onClick={() => {
             this.setState({ showDialog: true });
           }}

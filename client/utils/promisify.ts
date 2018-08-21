@@ -5,7 +5,7 @@ export const sleep = time =>
     }, time);
   });
 
-const promisify = (func,opt) =>
+const promisify = (func, opt) =>
   new Promise((resolve, reject) => {
     func({
       ...(opt || {}),

@@ -1,9 +1,9 @@
 import React from 'react';
 import shareOverlayIcon from '../assets/share_overlay_icon.png';
 
-interface ShareOverlayPropType{
+interface ShareOverlayPropType {
   show: boolean;
-  onClose: ()=>void;
+  onClose: () => void;
 }
 
 class ShareOverlay extends React.PureComponent<ShareOverlayPropType> {
@@ -21,8 +21,8 @@ class ShareOverlay extends React.PureComponent<ShareOverlayPropType> {
   render() {
     const { show } = this.props;
     return show ? (
-      <div className="mask">
-        <img src={shareOverlayIcon} className="share-guide" alt="请点击右上角分享" />
+      <div className='mask'>
+        <img src={shareOverlayIcon} className='share-guide' alt='请点击右上角分享' />
       </div>
     ) : null;
   }

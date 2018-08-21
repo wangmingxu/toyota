@@ -7,12 +7,12 @@ class Index extends React.Component {
     super(props);
   }
   componentDidMount() {
-    api.getCity({ test: 1 }).then((res)=>{
+    api.getCity({ test: 1 }).then((res) => {
       console.log(res.data);
     });
   }
   render() {
-    return (<div styleName="demo">如需查看demo项目，请切换分支到singleDog分支</div>);
+    return (<div styleName='demo'>如需查看demo项目，请切换分支到singleDog分支</div>);
   }
 }
 

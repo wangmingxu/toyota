@@ -2,16 +2,16 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { ActivityIndicator } from 'antd-mobile';
 
-interface BundlePropType{
-  load: (args:any)=>void;
-  children: (args:React.ComponentType)=>JSX.Element;
+interface BundlePropType {
+  load: (args: any) => void;
+  children: (args: React.ComponentType) => JSX.Element;
 }
 
-interface BundleStateType{
+interface BundleStateType {
   mod: React.ComponentType;
 }
 
-class Bundle extends React.Component<BundlePropType,BundleStateType> {
+class Bundle extends React.Component<BundlePropType, BundleStateType> {
   static propTypes = {
     load: PropTypes.func.isRequired,
     children: PropTypes.func.isRequired,
@@ -33,7 +33,7 @@ class Bundle extends React.Component<BundlePropType,BundleStateType> {
     }
   }
 
-  load(di:BundlePropType) {
+  load(di: BundlePropType) {
     this.setState({
       mod: null,
     });
@@ -47,7 +47,7 @@ class Bundle extends React.Component<BundlePropType,BundleStateType> {
   }
 
   render() {
-    return this.state.mod ? this.props.children(this.state.mod) : (<ActivityIndicator toast text="Loading..." />);
+    return this.state.mod ? this.props.children(this.state.mod) : (<ActivityIndicator toast text='Loading...' />);
   }
 }
 

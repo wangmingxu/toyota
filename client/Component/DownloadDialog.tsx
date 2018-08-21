@@ -15,11 +15,11 @@ const DownloadDialog = (props) => {
       transparent
       maskClosable={false}
     >
-      <div className="download-dialog">
-        <img src={downloadIcon} className="download-icon" alt="下载荔枝" />
-        <div className="ft">
-          <div className="btn download" onClick={download}>下载荔枝</div>
-          <div className="btn cancel" onClick={onClose}>取消</div>
+      <div className='download-dialog'>
+        <img src={downloadIcon} className='download-icon' alt='下载荔枝' />
+        <div className='ft'>
+          <div className='btn download' onClick={download}>下载荔枝</div>
+          <div className='btn cancel' onClick={onClose}>取消</div>
         </div>
       </div>
     </Modal>
