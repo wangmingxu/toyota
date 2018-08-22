@@ -4,13 +4,13 @@ import routes from 'Route';
 import RouteWrapper from 'Component/RouteWrapper';
 import { renderRoutes } from 'react-router-config';
 import { baseUrlPath } from 'constant';
-import withLogin from 'Hoc/withLogin';
+import WithLogin from 'Hoc/WithLogin';
 
 const Router = location.hash.length > 0 ? HashRouter : BrowserRouter;
 
 const basename = location.hash.length > 0 ? '' : baseUrlPath;
 
-@withLogin(true)
+@WithLogin(true)
 class App extends React.Component {
   constructor(props) {
     super(props);

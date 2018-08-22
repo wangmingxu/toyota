@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom';
 
 const threshold = 150;
 
-export default Wrapper => class onePage extends Wrapper {
+export default class OnePage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,4 +25,4 @@ export default Wrapper => class onePage extends Wrapper {
   render() {
     return this.props.render(this.state);
   }
-};
+}

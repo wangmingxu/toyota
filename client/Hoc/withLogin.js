@@ -47,8 +47,8 @@ export const applyLogin = async (force) => {
  *
  * @param {*} force 是否强制跳转登录页面
  */
-const withLogin = (force = true) => (Wrapper) => {
-  class withLoginComponent extends Wrapper {
+const WithLogin = (force = true) => (Wrapper) => {
+  class WithLoginComponent extends Wrapper {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
     }
@@ -68,7 +68,7 @@ const withLogin = (force = true) => (Wrapper) => {
   return connect(
     state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
     dispatch => bindActionCreators(global, dispatch),
-  )(withLoginComponent);
+  )(WithLoginComponent);
 };
 
-export default withLogin;
+export default WithLogin;

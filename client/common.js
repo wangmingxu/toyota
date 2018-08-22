@@ -40,7 +40,7 @@ FastClick.attach(document.body);
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
-window.platform = client.selectPlatform();
+window.platform = client.checkPlatform();
 document.documentElement.setAttribute('data-lizhi', window.isApp);
 document.documentElement.setAttribute('data-platform', window.platform);
 window.debug = location.search.includes('debug');
