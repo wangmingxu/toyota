@@ -1,38 +1,34 @@
-import 'babel-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
 import client from 'utils/ua';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
-import fundebug from 'fundebug-javascript';
 import { axiosInstance } from 'utils/api';
-import promiseFinally from 'promise.prototype.finally';
 import store from 'Store';
 import get from 'lodash-es/get';
 
-promiseFinally.shim();
-
-fundebug.apikey = fundebugApiKey;
-fundebug.releasestage = process.env.NODE_ENV;
-fundebug.sampleRate = 0.3;
-fundebug.silentHttp = true;
-fundebug.filters = [
-  {
-    message: /^Script error\.$/,
-  },
-  {
-    message: /Network Error/,
-  },
-  {
-    message: /JSBridge/,
-  },
-  {
-    target: {
-      tagName: /^IMG$/,
+import('fundebug-javascript').then(fundebug => {
+  fundebug.apikey = fundebugApiKey;
+  fundebug.releasestage = process.env.NODE_ENV;
+  fundebug.sampleRate = 0.3;
+  fundebug.silentHttp = true;
+  fundebug.filters = [
+    {
+      message: /^Script error\.$/,
     },
-  },
-];
-
+    {
+      message: /Network Error/,
+    },
+    {
+      message: /JSBridge/,
+    },
+    {
+      target: {
+        tagName: /^IMG$/,
+      },
+    },
+  ];
+});
 
 FastClick.attach(document.body);
 
