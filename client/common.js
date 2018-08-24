@@ -9,7 +9,8 @@ import shareCover from './assets/share_cover.jpg';
 import store from 'Store';
 import get from 'lodash/get';
 
-import('fundebug-javascript').then((fundebug) => {
+require.ensure([], (require) => {
+  const fundebug = require('fundebug-javascript');
   fundebug.apikey = fundebugApiKey;
   fundebug.releasestage = process.env.NODE_ENV;
   fundebug.sampleRate = 0.3;
@@ -30,7 +31,7 @@ import('fundebug-javascript').then((fundebug) => {
       },
     },
   ];
-});
+}, console.log, 'fundebug');
 
 FastClick.attach(document.body);
 
