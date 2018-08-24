@@ -6,7 +6,7 @@ import Clipboard from 'clipboard';
 
 const download = () => {
   _hmt.push(['_trackEvent', '按钮', '点击', '去下载荔枝']);
-  window.location.href = getDownloadUrl();
+  location.href = getDownloadUrl();
 };
 
 class DownloadDialog extends React.PureComponent {

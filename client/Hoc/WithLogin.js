@@ -33,10 +33,10 @@ export const applyLogin = async (force) => {
       return r2.token;
     }
   } else if (window.isWX && !localStorage.getItem(wxidKey)) {
-    window.location.href = `${wxAuthUrl}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    location.href = `${wxAuthUrl}&redirectURL=${encodeURIComponent(location.href)}`;
     return Promise.reject(new Error('Need Auth'));
   } else if (window.isWeiBo && !cookies.get(wbidKey)) {
-    window.location.href = `${wbAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(window.location.href)}`;
+    location.href = `${wbAuthUrl}&cookie_key=${wbidKey}&redirectURL=${encodeURIComponent(location.href)}`;
     return Promise.reject(new Error('Need Auth'));
   } else {
     return '';// 默认返回空的token

@@ -63,8 +63,8 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 window.shareData = {
-  url: window.location.href.replace(location.hash, ''),
-  link: window.location.href,
+  url: location.href.replace(location.hash, ''),
+  link: location.href,
   title: '声音气质报告',
   desc: '快来测试一下',
   'image-url': shareCover,

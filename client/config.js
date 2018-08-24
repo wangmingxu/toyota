@@ -4,7 +4,7 @@ import { lzAuthUrl, wxJsConfUrl } from './constant';
 export function wxConfig() {
   const {
     protocol, host, pathname, search,
-  } = window.location;
+  } = location;
   const link = `${protocol}//${host}${pathname}${search}`;
 
   axios({

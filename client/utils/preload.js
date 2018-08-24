@@ -22,7 +22,6 @@ export function imgPreload(srcList) {
 export function audioPreload(src) {
   const a = new Audio();
   a.preload = 'auto';
-  // window.document.body.appendChild(a)
   a.src = src;
   const audioLoadPromise = new Promise((resolve) => {
     const timer = setInterval(() => {
