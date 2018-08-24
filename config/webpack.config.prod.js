@@ -1,6 +1,7 @@
 /**
  * 生产构建配置
  */
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.config.base');
 const info = require('./info');
@@ -83,6 +84,8 @@ const clientConfig = merge(baseConfig, {
       filename: RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
       isomorphic: RENDER_MODE === 'ssr',
     })),
+    new webpack.HashedModuleIdsPlugin(),
+    new webpack.NamedChunksPlugin(),
     new CrossOriginPlugin(),
     new PreloadWebpackPlugin({
       rel: 'prefetch',

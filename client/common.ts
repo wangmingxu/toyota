@@ -7,7 +7,8 @@ import { axiosInstance } from 'utils/api';
 import store from 'Store';
 import get from 'lodash-es/get';
 
-import('fundebug-javascript').then(fundebug => {
+require.ensure([], function(require) {
+  const fundebug: any = require('fundebug-javascript');
   fundebug.apikey = fundebugApiKey;
   fundebug.releasestage = process.env.NODE_ENV;
   fundebug.sampleRate = 0.3;
