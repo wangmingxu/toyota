@@ -1,5 +1,5 @@
-import Global from './global';
-import demo from './demo'; // 临时demo
+import Global from './Global';
+import demo from './Demo'; // 临时demo
 
 export default {
   Global,

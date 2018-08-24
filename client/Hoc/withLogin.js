@@ -2,7 +2,7 @@ import React from 'react';
 import { Cookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl, wbAuthUrl } from 'constant';
 import { connect } from 'react-redux';
-import * as global from 'Action/global';
+import * as global from 'Action/Global';
 import { bindActionCreators } from 'redux';
 import get from 'lodash/get';
 import PropTypes from 'prop-types';

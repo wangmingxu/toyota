@@ -12,7 +12,7 @@ import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api';
 import { tokenKey } from '../../client/constant';
 import { dev } from '../../config/build.config';
-import { setToken, collectErrMsg } from '../../client/Action/global';
+import { setToken, collectErrMsg } from 'Action/Global';
 
 const router = express.Router();
 
@@ -20,6 +20,7 @@ router.use((req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
   const token = universalCookies.get(tokenKey);
+  store.dispatch(setToken(token));// 同步token回客户端
   axiosInstance.defaults.baseURL = `${req.protocol}://${req.hostname}:${dev.port}`;// 兼容客户端以相对路径进行请求的情况
   const axiosRequestHook = axiosInstance.interceptors.request.use(
     (config) => {
@@ -28,7 +29,6 @@ router.use((req, res) => {
         Object.assign(config, {
           [dataKey]: Object.assign(config[dataKey] || {}, { token }),
         });// 转发token
-        store.dispatch(setToken(token));// 同步token回客户端
       }
       config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
       return config;

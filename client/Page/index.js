@@ -1,7 +1,7 @@
 import React from 'react';
 import api from 'utils/api';
 import { connect } from 'react-redux';
-import * as demoAction from 'Action/demo';
+import * as demoAction from 'Action/Demo';
 import '../styles/demo.less';
 import PropTypes from 'prop-types';
 
