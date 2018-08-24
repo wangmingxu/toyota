@@ -8,9 +8,6 @@ const proxyTable = require('../proxy/prod/proxyTable');
 
 const app = express();
 const { dev } = require('../config/build.config');
-const promiseFinally = require('promise.prototype.finally');
-
-promiseFinally.shim();
 
 // proxy api requests
 Object.keys(proxyTable).forEach((context) => {

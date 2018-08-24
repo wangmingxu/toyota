@@ -51,12 +51,9 @@ const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
 const cookiesMiddleware = require('universal-cookie-express');
 const useragent = require('express-useragent');
-const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
 
 const { RENDER_MODE } = process.env;
-
-promiseFinally.shim();
 
 const compiler = webpack(config);
 

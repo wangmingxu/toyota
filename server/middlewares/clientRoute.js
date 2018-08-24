@@ -12,11 +12,11 @@ import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api.ts';
 import { tokenKey } from '../../client/constant.ts';
 import { dev } from '../../config/build.config';
-import { setToken, collectErrMsg } from '../../client/Action/global.ts';
+import { setToken, collectErrMsg } from '../../client/Action/Global.ts';
 
 const router = express.Router();
 
-router.use((req, res) => {
+router.use(async (req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
   const token = universalCookies.get(tokenKey);
@@ -46,48 +46,47 @@ router.use((req, res) => {
       : Promise.resolve(null)));
   // console.log(promises);
 
-  Promise
-    .all(promises)
-    .then(() => {
-      const { errMsg } = store.getState().Global;
-      if (errMsg && errMsg.length > 0) {
-        return Promise.reject(new Error(JSON.stringify(errMsg)));
-      }
-      const context = {};
+  try {
+    await Promise.all(promises)
+      .then(() => {
+        const { errMsg } = store.getState().Global;
+        if (errMsg && errMsg.length > 0) {
+          return Promise.reject(new Error(JSON.stringify(errMsg)));
+        }
+        const context = {};
 
-      const html = ReactDOMServer.renderToString(<Provider store={store}>
-        <CookiesProvider cookies={req.universalCookies}>
-          <StaticRouter location={req.originalUrl} context={context}>
-            <Route
-              render={() => (
-                <div className="routerWrapper">
-                  <Switch>
-                    {renderRoutes(routes)}
-                  </Switch>
-                </div>
-              )}
-            />
-          </StaticRouter>
-        </CookiesProvider>
-      </Provider>);
-      // console.log(html);
+        const html = ReactDOMServer.renderToString(<Provider store={store}>
+          <CookiesProvider cookies={req.universalCookies}>
+            <StaticRouter location={req.originalUrl} context={context}>
+              <Route
+                render={() => (
+                  <div className="routerWrapper">
+                    <Switch>
+                      {renderRoutes(routes)}
+                    </Switch>
+                  </div>
+                )}
+              />
+            </StaticRouter>
+          </CookiesProvider>
+        </Provider>);
+        // console.log(html);
 
-      if (context.url) {
-        res.writeHead(301, {
-          Location: context.url,
-        });
-        return res.end();
-      }
-      return res.render('index', { root: html, store: serialize(store.getState()) });
-    })
-    .catch((error) => {
-      console.log(error);
-      store.dispatch(collectErrMsg(error));// 同步错误信息到客户端
-      res.render('index', { root: null, store: serialize(store.getState()) });
-    })
-    .finally(() => {
-      axiosInstance.interceptors.request.eject(axiosRequestHook);
-    });
+        if (context.url) {
+          res.writeHead(301, {
+            Location: context.url,
+          });
+          return res.end();
+        }
+        return res.render('index', { root: html, store: serialize(store.getState()) });
+      });
+  } catch (error) {
+    console.log(error);
+    store.dispatch(collectErrMsg(error));// 同步错误信息到客户端
+    res.render('index', { root: null, store: serialize(store.getState()) });
+  } finally {
+    axiosInstance.interceptors.request.eject(axiosRequestHook);
+  }
 });
 
 module.exports = router;
