@@ -10,7 +10,6 @@ export default class OnePage extends React.PureComponent {
       offsetHeight: 0,
       scale: 1,
     };
-    this.pageRef = React.createRef();
   }
   componentDidMount() {
     const docHeight = document.documentElement.clientHeight;
