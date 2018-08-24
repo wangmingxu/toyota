@@ -2,7 +2,7 @@ const lessParser = require('postcss-less').parse;
 const utils = require('../config/utils');
 const path = require('path');
 // Provide custom regenerator runtime and core-js
-require('babel-polyfill');
+require('@babel/polyfill');
 
 // Node babel source map support
 require('source-map-support').install();

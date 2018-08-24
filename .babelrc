@@ -24,6 +24,8 @@
     "react-hot-loader/babel",
     /**转换jsx**/
     "@babel/plugin-transform-react-jsx",
+    /**支持class-properties语法*/
+    "@babel/plugin-proposal-class-properties",
     /**支持import异步加载语法*/
     "dynamic-import-webpack",
     [
