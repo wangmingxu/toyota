@@ -2,7 +2,7 @@ import React from 'react';
 import { Cookies } from 'react-cookie';
 import { tokenKey, idKey, wxidKey, wbidKey, wxAuthUrl } from '../constant';
 import { connect } from 'react-redux';
-import * as global from '../Action/global';
+import * as global from '../Action/Global';
 import { bindActionCreators, Dispatch } from 'redux';
 import PropTypes from 'prop-types';
 import { AppStoreType } from '../Reducer';
@@ -56,7 +56,7 @@ export const applyLogin = async force => {
  *
  * @param {*} force 是否强制跳转登录页面
  */
-const withLogin = (force = true) => (Wrapped: React.ComponentClass) => {
+const WithLogin = (force = true) => (Wrapped: React.ComponentClass) => {
   class WithLoginComponent extends (Wrapped as React.ComponentClass<WithLoginProps>) {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
@@ -80,4 +80,4 @@ const withLogin = (force = true) => (Wrapped: React.ComponentClass) => {
   )(WithLoginComponent);
 };
 
-export default withLogin;
+export default WithLogin;

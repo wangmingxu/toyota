@@ -9,6 +9,7 @@ const initState: GlobalStateType = {
   errMsg: [],
   token: ''
 };
+
 const Global = (state = initState, action) => {
   switch (action.type) {
   case 'toggleAuthStatus':

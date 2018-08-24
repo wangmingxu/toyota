@@ -4,7 +4,7 @@ import routes from 'Route';
 import RouteWrapper from 'Component/RouteWrapper';
 import { renderRoutes } from 'react-router-config';
 import { baseUrlPath } from './constant';
-import withLogin from 'Hoc/withLogin';
+import WithLogin from 'Hoc/WithLogin';
 
 const Router = location.hash.length > 0 ? HashRouter : BrowserRouter;
 
@@ -24,4 +24,4 @@ class App extends React.Component {
   }
 }
 
-export default withLogin(true)(App);
+export default WithLogin(true)(App);
