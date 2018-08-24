@@ -16,7 +16,7 @@ import { setToken, collectErrMsg } from 'Action/Global';
 
 const router = express.Router();
 
-router.use((req, res) => {
+router.use(async (req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
   const token = universalCookies.get(tokenKey);
@@ -46,44 +46,42 @@ router.use((req, res) => {
       : Promise.resolve(null)));
   // console.log(promises);
 
-  Promise
-    .all(promises)
-    .then(() => {
-      const context = {};
+  try {
+    await Promise.all(promises)
+      .then(() => {
+        const context = {};
+        const html = ReactDOMServer.renderToString(<Provider store={store}>
+          <CookiesProvider cookies={req.universalCookies}>
+            <StaticRouter location={req.originalUrl} context={context}>
+              <Route
+                render={() => (
+                  <div className="routerWrapper">
+                    <Switch>
+                      {renderRoutes(routes)}
+                    </Switch>
+                  </div>
+                )}
+              />
+            </StaticRouter>
+          </CookiesProvider>
+        </Provider>);
+        // console.log(html);
 
-      const html = ReactDOMServer.renderToString(<Provider store={store}>
-        <CookiesProvider cookies={req.universalCookies}>
-          <StaticRouter location={req.originalUrl} context={context}>
-            <Route
-              render={() => (
-                <div className="routerWrapper">
-                  <Switch>
-                    {renderRoutes(routes)}
-                  </Switch>
-                </div>
-              )}
-            />
-          </StaticRouter>
-        </CookiesProvider>
-      </Provider>);
-      // console.log(html);
-
-      if (context.url) {
-        res.writeHead(301, {
-          Location: context.url,
-        });
-        return res.end();
-      }
-      return res.render('index', { root: html, store: serialize(store.getState()) });
-    })
-    .catch((error) => {
-      console.log(error);
-      store.dispatch(collectErrMsg(error));// 同步错误信息到客户端
-      res.render('index', { root: null, store: serialize(store.getState()) });
-    })
-    .finally(() => {
-      axiosInstance.interceptors.request.eject(axiosRequestHook);
-    });
+        if (context.url) {
+          res.writeHead(301, {
+            Location: context.url,
+          });
+          return res.end();
+        }
+        return res.render('index', { root: html, store: serialize(store.getState()) });
+      });
+  } catch (error) {
+    console.log(error);
+    store.dispatch(collectErrMsg(error));// 同步错误信息到客户端
+    res.render('index', { root: null, store: serialize(store.getState()) });
+  } finally {
+    axiosInstance.interceptors.request.eject(axiosRequestHook);
+  }
 });
 
 module.exports = router;

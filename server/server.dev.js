@@ -1,7 +1,7 @@
 const lessParser = require('postcss-less').parse;
 const utils = require('../config/utils');
 // Provide custom regenerator runtime and core-js
-require('babel-polyfill');
+require('@babel/polyfill');
 
 // Node babel source map support
 require('source-map-support').install();
@@ -48,12 +48,9 @@ const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
 const cookiesMiddleware = require('universal-cookie-express');
 const useragent = require('express-useragent');
-const promiseFinally = require('promise.prototype.finally');
 const chokidar = require('chokidar');
 
 const { RENDER_MODE } = process.env;
-
-promiseFinally.shim();
 
 const compiler = webpack(config);
 

@@ -5,12 +5,9 @@ import client from './utils/ua';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID, wxidKey } from './constant';
 import { axiosInstance } from 'utils/api';
-import promiseFinally from 'promise.prototype.finally';
 import shareCover from './assets/share_cover.jpg';
 import store from 'Store';
 import get from 'lodash/get';
-
-promiseFinally.shim();
 
 import('fundebug-javascript').then((fundebug) => {
   fundebug.apikey = fundebugApiKey;
