@@ -88,7 +88,7 @@ function isLizhiFM() {
   return false;
 }
 
-function checkPlatform() {
+function checkDeviceType() {
   if (isIPhone()) {
     if ([812, 724, 690].includes(screen.height) && screen.width === 375) {
       return 'IPhoneX';
@@ -119,5 +119,5 @@ export default {
   isQQ,
   isSafari,
   isLizhiFM,
-  checkPlatform,
+  checkDeviceType,
 };

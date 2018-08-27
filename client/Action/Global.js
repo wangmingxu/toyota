@@ -18,3 +18,14 @@ export function setToken(token) {
     token,
   };
 }
+
+export function getToken() {
+  return async (dispatch, getState) => {
+    const { token } = getState();
+    if (token) return token;
+    const { getToken: _getToken } = await import('utils/auth');
+    const _token = await _getToken();
+    dispatch(setToken(_token));
+    return _token;
+  };
+}

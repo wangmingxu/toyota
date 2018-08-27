@@ -3,11 +3,11 @@ import './styles/global.less';
 import FastClick from 'fastclick';
 import client from './utils/ua';
 import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, baiduTongjiID, wxidKey } from './constant';
+import { fundebugApiKey, baiduTongjiID } from './constant';
 import { axiosInstance } from 'utils/api';
 import shareCover from './assets/share_cover.jpg';
 import store from 'Store';
-import get from 'lodash/get';
+import { getToken } from 'Action/Global';
 
 require.ensure([], (require) => {
   const fundebug = require('fundebug-javascript');
@@ -38,7 +38,7 @@ FastClick.attach(document.body);
 window.isApp = client.isLizhiFM();
 window.isWX = client.isWeiXin();
 window.isWeiBo = client.isWeiBo();
-window.platform = client.checkPlatform();
+window.platform = client.checkDeviceType();
 document.documentElement.setAttribute('data-lizhi', window.isApp);
 document.documentElement.setAttribute('data-platform', window.platform);
 window.debug = location.search.includes('debug');
@@ -48,18 +48,19 @@ window.isPre = location.host.includes('pre') || location.search.includes('pre');
 axiosInstance.interceptors.request.use((config) => {
   const { method } = config;
   const dataKey = method === 'get' ? 'params' : 'data';
-  if (window.isApp) {
-    const token = get(store.getState(), ['Global', 'token']);
-    Object.assign(config, {
-      [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+  return store.dispatch(getToken())
+    .then((token) => {
+      if (window.isApp) {
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+        });
+      } else if (window.isWX) {
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
+        });
+      }
+      return config;
     });
-  } else if (window.isWX) {
-    const openid = localStorage.getItem(wxidKey);
-    Object.assign(config, {
-      [dataKey]: Object.assign(config[dataKey] || {}, { openid }),
-    });
-  }
-  return config;
 });
 
 window.shareData = {

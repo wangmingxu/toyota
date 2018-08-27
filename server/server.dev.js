@@ -16,6 +16,7 @@ require('@babel/register')({
       extensions: ['.jsx', '.js', '.tsx', '.ts'],
       root: ['client'],
     }],
+    'dynamic-import-node',
   ],
 });
 

@@ -23,7 +23,7 @@ export const openWithAction = (action) => {
   if (client.isIPhone()) {
     location.href = `https://link.lizhi.fm/ulink/action/?downloadUrl=${encodeURIComponent(getDownloadUrl())}&action=${encodeURIComponent(JSON.stringify(action))}`;
   }
-  location.href = `lizhifm://action?action=${encodeURIComponent(JSON.stringify(action))}&sp=${client.checkPlatform()}&sa=sh`;
+  location.href = `lizhifm://action?action=${encodeURIComponent(JSON.stringify(action))}&sp=${client.checkDeviceType()}&sa=sh`;
   setTimeout(() => {
     if (!document.hidden) {
       location.href = `https://link.lizhi.fm/ulink/action/?downloadUrl=${encodeURIComponent(getDownloadUrl())}&action=${encodeURIComponent(JSON.stringify(action))}`;
