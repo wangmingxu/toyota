@@ -2,11 +2,13 @@ import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { wxConfig } from '../config';
 import { Location, History } from 'history';
+import { withUserAgent, ClientDetect } from 'rc-useragent';
 
 interface RouteWrapperPropType {
   location: Location;
   history: History;
   children: React.ReactElement<any>;
+  ua: ClientDetect;
 }
 
 /**
@@ -21,7 +23,7 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
       window.scrollTo(0, 0);
-      if (window.isWX) {
+      if (this.props.ua.isWeiXin) {
         wxConfig(); // spa跳转之后重新获取wx-sdk授权
       }
     }
@@ -44,4 +46,4 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   }
 }
 
-export default RouteWrapper;
+export default withUserAgent(RouteWrapper);

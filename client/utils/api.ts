@@ -55,7 +55,7 @@ function apiConfig<T>(rMap: T) {
             Object.assign(config, {
               url,
               method,
-              [method.toUpperCase() === 'GET' ? 'params' : 'data']: data,
+              [/GET/i.test(method) ? 'params' : 'data']: data,
             }),
           );
         }

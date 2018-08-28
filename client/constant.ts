@@ -1,8 +1,5 @@
 export const cookiePrefix = 'base_cityfm_hangzhou_single_dog_';
 export const tokenKey = `${cookiePrefix}token`;
-export const idKey = `${cookiePrefix}id`;
-export const wxidKey = `${cookiePrefix}wxid`;
-export const wbidKey = `${cookiePrefix}wbid`;
 
 export const wxJsConfUrl = '//oauthbiz.lizhi.fm/weixin/jsconfig?tag=cityfm';
 export const wxAuthUrl = '//oauthbiz.lizhi.fm/weixin/auth?tag=cityfm';

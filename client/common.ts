@@ -1,11 +1,10 @@
 import './styles/global.less';
 import FastClick from 'fastclick';
-import client from 'utils/ua';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
 import { axiosInstance } from 'utils/api';
-import store from 'Store';
-import get from 'lodash-es/get';
+import { getToken } from 'utils/auth';
+import ClientDetect from 'rc-useragent/ClientDetect';
 
 require.ensure([], function(require) {
   const fundebug: any = require('fundebug-javascript');
@@ -33,24 +32,30 @@ require.ensure([], function(require) {
 
 FastClick.attach(document.body);
 
-window.isApp = client.isLizhiFM();
-window.isWX = client.isWeiXin();
-window.isWeiBo = client.isWeiBo();
-window.platform = client.selectPlatform();
-document.documentElement.setAttribute('data-platform', window.platform);
+const client = ClientDetect.getInstance();
+document.documentElement.setAttribute('data-lizhi', client.isLizhiFM);
+document.documentElement.setAttribute('data-platform', client.checkDeviceType());
 window.debug = location.search.includes('debug');
 window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
 // 添加请求拦截器
 axiosInstance.interceptors.request.use((config) => {
-  if (window.isApp) {
-    const { method } = config;
-    const dataKey = method === 'get' ? 'params' : 'data';
-    Object.assign(config, {
-      [dataKey]: Object.assign(config[dataKey] || {}, { token: get(store.getState(), ['Global', 'token']) }),
-    });
-  }
-  return config;
+  const { method } = config;
+  const dataKey = /GET/i.test(method) ? 'params' : 'data';
+  return getToken()
+    .then((token) => {
+      if (client.isLizhiFM) {
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+        });
+      } else if (client.isWeiXin) {
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
+        });
+      }
+      return config;
+    })
+    .catch(() => Promise.resolve(config));
 });
 
 window.shareData = {
@@ -64,7 +69,7 @@ window.shareData = {
 
 // console.log(window.shareData);
 
-if (window.isApp) {
+if (client.isLizhiFM) {
   appConfig();
   lz.ready(() => {
     LizhiJSBridge.call('configShareUrl', {
@@ -85,7 +90,7 @@ function onWXBridgeReady() {
     wx.onMenuShareTimeline(window.shareData);
   });
 }
-if (window.isWX) {
+if (client.isWeiXin) {
   if (typeof WeixinJSBridge === 'undefined') {
     document.addEventListener('WeixinJSBridgeReady', onWXBridgeReady, false);
   } else {

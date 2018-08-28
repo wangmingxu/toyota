@@ -162,6 +162,9 @@ const serverConfig = {
               modules: 'commonjs',
               useBuiltIns: 'usage',
             }]],
+            plugins: [
+              'dynamic-import-node',
+            ],
           },
         }],
       },
