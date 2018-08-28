@@ -1,4 +1,4 @@
-import { lzTokenKey, wxidKey, wxAuthUrl } from 'constant';
+import { tokenKey, wxAuthUrl } from 'constant';
 import ClientDetect from 'rc-useragent/ClientDetect';
 import { Cookies } from 'react-cookie';
 
@@ -19,16 +19,18 @@ export const getToken = async () => {
   if (client.isLizhiFM) {
     const r2 = await lz.getToken({ needRefresh: true });
     if (r2.status === 'success') {
-      cookies.set(lzTokenKey, r2.token);
+      cookies.set(tokenKey, r2.token);
       return r2.token;
     }
   } else if (client.isWeiXin) {
     const qs = new URLSearchParams(location.search);
     const openid = qs.get('openid');
-    openid && cookies.set(wxidKey, openid);
-    return cookies.get(wxidKey);
+    if (openid) {
+      openid && cookies.set(tokenKey, openid);
+      return openid;
+    }
   }
-  return '';
+  return cookies.get(tokenKey);
 };
 
 export const checkLogin = async () => {

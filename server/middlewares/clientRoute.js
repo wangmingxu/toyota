@@ -10,9 +10,9 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api';
-import { lzTokenKey, wxidKey } from '../../client/constant';
+import { tokenKey } from '../../client/constant';
 import { dev } from '../../config/build.config';
-import { setToken, collectErrMsg } from 'Action/Global';
+import { collectErrMsg } from 'Action/Global';
 import { UseragentProvider, ClientDetect } from 'rc-useragent';
 
 const router = express.Router();
@@ -21,22 +21,19 @@ router.use(async (req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
   const client = new ClientDetect(useragent.source);
+  const token = universalCookies.get(tokenKey);
   axiosInstance.defaults.baseURL = `${req.protocol}://${req.hostname}:${dev.port}`;// 兼容客户端以相对路径进行请求的情况
   const axiosRequestHook = axiosInstance.interceptors.request.use(
     (config) => {
       const dataKey = config.method === 'get' ? 'params' : 'data';
       if (client.isLizhiFM) {
-        const token = universalCookies.get(lzTokenKey);
         Object.assign(config, {
           [dataKey]: Object.assign(config[dataKey] || {}, { token }),
         });// 转发token
-        store.dispatch(setToken(token));// 同步token回客户端
       } else if (client.isWeiXin) {
-        const openid = universalCookies.get(wxidKey);
         Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { openid }),
-        });// 转发openid
-        store.dispatch(setToken(openid));// 同步openid回客户端
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
+        });// 转发openid(改成用token更安全)
       }
       config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
       return config;

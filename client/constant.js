@@ -1,6 +1,5 @@
-export const cookiePrefix = 'base_cityfm_';
-export const lzTokenKey = `${cookiePrefix}token`;
-export const wxidKey = `${cookiePrefix}wxid`;
+export const cookiePrefix = 'base_cityfm_single_dog';
+export const tokenKey = `${cookiePrefix}token`;
 
 export const wxJsConfUrl = '//oauthbiz.lizhi.fm/weixin/jsconfig?tag=cityfm';
 export const wxAuthUrl = '//oauthbiz.lizhi.fm/weixin/wechatAuth?tag=cityfm';

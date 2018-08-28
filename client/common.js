@@ -5,8 +5,7 @@ import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
 import { axiosInstance } from 'utils/api';
 import shareCover from './assets/share_cover.jpg';
-import store from 'Store';
-import { getToken } from 'Action/Global';
+import { getToken } from 'utils/auth';
 import ClientDetect from 'rc-useragent/ClientDetect';
 
 require.ensure([], (require) => {
@@ -44,20 +43,21 @@ window.isPre = location.host.includes('pre') || location.search.includes('pre');
 // 添加请求拦截器
 axiosInstance.interceptors.request.use((config) => {
   const { method } = config;
-  const dataKey = method === 'get' ? 'params' : 'data';
-  return store.dispatch(getToken())
-    .then((str) => {
+  const dataKey = /GET/i.test(method) ? 'params' : 'data';
+  return getToken()
+    .then((token) => {
       if (client.isLizhiFM) {
         Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { token: str }),
+          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
         });
       } else if (client.isWeiXin) {
         Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { openid: str }),
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
         });
       }
       return config;
-    });
+    })
+    .catch(() => Promise.resolve(config));
 });
 
 window.shareData = {

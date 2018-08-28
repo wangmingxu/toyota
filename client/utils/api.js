@@ -45,7 +45,7 @@ function apiConfig(rMap) {
           const [method, url] = rMap[key].split(' ');
           return axiosInstance(Object.assign(
             config,
-            { url, method, [method.toUpperCase() === 'GET' ? 'params' : 'data']: data },
+            { url, method, [/GET/i.test(method) ? 'params' : 'data']: data },
           ));
         }
         return axiosInstance(Object.assign(config, { url: rMap[key], params: data }));
