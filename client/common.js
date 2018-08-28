@@ -35,7 +35,7 @@ require.ensure([], (require) => {
 
 FastClick.attach(document.body);
 
-const client = new ClientDetect();
+const client = ClientDetect.getInstance();
 document.documentElement.setAttribute('data-lizhi', client.isLizhiFM);
 document.documentElement.setAttribute('data-platform', client.checkDeviceType());
 window.debug = location.search.includes('debug');
@@ -63,7 +63,7 @@ axiosInstance.interceptors.request.use((config) => {
 window.shareData = {
   url: location.href.replace(location.hash, ''),
   link: location.href,
-  title: '声音气质报告',
+  title: '测试标题',
   desc: '快来测试一下',
   'image-url': shareCover,
   imgUrl: shareCover,

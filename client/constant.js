@@ -1,4 +1,4 @@
-export const cookiePrefix = 'base_cityfm_hangzhou_single_dog_';
+export const cookiePrefix = 'base_cityfm_';
 export const lzTokenKey = `${cookiePrefix}token`;
 export const wxidKey = `${cookiePrefix}wxid`;
 
