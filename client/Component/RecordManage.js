@@ -1,4 +1,5 @@
 import promisify from 'utils/promisify';
+import client from 'utils/ua';
 
 const defaultOpt = {
   minRecordTime: 5 * 1000,
@@ -42,7 +43,7 @@ class RecordManage {
   }
   init = () => {
     this.authorize();
-    if (window.isWX) {
+    if (client.isWeiXin()) {
       // 录音时间超过一分钟没有停止的时候会执行 complete 回调
       wx.onVoiceRecordEnd({
         success: (res) => {
@@ -51,7 +52,7 @@ class RecordManage {
           this.endRecord();
         },
       });
-    } else if (window.isApp) {
+    } else if (client.isLizhiFM()) {
       this.recordStateChangeCallbackId = lz.on('recordStateChange', (ret) => {
         // console.log(ret);
         if (ret && ret.status) {
@@ -89,10 +90,10 @@ class RecordManage {
     }
   }
   authorize = async () => {
-    if (window.isWX) {
+    if (client.isWeiXin()) {
       await promisify(wx.startRecord);
       wx.stopRecord();
-    } else if (window.isApp) {
+    } else if (client.isLizhiFM()) {
       await lz.startRecordVoice({ type: this.$options.lzRecordType });// 活动类型，由H5指定
       lz.stopRecordVoice({
         isNeedUpload: false,
@@ -115,9 +116,9 @@ class RecordManage {
   }
   startRecord = async () => {
     try {
-      if (window.isApp) {
+      if (client.isLizhiFM()) {
         await lz.startRecordVoice({ type: this.$options.lzRecordType });
-      } else if (window.isWX) {
+      } else if (client.isWeiXin()) {
         await promisify(wx.startRecord);
       } else {
         // return
@@ -132,9 +133,9 @@ class RecordManage {
     clearInterval(this.sTimer);
     if (this.recordingTime < this.$options.minRecordTime) {
       this.throwError(ErrorType.TIME_SHORT);
-      if (window.isWX) {
+      if (client.isWeiXin()) {
         wx.stopRecord();
-      } else if (window.isApp) {
+      } else if (client.isLizhiFM()) {
         lz.stopRecordVoice({
           isNeedUpload: false,
           isNeedSave: false,
@@ -144,12 +145,12 @@ class RecordManage {
     }
     this.changeRecordStatus(RecordStatus.RECORD_FINISH);
     this.duration = this.recordingTime / 1000;
-    if (window.isApp) {
+    if (client.isLizhiFM()) {
       await lz.stopRecordVoice({
         isNeedUpload: this.$options.immediateUpload,
         isNeedSave: true,
       });
-    } else if (window.isWX) {
+    } else if (client.isWeiXin()) {
       wx.stopRecord({
         success: ({ localId }) => {
           this.localId = localId;
@@ -159,7 +160,7 @@ class RecordManage {
     }
   }
   uploadAudio = () => {
-    if (window.isWX) {
+    if (client.isWeiXin()) {
       this.$options.onUploadStart();
       wx.uploadVoice({
         localId: this.localId, // 需要上传的音频的本地ID，由stopRecord接口获得
@@ -172,7 +173,7 @@ class RecordManage {
           this.throwError(ErrorType.UPLOAD_FAIL);
         },
       });
-    } else if (window.isApp) {
+    } else if (client.isLizhiFM()) {
       lz.uploadRecordVoice();
     }
   }
@@ -190,9 +191,9 @@ class RecordManage {
     this.$options.onRecordTimeChange(0);
   }
   destroy() {
-    if (window.isWX) {
+    if (client.isWeiXin()) {
       wx.stopRecord();
-    } else if (window.isApp) {
+    } else if (client.isLizhiFM()) {
       lz.stopRecordVoice({
         isNeedUpload: false,
         isNeedSave: false,

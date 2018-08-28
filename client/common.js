@@ -1,13 +1,13 @@
 import babelHelpers from 'script-loader!../helpers.js'; //eslint-disable-line
 import './styles/global.less';
 import FastClick from 'fastclick';
-import client from './utils/ua';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
 import { axiosInstance } from 'utils/api';
 import shareCover from './assets/share_cover.jpg';
 import store from 'Store';
 import { getToken } from 'Action/Global';
+import ClientDetect from 'rc-useragent/ClientDetect';
 
 require.ensure([], (require) => {
   const fundebug = require('fundebug-javascript');
@@ -35,12 +35,9 @@ require.ensure([], (require) => {
 
 FastClick.attach(document.body);
 
-window.isApp = client.isLizhiFM();
-window.isWX = client.isWeiXin();
-window.isWeiBo = client.isWeiBo();
-window.platform = client.checkDeviceType();
-document.documentElement.setAttribute('data-lizhi', window.isApp);
-document.documentElement.setAttribute('data-platform', window.platform);
+const client = new ClientDetect();
+document.documentElement.setAttribute('data-lizhi', client.isLizhiFM);
+document.documentElement.setAttribute('data-platform', client.checkDeviceType());
 window.debug = location.search.includes('debug');
 window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
@@ -49,14 +46,14 @@ axiosInstance.interceptors.request.use((config) => {
   const { method } = config;
   const dataKey = method === 'get' ? 'params' : 'data';
   return store.dispatch(getToken())
-    .then((token) => {
-      if (window.isApp) {
+    .then((str) => {
+      if (client.isLizhiFM) {
         Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
+          [dataKey]: Object.assign(config[dataKey] || {}, { token: str }),
         });
-      } else if (window.isWX) {
+      } else if (client.isWeiXin) {
         Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid: str }),
         });
       }
       return config;
@@ -72,7 +69,7 @@ window.shareData = {
   imgUrl: shareCover,
 };
 
-if (window.isApp) {
+if (client.isLizhiFM) {
   appConfig();
   lz.ready(() => {
     LizhiJSBridge.call(
@@ -90,7 +87,7 @@ if (window.isApp) {
   });
 }
 
-if (window.isWX) {
+if (client.isWeiXin) {
   function onBridgeReady() {
     wxConfig();
     wx.ready(() => {

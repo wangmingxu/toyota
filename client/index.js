@@ -6,15 +6,18 @@ import { Provider } from 'react-redux';
 import App from './App';
 import store from './Store';
 import { CookiesProvider } from 'react-cookie';
+import { UseragentProvider } from 'rc-useragent';
 
 const render = (Component) => {
   const rcRender = __isomorphic__ ? ReactDOM.hydrate : ReactDOM.render // eslint-disable-line
   rcRender(
     <AppContainer>
       <Provider store={store}>
-        <CookiesProvider>
-          <Component />
-        </CookiesProvider>
+        <UseragentProvider>
+          <CookiesProvider>
+            <Component />
+          </CookiesProvider>
+        </UseragentProvider>
       </Provider>
     </AppContainer>,
     document.getElementById('app'),

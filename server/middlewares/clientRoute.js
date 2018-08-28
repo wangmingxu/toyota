@@ -10,25 +10,33 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api';
-import { lzTokenKey } from '../../client/constant';
+import { lzTokenKey, wxidKey } from '../../client/constant';
 import { dev } from '../../config/build.config';
 import { setToken, collectErrMsg } from 'Action/Global';
+import { UseragentProvider, ClientDetect } from 'rc-useragent';
 
 const router = express.Router();
 
 router.use(async (req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
-  const token = universalCookies.get(lzTokenKey);
-  store.dispatch(setToken(token));// 同步token回客户端
+  const client = new ClientDetect(useragent.source);
   axiosInstance.defaults.baseURL = `${req.protocol}://${req.hostname}:${dev.port}`;// 兼容客户端以相对路径进行请求的情况
   const axiosRequestHook = axiosInstance.interceptors.request.use(
     (config) => {
       const dataKey = config.method === 'get' ? 'params' : 'data';
-      if (token) {
+      if (client.isLizhiFM) {
+        const token = universalCookies.get(lzTokenKey);
         Object.assign(config, {
           [dataKey]: Object.assign(config[dataKey] || {}, { token }),
         });// 转发token
+        store.dispatch(setToken(token));// 同步token回客户端
+      } else if (client.isWeiXin) {
+        const openid = universalCookies.get(wxidKey);
+        Object.assign(config, {
+          [dataKey]: Object.assign(config[dataKey] || {}, { openid }),
+        });// 转发openid
+        store.dispatch(setToken(openid));// 同步openid回客户端
       }
       config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
       return config;
@@ -51,19 +59,21 @@ router.use(async (req, res) => {
       .then(() => {
         const context = {};
         const html = ReactDOMServer.renderToString(<Provider store={store}>
-          <CookiesProvider cookies={req.universalCookies}>
-            <StaticRouter location={req.originalUrl} context={context}>
-              <Route
-                render={() => (
-                  <div className="routerWrapper">
-                    <Switch>
-                      {renderRoutes(routes)}
-                    </Switch>
-                  </div>
-                )}
-              />
-            </StaticRouter>
-          </CookiesProvider>
+          <UseragentProvider userAgent={client}>
+            <CookiesProvider cookies={req.universalCookies}>
+              <StaticRouter location={req.originalUrl} context={context}>
+                <Route
+                  render={() => (
+                    <div className="routerWrapper">
+                      <Switch>
+                        {renderRoutes(routes)}
+                      </Switch>
+                    </div>
+                  )}
+                />
+              </StaticRouter>
+            </CookiesProvider>
+          </UseragentProvider>
         </Provider>);
         // console.log(html);
 
