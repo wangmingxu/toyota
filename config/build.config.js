@@ -17,6 +17,8 @@ module.exports = {
     serverPath: SERVER_PATH,
   },
   build: {
+    port: 8080,
+    SERVER_URL: 'https://http://marketin.lizhi.fm', // node服务部署的地址
     codeSplit: true, // 是否启用路由按需加载
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'client', // 单独创建一个目录存放静态资源，方便upload

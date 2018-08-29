@@ -6,7 +6,11 @@ import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import { checkLogin, applyLogin } from 'utils/auth';
 
-const WithLogin = (Wrapper) => {
+/**
+ *
+ * @param {*} forceLogin 如果未登录是否强制跳转登录
+ */
+const WithLogin = (forceLogin = true) => (Wrapper) => {
   class WithLoginComponent extends Wrapper {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
@@ -15,13 +19,17 @@ const WithLogin = (Wrapper) => {
       super(props);
     }
     async componentDidMount() {
-      const isLogin = await checkLogin();
-      !isLogin && await applyLogin();
-      this.props.toggleAuthStatus(true);
+      const status = await checkLogin();
+      if (status) {
+        this.props.toggleAuthStatus(true);
+      } else if (forceLogin) {
+        await applyLogin();
+        this.props.toggleAuthStatus(true);
+      }
     }
     render() {
       const { isLogin } = this.props;
-      return (isLogin ? <Wrapper {...this.props} /> : null);
+      return ((!isLogin && forceLogin) ? null : <Wrapper {...this.props} />);
     }
   }
   return connect(

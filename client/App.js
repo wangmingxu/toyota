@@ -10,7 +10,7 @@ const Router = location.hash.length > 0 ? HashRouter : BrowserRouter;
 
 const basename = location.hash.length > 0 ? '' : baseUrlPath;
 
-@WithLogin
+@WithLogin(true)
 class App extends React.Component {
   constructor(props) {
     super(props);

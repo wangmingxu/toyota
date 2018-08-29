@@ -10,9 +10,9 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
 import { axiosInstance } from '../../client/utils/api';
-import { tokenKey } from '../../client/constant';
-import { dev } from '../../config/build.config';
-import { collectErrMsg } from 'Action/Global';
+import { initJWTInterceptor } from 'utils/jwtInterceptor';
+import { checkLogin } from '../../client/utils/auth';
+import { collectErrMsg, toggleAuthStatus } from 'Action/Global';
 import { UseragentProvider, ClientDetect } from 'rc-useragent';
 
 const router = express.Router();
@@ -21,25 +21,10 @@ router.use(async (req, res) => {
   const store = req.store || configureStore();
   const { universalCookies, useragent } = req;
   const client = new ClientDetect(useragent.source);
-  const token = universalCookies.get(tokenKey);
-  axiosInstance.defaults.baseURL = `${req.protocol}://${req.hostname}:${dev.port}`;// 兼容客户端以相对路径进行请求的情况
-  const axiosRequestHook = axiosInstance.interceptors.request.use(
-    (config) => {
-      const dataKey = config.method === 'get' ? 'params' : 'data';
-      if (client.isLizhiFM) {
-        Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
-        });// 转发token
-      } else if (client.isWeiXin) {
-        Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
-        });// 转发openid(改成用token更安全)
-      }
-      config.headers.common['User-Agent'] = useragent.source;// 转发User-Agent
-      return config;
-    },
-    err => Promise.reject(err),
-  );
+  const isLogin = await checkLogin(client, universalCookies);
+  store.dispatch(toggleAuthStatus(isLogin));
+  axiosInstance.defaults.baseURL = process.env.SERVER_URL;// 兼容客户端以相对路径进行请求的情况
+  const axiosRequestHook = initJWTInterceptor(axiosInstance, client, universalCookies);
 
   const currentRoute = matchRoutes(routes, req.originalUrl.replace(/\?((\w+)\=(\w+)\&?)+/g, ''));
   // console.log(currentRoute);

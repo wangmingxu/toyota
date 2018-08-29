@@ -185,6 +185,11 @@ const serverConfig = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.SERVER_URL': JSON.stringify(build.SERVER_URL),
+    }),
+  ],
 };
 
 const prodConfig = RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
