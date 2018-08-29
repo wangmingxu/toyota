@@ -56,6 +56,8 @@ const chokidar = require('chokidar');
 
 const { RENDER_MODE } = process.env;
 
+process.env.SERVER_URL = `http://${utils.getIP()}:${dev.port}`;
+
 const compiler = webpack(config);
 
 // Webpack hook event to write html file into `/views/dev` from `/views/tpl` due to server render

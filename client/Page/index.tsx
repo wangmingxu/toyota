@@ -1,13 +1,14 @@
 import * as React from 'react';
 import api from 'utils/api';
 import '../styles/test.less';
+import { AuthRequestConfig } from 'utils/jwtInterceptor';
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
   }
   componentDidMount() {
-    api.getCity({ test: 1 }).then((res) => {
+    api.getCity<AuthRequestConfig>({test: 1}, {needAuth: false}).then((res) => {
       console.log(res.data);
     });
   }

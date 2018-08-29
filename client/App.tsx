@@ -24,4 +24,4 @@ class App extends React.Component {
   }
 }
 
-export default WithLogin(App);
+export default WithLogin(true)(App);

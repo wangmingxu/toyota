@@ -204,6 +204,9 @@ const serverConfig = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.SERVER_URL': JSON.stringify(build.SERVER_URL),
+    }),
     new ForkTsCheckerWebpackPlugin({
       tsconfig: '../tsconfig.json',
     }),

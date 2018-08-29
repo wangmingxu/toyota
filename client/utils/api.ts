@@ -1,4 +1,4 @@
-import axios, { AxiosPromise, AxiosResponse, AxiosError, AxiosStatic } from 'axios';
+import axios, { AxiosPromise, AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios';
 
 export const axiosInstance = axios.create();
 
@@ -43,7 +43,7 @@ interface CustomResponse {
   msg: string;
 }
 
-type axiosMap<T> = { [P in keyof T]?: (args: any) => AxiosPromise<CustomResponse> };
+type axiosMap<T> = { [P in keyof T]?: <R extends AxiosRequestConfig>(args: any, config?: R) => AxiosPromise<CustomResponse> };
 
 function apiConfig<T>(rMap: T) {
   return Object.keys(rMap).reduce<axiosMap<T>>((fMap, key) => {

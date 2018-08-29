@@ -3,7 +3,7 @@ import FastClick from 'fastclick';
 import { wxConfig, appConfig } from './config';
 import { fundebugApiKey, baiduTongjiID } from './constant';
 import { axiosInstance } from 'utils/api';
-import { getToken } from 'utils/auth';
+import { initJWTInterceptor } from 'utils/jwtInterceptor';
 import ClientDetect from 'rc-useragent/ClientDetect';
 
 require.ensure([], function(require) {
@@ -38,25 +38,8 @@ document.documentElement.setAttribute('data-platform', client.checkDeviceType())
 window.debug = location.search.includes('debug');
 window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
-// 添加请求拦截器
-axiosInstance.interceptors.request.use((config) => {
-  const { method } = config;
-  const dataKey = /GET/i.test(method) ? 'params' : 'data';
-  return getToken()
-    .then((token) => {
-      if (client.isLizhiFM) {
-        Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { token }),
-        });
-      } else if (client.isWeiXin) {
-        Object.assign(config, {
-          [dataKey]: Object.assign(config[dataKey] || {}, { openid: token }),
-        });
-      }
-      return config;
-    })
-    .catch(() => Promise.resolve(config));
-});
+// 请求拦截器,获取token并添加到请求参数中
+initJWTInterceptor(axiosInstance);
 
 window.shareData = {
   url: window.location.href,

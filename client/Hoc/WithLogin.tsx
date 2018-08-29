@@ -14,9 +14,9 @@ interface WithLoginProps {
 
 /**
  *
- * @param {*} force 是否强制跳转登录页面
+ * @param {*} force 如果未登录是否强制跳转登录页面
  */
-const WithLogin = (Wrapped: React.ComponentClass) => {
+const WithLogin = (force= true) => (Wrapped: React.ComponentClass) => {
   class WithLoginComponent extends (Wrapped as React.ComponentClass<WithLoginProps>) {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
@@ -25,13 +25,17 @@ const WithLogin = (Wrapped: React.ComponentClass) => {
       super(props);
     }
     async componentDidMount() {
-      const isLogin = await checkLogin();
-      !isLogin && await applyLogin();
-      this.props.toggleAuthStatus(true);
+      const status = await checkLogin();
+      if (status) {
+        this.props.toggleAuthStatus(true);
+      } else if (force) {
+        await applyLogin();
+        this.props.toggleAuthStatus(true);
+      }
     }
     render() {
       const { isLogin } = this.props;
-      return (isLogin ? <Wrapped {...this.props} /> : null);
+      return ((!isLogin && force) ? null : <Wrapped {...this.props} />);
     }
   }
   return connect(

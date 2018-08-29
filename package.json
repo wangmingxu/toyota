@@ -85,7 +85,7 @@
     "lib-flexible": "^0.3.2",
     "lodash-es": "^4.17.10",
     "prop-types": "^15.6.0",
-    "rc-useragent": "^1.0.2",
+    "rc-useragent": "^1.0.3",
     "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-cookie": "^2.1.5",

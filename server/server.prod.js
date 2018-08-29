@@ -7,7 +7,7 @@ const proxyMiddleware = require('proxy-middleware');
 const proxyTable = require('../proxy/prod/proxyTable');
 
 const app = express();
-const { dev } = require('../config/build.config');
+const { build } = require('../config/build.config');
 
 // proxy api requests
 Object.keys(proxyTable).forEach((context) => {
@@ -27,6 +27,6 @@ app.engine('html', require('hbs').__express);
 
 app.use(clientRoute);
 
-app.listen(dev.port, () => {
-  console.log(`App listening on port ${dev.port}!\n`);
+app.listen(build.port, () => {
+  console.log(`App listening on port ${build.port}!\n`);
 });

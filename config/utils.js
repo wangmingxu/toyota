@@ -24,13 +24,11 @@ exports.getEntrys = function (dirname) {
 exports.getIP = function () {
   const ifaces = os.networkInterfaces();
   let ip = '127.0.0.1';
-  for (const dev in ifaces) {
-    ifaces[dev].forEach((details) => {
-      if (details.family === 'IPv4' && !details.internal) {
-        ip = details.address;
-      }
-    });
-  }
+  Object.keys(ifaces).forEach((key) => {
+    if (ifaces[key].family === 'IPv4' && !ifaces[key].internal) {
+      ip = ifaces[key].address;
+    }
+  });
   return ip;
 };
 // 自动打开浏览器
