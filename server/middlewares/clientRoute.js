@@ -1,17 +1,16 @@
-const express = require('express');
-
+import express from 'express';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from '../../client/Store';
+import { configureStore } from 'Store';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter, Route, Switch } from 'react-router';
-import routes from '../../client/Route';
+import routes from 'Route';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
 import { CookiesProvider } from 'react-cookie';
-import { axiosInstance } from '../../client/utils/api';
+import { axiosInstance } from 'utils/api';
 import { initJWTInterceptor } from 'utils/jwtInterceptor';
-import { checkLogin } from '../../client/utils/auth';
+import { checkLogin } from 'utils/auth';
 import { collectErrMsg, toggleAuthStatus } from 'Action/Global';
 import { UseragentProvider, ClientDetect } from 'rc-useragent';
 
