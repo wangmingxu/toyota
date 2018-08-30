@@ -1,7 +1,7 @@
 import * as React from 'react';
 import api from 'utils/api';
 import '../styles/test.less';
-import { AuthRequestConfig } from 'utils/jwtInterceptor';
+import { AuthRequestConfig } from 'utils/JWTInterceptor';
 
 class Index extends React.Component {
   constructor(props) {

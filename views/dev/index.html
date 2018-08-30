@@ -10,6 +10,10 @@
   </title>
   <!--[if lte IE 8]><script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js" charset="utf-8"></script><![endif]-->
   
+  <script type="text/javascript">
+    window.REDUX_STATE = {{{store}}};
+  </script>
+  
   <script>
     ;(function () {
       var src = '//eruda.liriliri.io/eruda.min.js';
@@ -27,7 +31,7 @@
 <link rel="shortcut icon" href="/favicon.ico"><link href="/client/css/main.css?72ffa6c655dc2eff4fc8" rel="stylesheet"></head>
 
 <body>
-  <div id="app"></div>
-<script type="text/javascript" src="/client/js/main.js?5d4b2c39191db62a720a"></script></body>
+  <div id="app">{{{root}}}</div>
+<script type="text/javascript" src="/client/js/main.js?35edab6240f0c67d0192"></script></body>
 
 </html>
