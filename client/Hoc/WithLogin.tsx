@@ -4,12 +4,11 @@ import * as Global from '../Action/Global';
 import { bindActionCreators, Dispatch } from 'redux';
 import PropTypes from 'prop-types';
 import { AppStoreType } from '../Reducer';
-import { checkLogin, applyLogin } from 'utils/auth';
 
 interface WithLoginProps {
   isLogin: boolean;
-  toggleAuthStatus: Function;
-  setToken: Function;
+  checkAuthStatus: Function;
+  login: Function;
 }
 
 /**
@@ -25,12 +24,9 @@ const WithLogin = (force= true) => (Wrapped: React.ComponentClass) => {
       super(props);
     }
     async componentDidMount() {
-      const status = await checkLogin();
-      if (status) {
-        this.props.toggleAuthStatus(true);
-      } else if (force) {
-        await applyLogin();
-        this.props.toggleAuthStatus(true);
+      const isLogin = await this.props.checkAuthStatus();
+      if (!isLogin && force) {
+        await this.props.login();
       }
     }
     render() {
