@@ -1,14 +1,3 @@
-import shareCover from './assets/share_cover.jpg';
-
-export const getDefaultShareData = () => ({
-  url: `${location.origin}${location.pathname}#/`,
-  link: `${location.origin}${location.pathname}#/`,
-  title: '测试标题',
-  desc: '测试描述',
-  'image-url': shareCover,
-  imgUrl: shareCover,
-});
-
 export const cookiePrefix = 'base_cityfm_single_dog';
 export const tokenKey = `${cookiePrefix}token`;
 

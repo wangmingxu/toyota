@@ -2,7 +2,7 @@ import babelHelpers from 'script-loader!../helpers.js'; //eslint-disable-line
 import './styles/global.less';
 import FastClick from 'fastclick';
 import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, BaiduStatID, getDefaultShareData } from './constant';
+import { fundebugApiKey, BaiduStatID } from './constant';
 import { registerInterceptor } from 'utils/api';
 import { clientJWTInterceptor } from 'utils/JWTInterceptor';
 import ClientDetect from 'rc-useragent/ClientDetect';
@@ -47,7 +47,14 @@ document.documentElement.setAttribute('data-platform', client.checkDeviceType())
 // 请求拦截器,获取token并添加到请求参数中
 registerInterceptor(clientJWTInterceptor);
 
-const shareData = getDefaultShareData();
+const shareData = {
+  url: `${location.origin}${location.pathname}#/`,
+  link: `${location.origin}${location.pathname}#/`,
+  title: '测试标题',
+  desc: '测试描述',
+  'image-url': require('./assets/share_cover.jpg'),
+  imgUrl: require('./assets/share_cover.jpg'),
+};
 
 if (client.isLizhiFM) {
   appConfig();

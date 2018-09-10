@@ -30,7 +30,7 @@ export function DefaultInterceptor() {
   this.interceptors.response.use(
     ({ data: response }) => {
       const { status, msg } = rDataMap;
-      if (response[status] === rCodeMap.SUCCESS) {
+      if (response[status] === rCodeMap.SUCCESS || response[status] === rCodeMap.POLLING) {
         return Promise.resolve(response); // 避免每次都要写res.data.xxx
       }
       return Promise.reject(response[msg]);
