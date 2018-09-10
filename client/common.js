@@ -2,10 +2,9 @@ import babelHelpers from 'script-loader!../helpers.js'; //eslint-disable-line
 import './styles/global.less';
 import FastClick from 'fastclick';
 import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, baiduTongjiID } from './constant';
+import { fundebugApiKey, BaiduStatID, getDefaultShareData } from './constant';
 import { registerInterceptor } from 'utils/api';
 import { clientJWTInterceptor } from 'utils/JWTInterceptor';
-import shareCover from './assets/share_cover.jpg';
 import ClientDetect from 'rc-useragent/ClientDetect';
 
 require.ensure([], (require) => {
@@ -32,37 +31,30 @@ require.ensure([], (require) => {
   ];
 }, console.log, 'fundebug');
 
+if (/debug/.test(location.href)) {
+  require.ensure([], (require) => {
+    const eruda = require('eruda');
+    eruda.init();
+  }, console.log, 'eruda');
+}
+
 FastClick.attach(document.body);
 
 const client = ClientDetect.getInstance();
-document.documentElement.setAttribute('data-lizhi', client.isLizhiFM);
+
 document.documentElement.setAttribute('data-platform', client.checkDeviceType());
-window.debug = location.search.includes('debug');
-window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
 // 请求拦截器,获取token并添加到请求参数中
 registerInterceptor(clientJWTInterceptor);
 
-window.shareData = {
-  url: location.href.replace(location.hash, ''),
-  link: location.href,
-  title: '测试标题',
-  desc: '快来测试一下',
-  'image-url': shareCover,
-  imgUrl: shareCover,
-};
+const shareData = getDefaultShareData();
 
 if (client.isLizhiFM) {
   appConfig();
   lz.ready(() => {
     LizhiJSBridge.call(
       'configShareUrl',
-      {
-        url: window.shareData.url, // 分享的url
-        title: window.shareData.title, // 分享标题
-        desc: window.shareData.desc, // 分享的描述
-        'image-url': window.shareData.imgUrl, // 分享的图片
-      },
+      shareData,
       (ret) => {
         console.log(ret);
       },
@@ -74,8 +66,8 @@ if (client.isWeiXin) {
   function onBridgeReady() {
     wxConfig();
     wx.ready(() => {
-      wx.onMenuShareAppMessage(window.shareData);
-      wx.onMenuShareTimeline(window.shareData);
+      wx.onMenuShareAppMessage(shareData);
+      wx.onMenuShareTimeline(shareData);
     });
   }
   if (typeof WeixinJSBridge === 'undefined') {
@@ -88,7 +80,7 @@ if (client.isWeiXin) {
 window._hmt = window._hmt || [];
 (function () {
   const hm = document.createElement('script');
-  hm.src = `https://hm.baidu.com/hm.js?${baiduTongjiID}`;
+  hm.src = `https://hm.baidu.com/hm.js?${BaiduStatID}`;
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(hm, s);
 }());

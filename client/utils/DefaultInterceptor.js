@@ -6,16 +6,23 @@ const rDataMap = {
   msg: 'msg',
 };
 
-  // 后端返回的状态码
+// 后端返回的状态码
 const rCodeMap = {
   SUCCESS: 0,
   NO_LOGIN: 2,
+  POLLING: 4,
 };
 
 export function DefaultInterceptor() {
   this.interceptors.request.use((config) => {
     const { url } = config;
-    if (!url.startsWith('https://') && !url.startsWith('http://') && process.env.SERVER_URL) {
+    if (
+      !url.startsWith('https://') &&
+      !url.startsWith('http://') &&
+      !url.startsWith('//') &&
+      process.env.SERVER_URL &&
+      typeof location === 'undefined'
+    ) {
       config.url = process.env.SERVER_URL + url;
     }
     return config;
