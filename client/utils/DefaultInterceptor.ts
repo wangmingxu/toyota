@@ -9,7 +9,8 @@ export interface ServerResponse {
 // 后端返回的状态码
 enum rCodeMap {
     SUCCESS = 0,
-    NO_LOGIN = 2
+    NO_LOGIN = 2,
+    POLLING= 4,
 }
 
 export function DefaultInterceptor() {
@@ -18,8 +19,10 @@ export function DefaultInterceptor() {
         if (
             !url.startsWith('https://') &&
             !url.startsWith('http://') &&
-            process.env.SERVER_URL
-        ) {
+            !url.startsWith('//') &&
+            process.env.SERVER_URL &&
+            typeof location === 'undefined'
+        ) {      
             config.url = process.env.SERVER_URL + url;
         }
         return config;
@@ -27,7 +30,7 @@ export function DefaultInterceptor() {
     this.interceptors.response.use(
         ({ data: response }: AxiosResponse<ServerResponse>) => {
             const { status, msg } = response;
-            if (status === rCodeMap.SUCCESS) {
+            if (status === rCodeMap.SUCCESS || status === rCodeMap.POLLING) {
                 return Promise.resolve(response); // 避免每次都要写res.data.xxx
             }
             return Promise.reject(msg);

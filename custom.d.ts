@@ -11,13 +11,6 @@ declare var LizhiJSBridge: any;
 
 interface Window{
   lz: any;
-  isApp: boolean;
-  isWX: boolean;
-  isWeiBo: boolean;
-  platform: string;
-  debug: boolean;
-  isPre: boolean;
-  shareData: any;
   _hmt: any;
   REDUX_STATE: any;
 }

@@ -1,7 +1,7 @@
 import './styles/global.less';
 import FastClick from 'fastclick';
 import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, baiduTongjiID } from './constant';
+import { fundebugApiKey, BaiduStatID } from './constant';
 import { registerInterceptor } from 'utils/api';
 import { clientJWTInterceptor } from 'utils/JWTInterceptor';
 import ClientDetect from 'rc-useragent/ClientDetect';
@@ -30,37 +30,34 @@ require.ensure([], function(require) {
   ];
 });
 
+if (/debug/.test(location.href)) {
+  require.ensure([], (require) => {
+    const eruda: any = require('eruda');
+    eruda.init();
+  });
+}
+
 FastClick.attach(document.body);
 
 const client = ClientDetect.getInstance();
-document.documentElement.setAttribute('data-lizhi', client.isLizhiFM);
 document.documentElement.setAttribute('data-platform', client.checkDeviceType());
-window.debug = location.search.includes('debug');
-window.isPre = location.host.includes('pre') || location.search.includes('pre');
 
 // 请求拦截器,获取token并添加到请求参数中
 registerInterceptor(clientJWTInterceptor);
 
-window.shareData = {
-  url: window.location.href,
-  link: window.location.href,
+const shareData = {
+  url: location.href,
+  link: location.href,
   title: '全国单身踢馆歌手大赛',
   desc: '妈耶！单身汪怎么可以手撕情侣档？画面惨不忍睹……',
   'image-url': require('./assets/share_cover.jpg'),
   imgUrl: require('./assets/share_cover.jpg'),
 };
 
-// console.log(window.shareData);
-
 if (client.isLizhiFM) {
   appConfig();
   lz.ready(() => {
-    LizhiJSBridge.call('configShareUrl', {
-      url: window.shareData.url, // 分享的url
-      title: window.shareData.title, // 分享标题
-      desc: window.shareData.desc, // 分享的描述
-      'image-url': window.shareData.imgUrl, // 分享的图片
-    }, (ret) => {
+    LizhiJSBridge.call('configShareUrl', shareData, (ret) => {
       console.log(ret);
     });
   });
@@ -69,8 +66,8 @@ if (client.isLizhiFM) {
 function onWXBridgeReady() {
   wxConfig();
   wx.ready(() => {
-    wx.onMenuShareAppMessage(window.shareData);
-    wx.onMenuShareTimeline(window.shareData);
+    wx.onMenuShareAppMessage(shareData);
+    wx.onMenuShareTimeline(shareData);
   });
 }
 if (client.isWeiXin) {
@@ -81,10 +78,10 @@ if (client.isWeiXin) {
   }
 }
 
-window._hmt = window._hmt || [];
 (function () {
+  window._hmt = window._hmt || [];
   const hm = document.createElement('script');
-  hm.src = `https://hm.baidu.com/hm.js?${baiduTongjiID}`;
+  hm.src = `https://hm.baidu.com/hm.js?${BaiduStatID}`;
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(hm, s);
 }());

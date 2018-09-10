@@ -70,6 +70,7 @@ export function appConfig() {
     debug: false,
     url: lzAuthUrl,
     apiList: [
+      'getAppInfo',
       'getToken',
       'getSessionUser',
       'gotoLogin',
@@ -81,6 +82,6 @@ export function appConfig() {
       'shareImage',
       'saveImage',
     ],
-    eventList: ['user:login', 'recordStateChange'],
+    eventList: ['user:login', 'recordStateChange', 'shareFinish'],
   });
 }
