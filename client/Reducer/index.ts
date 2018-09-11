@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import Global, { GlobalStateType } from './Global';
 
-export interface AppStoreType {
+export interface ApplicationState {
   Global: GlobalStateType;
 }
 

@@ -7,7 +7,7 @@ export function toggleAuthStatus(isLogin: boolean) {
   };
 }
 
-export const checkAuthStatus = (client, cookies) => async (dispatch) => {
+export const checkAuthStatus = (client?, cookies?) => async (dispatch) => {
   const isLogin = await checkLogin(client, cookies);
   dispatch(toggleAuthStatus(isLogin));
   return isLogin;
