@@ -259,6 +259,22 @@
 
   babelHelpers.asyncGeneratorDelegate = _asyncGeneratorDelegate;
 
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
+    }
+  }
+
   function _asyncToGenerator(fn) {
     return function () {
       var self = this,
@@ -266,31 +282,15 @@
       return new Promise(function (resolve, reject) {
         var gen = fn.apply(self, args);
 
-        function step(key, arg) {
-          try {
-            var info = gen[key](arg);
-            var value = info.value;
-          } catch (error) {
-            reject(error);
-            return;
-          }
-
-          if (info.done) {
-            resolve(value);
-          } else {
-            Promise.resolve(value).then(_next, _throw);
-          }
-        }
-
         function _next(value) {
-          step("next", value);
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
         }
 
         function _throw(err) {
-          step("throw", err);
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
         }
 
-        _next();
+        _next(undefined);
       });
     };
   }
@@ -428,24 +428,30 @@
       throw new TypeError("Super expression must either be null or a function");
     }
 
-    babelHelpers.setPrototypeOf(subClass.prototype, superClass && superClass.prototype);
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
     if (superClass) babelHelpers.setPrototypeOf(subClass, superClass);
   }
 
   babelHelpers.inherits = _inherits;
 
   function _inheritsLoose(subClass, superClass) {
-    subClass.prototype.__proto__ = superClass && superClass.prototype;
+    subClass.prototype = Object.create(superClass.prototype);
+    subClass.prototype.constructor = subClass;
     subClass.__proto__ = superClass;
   }
 
   babelHelpers.inheritsLoose = _inheritsLoose;
 
   function _getPrototypeOf(o) {
-    babelHelpers.getPrototypeOf = _getPrototypeOf = Object.getPrototypeOf || function _getPrototypeOf(o) {
-      return o.__proto__;
+    babelHelpers.getPrototypeOf = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
     };
-
     return _getPrototypeOf(o);
   }
 
@@ -462,14 +468,27 @@
 
   babelHelpers.setPrototypeOf = _setPrototypeOf;
 
+  function isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   function _construct(Parent, args, Class) {
-    if (typeof Reflect !== "undefined" && Reflect.construct) {
+    if (isNativeReflectConstruct()) {
       babelHelpers.construct = _construct = Reflect.construct;
     } else {
       babelHelpers.construct = _construct = function _construct(Parent, args, Class) {
         var a = [null];
         a.push.apply(a, args);
-        var Constructor = Parent.bind.apply(Parent, a);
+        var Constructor = Function.bind.apply(Parent, a);
         var instance = new Constructor();
         if (Class) babelHelpers.setPrototypeOf(instance, Class.prototype);
         return instance;
@@ -485,6 +504,8 @@
     var _cache = typeof Map === "function" ? new Map() : undefined;
 
     babelHelpers.wrapNativeSuper = _wrapNativeSuper = function _wrapNativeSuper(Class) {
+      if (Class === null) return null;
+
       if (typeof Class !== "function") {
         throw new TypeError("Super expression must either be null or a function");
       }
@@ -495,7 +516,9 @@
         _cache.set(Class, Wrapper);
       }
 
-      function Wrapper() {}
+      function Wrapper() {
+        return babelHelpers.construct(Class, arguments, babelHelpers.getPrototypeOf(this).constructor);
+      }
 
       Wrapper.prototype = Object.create(Class.prototype, {
         constructor: {
@@ -505,9 +528,7 @@
           configurable: true
         }
       });
-      return babelHelpers.setPrototypeOf(Wrapper, babelHelpers.setPrototypeOf(function Super() {
-        return babelHelpers.construct(Class, arguments, babelHelpers.getPrototypeOf(this).constructor);
-      }, Class));
+      return babelHelpers.setPrototypeOf(Wrapper, Class);
     };
 
     return _wrapNativeSuper(Class);
@@ -574,7 +595,7 @@
 
   babelHelpers.objectDestructuringEmpty = _objectDestructuringEmpty;
 
-  function _objectWithoutProperties(source, excluded) {
+  function _objectWithoutPropertiesLoose(source, excluded) {
     if (source == null) return {};
     var target = {};
     var sourceKeys = Object.keys(source);
@@ -585,6 +606,16 @@
       if (excluded.indexOf(key) >= 0) continue;
       target[key] = source[key];
     }
+
+    return target;
+  }
+
+  babelHelpers.objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
+
+  function _objectWithoutProperties(source, excluded) {
+    if (source == null) return {};
+    var target = babelHelpers.objectWithoutPropertiesLoose(source, excluded);
+    var key, i;
 
     if (Object.getOwnPropertySymbols) {
       var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
@@ -922,4 +953,48 @@
   }
 
   babelHelpers.applyDecoratedDescriptor = _applyDecoratedDescriptor;
+  var id = 0;
+
+  function _classPrivateFieldKey(name) {
+    return "__private_" + id++ + "_" + name;
+  }
+
+  babelHelpers.classPrivateFieldLooseKey = _classPrivateFieldKey;
+
+  function _classPrivateFieldBase(receiver, privateKey) {
+    if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) {
+      throw new TypeError("attempted to use private field on non-instance");
+    }
+
+    return receiver;
+  }
+
+  babelHelpers.classPrivateFieldLooseBase = _classPrivateFieldBase;
+
+  function _classPrivateFieldGet(receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+      throw new TypeError("attempted to get private field on non-instance");
+    }
+
+    return privateMap.get(receiver).value;
+  }
+
+  babelHelpers.classPrivateFieldGet = _classPrivateFieldGet;
+
+  function _classPrivateFieldSet(receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+      throw new TypeError("attempted to set private field on non-instance");
+    }
+
+    var descriptor = privateMap.get(receiver);
+
+    if (!descriptor.writable) {
+      throw new TypeError("attempted to set read only private field");
+    }
+
+    descriptor.value = value;
+    return value;
+  }
+
+  babelHelpers.classPrivateFieldSet = _classPrivateFieldSet;
 })(typeof global === "undefined" ? self : global);
