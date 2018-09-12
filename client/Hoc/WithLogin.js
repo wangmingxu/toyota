@@ -25,13 +25,12 @@ const WithLogin = (forceLogin = true, cb) => (Wrapper) => {
         if (forceLogin) {
           await this.props.login();
         } else {
-          lz.on('user:login', () => {
-            cb && cb(this.props.dispatch);
+          await new Promise((resolve) => {
+            lz.on('user:login', resolve);
           });
         }
-      } else {
-        cb && cb(this.props.dispatch);
       }
+      cb && cb(this.props.dispatch);
     }
     render() {
       const { isLogin } = this.props;
