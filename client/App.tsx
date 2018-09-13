@@ -9,19 +9,22 @@ import WithLogin from 'Hoc/WithLogin';
 const Router = location.hash.length > 0 ? HashRouter : BrowserRouter;
 
 const basename = location.hash.length > 0 ? '' : baseUrlPath;
+
 @WithLogin(true)
 class App extends React.Component {
-  render() {
-    return (<Router basename={basename}>
-      <Route
-        render={props => (
-          <RouteWrapper {...props}>
-            {renderRoutes(routes)}
-          </RouteWrapper>
-        )}
-      />
-    </Router>);
-  }
+    render() {
+        return (
+            <Router basename={basename}>
+                <Route
+                    render={props => (
+                        <RouteWrapper {...props}>
+                            {renderRoutes(routes)}
+                        </RouteWrapper>
+                    )}
+                />
+            </Router>
+        );
+    }
 }
 
 export default App;
