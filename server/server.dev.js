@@ -142,7 +142,7 @@ const watchConfig = {
 chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (_path) => {
   console.log(`${_path} changed`);
   Object.keys(require.cache).forEach((cachePath) => {
-    if (cachePath.indexOf('/client') > -1) {
+    if (/[/\\]client[/\\]/.test(cachePath)) {
       cleanCache(cachePath);
     }
   });
