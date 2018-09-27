@@ -28,6 +28,7 @@
     "react/no-did-mount-set-state": 0,
     "react/no-array-index-key": 0,
     "react/prop-types": 0,
+    "react/no-multi-comp": 0,
     "no-console": 0,
     "import/no-extraneous-dependencies": 0,
     "func-names": 0,

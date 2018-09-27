@@ -12,7 +12,7 @@ import { preventDefault } from 'utils/domHelper';
  * @param {*} cb 登录完之后的回调
  */
 const WithLogin = (forceLogin = true, cb) => (Wrapper) => {
-  class WithLoginComponent extends Wrapper {
+  class WithLoginComponent extends React.Component {
     static propTypes = {
       isLogin: PropTypes.bool.isRequired,
     }
@@ -39,7 +39,7 @@ const WithLogin = (forceLogin = true, cb) => (Wrapper) => {
   }
   return connect(
     state => ({ isLogin: get(state, ['Global', 'isLogin']) }),
-    dispatch => bindActionCreators(Global, dispatch),
+    dispatch => ({ ...bindActionCreators(Global, dispatch), dispatch }),
   )(WithLoginComponent);
 };
 
