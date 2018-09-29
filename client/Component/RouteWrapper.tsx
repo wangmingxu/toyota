@@ -2,13 +2,12 @@ import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { wxConfig } from '../config';
 import { Location, History } from 'history';
-import { withUserAgent, ClientDetect } from 'rc-useragent';
+import { withUserAgent, ReactUserAgentProps } from 'rc-useragent';
 
-interface RouteWrapperPropType {
+interface RouteWrapperPropType extends ReactUserAgentProps {
   location: Location;
   history: History;
-  children: React.ReactElement<any>;
-  ua: ClientDetect;
+  children: React.ReactElement<Location>;
 }
 
 /**
@@ -16,7 +15,8 @@ interface RouteWrapperPropType {
  * 2.在路由跳转时执行某些操作，比如微信sdk授权
  * 3.恢复滚动条到最顶部
  */
-class RouteWrapper extends React.Component<RouteWrapperPropType> {
+@(withUserAgent as any)
+ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   constructor(props) {
     super(props);
   }
@@ -46,4 +46,4 @@ class RouteWrapper extends React.Component<RouteWrapperPropType> {
   }
 }
 
-export default withUserAgent(RouteWrapper);
+export default RouteWrapper;

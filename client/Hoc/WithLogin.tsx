@@ -21,7 +21,7 @@ interface IProps extends IStateProps, IDispatchProps {}
  * @param {*} cb 登录完之后的回调
  */
 const WithLogin = (force = true, cb?) => (Wrapped: React.ComponentClass) => {
-    class WithLoginComponent extends (Wrapped as React.ComponentClass<IProps>) {
+    class WithLoginComponent extends React.Component<IProps> {
         constructor(props) {
             super(props);
         }
