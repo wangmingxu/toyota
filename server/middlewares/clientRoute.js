@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from 'Store';
 import ReactDOMServer from 'react-dom/server';
-import { StaticRouter, Route, Switch } from 'react-router';
+import { StaticRouter, Route } from 'react-router';
 import routes from 'Route';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
@@ -43,9 +43,7 @@ router.use(async (req, res) => {
                 <Route
                   render={() => (
                     <div className="routerWrapper">
-                      <Switch>
-                        {renderRoutes(routes)}
-                      </Switch>
+                      {renderRoutes(routes)}
                     </div>
                   )}
                 />
