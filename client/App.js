@@ -35,11 +35,7 @@ class App extends React.Component {
     return (
       <Router basename={basename}>
         <Suspense fallback={<ActivityIndicator toast text="Loading..." />}>
-          <Route
-            render={props => (
-              <RouteWrapper {...props}>{renderRoutes(routes)}</RouteWrapper>
-            )}
-          />
+          <Route render={props => <RouteWrapper {...props}>{renderRoutes(routes)}</RouteWrapper>} />
         </Suspense>
       </Router>
     );

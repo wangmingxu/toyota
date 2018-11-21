@@ -6,9 +6,7 @@ import { lazy } from 'react';
 const routes = [
   {
     path: '/',
-    component: __ISOMORPHIC__
-      ? require('Page/index').default
-      : lazy(() => import('Page/index')),
+    component: __ISOMORPHIC__ ? require('Page/index').default : lazy(() => import('Page/index')),
     exact: true,
   },
 ];

@@ -51,10 +51,7 @@ const defaultProvider = [
 ];
 
 const createInjector = (provider = []) => {
-  const injector = ReflectiveInjector.resolveAndCreate([
-    ...defaultProvider,
-    ...provider,
-  ]);
+  const injector = ReflectiveInjector.resolveAndCreate([...defaultProvider, ...provider]);
   return injector;
 };
 
