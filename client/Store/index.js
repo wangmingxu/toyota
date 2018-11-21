@@ -1,23 +1,25 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { createLogger } from 'redux-logger';
 import reducers from 'Reducer';
+import Injector from '../Service';
 
-const logger = createLogger();
+export const rootReducer = combineReducers(reducers);
 
-export const rootReducer = combineReducers({
-  ...reducers,
-});
+let middleware;
 
-const middleware = [thunk].concat(process.env.NODE_ENV === 'development' ? [logger] : []);
+if (process.env.NODE_ENV === 'development') {
+  middleware = [thunk, require('redux-logger').createLogger()];
+} else {
+  middleware = [thunk];
+}
 
-const initState = typeof window === 'object' ? window.REDUX_STATE : {};
+const SSRState = typeof window === 'object' ? window.REDUX_STATE : {};
 
-export const configureStore = (state) => {
+export const configureStore = (state = {}) => {
   const store = createStore(
     rootReducer,
-    state || {},
-    compose(applyMiddleware(...middleware)),
+    { ...state, ...SSRState },
+    compose(applyMiddleware(...middleware))
   );
 
   if (module.hot) {
@@ -28,4 +30,4 @@ export const configureStore = (state) => {
   return store;
 };
 
-export default configureStore(initState);
+export default configureStore({ Injector });

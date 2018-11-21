@@ -47,25 +47,19 @@ http://localhost:8080
 |   ├── index.js //客户端入口文件
 │   ├── App.js //处理App授权,获取token
 │   ├── common.js //客户端通用业务
-│   ├── config.js //wx-js-sdk lz-sdk配置
 │   ├── babelHelpers.js //babel-helper抽离
 │   ├── Actions //redux action
 │   ├── Reducer //redux reducer
-│   ├── HOC //高阶组件
 │   ├── Page //Page组件
 │   ├── Components //公共组件React组件
-│   │   ├── Bundle.js //异步加载js组件,配合bundle-loader使用
-│   │   ├── RouterView.js //路由组件
 │   │   ├── RouterWrapper.js //路由包裹组件,处理在页面跳转时的逻辑
-│   │   ├── Logo.js //业务组件
-│   │   ├── xxxDialog.js //各种弹窗组件
 │   ├── assets //存放图片文件 
 │   ├── styles //存放less\css
 │   ├── Store //创建redux store
+│   ├── Service //各种服务,参考injection-js
 │   ├── untils //一些工具方法
 ├── config //脚手架配置文件
 │   ├── build.config.js //脚手架各环境配置项
-│   ├── ftp.js //上传静态资源到cdn
 │   ├── info.js //网站信息配置,如title,description
 │   ├── tingpng.js //使用tinypng进行图片压缩
 │   ├── webpack.config.base.js //基础webpack配置文件
@@ -79,7 +73,6 @@ http://localhost:8080
 ├── proxy //服务端请求代理目录
 ├── server //服务端目录
 │   ├── middlewares //express中间件
-│   │   ├── auth.js //转发客户端传来的token和user-agent实现请求认证
 │   │   ├── clientRoute.js //React服务端渲染的主要实现
 │   ├── utils //工具函数
 │   ├── server.dev.js //开发环境server入口

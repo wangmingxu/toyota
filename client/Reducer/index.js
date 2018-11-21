@@ -1,7 +1,9 @@
 import Global from './Global';
-import demo from './Demo'; // 临时demo
+import Injector from './Injector';
+import Demo from './Demo'; // 临时demo
 
 export default {
   Global,
-  demo, // 临时demo
+  Injector,
+  Demo, // 临时demo
 };

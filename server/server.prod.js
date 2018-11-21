@@ -1,6 +1,5 @@
 const path = require('path');
 const express = require('express');
-const cookiesMiddleware = require('universal-cookie-express');
 const useragent = require('express-useragent');
 const clientRoute = require('./middlewares/clientRoute');
 const proxyMiddleware = require('proxy-middleware');
@@ -10,12 +9,11 @@ const app = express();
 const { build } = require('../config/build.config');
 
 // proxy api requests
-Object.keys(proxyTable).forEach((context) => {
+Object.keys(proxyTable).forEach(context => {
   const options = proxyTable[context];
   app.use(context, proxyMiddleware(options));
 });
 
-app.use(cookiesMiddleware());
 app.use(useragent.express());
 
 app.use(express.static(path.resolve(__dirname, '../../dist')));

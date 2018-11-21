@@ -1,93 +1,56 @@
 import babelHelpers from 'script-loader!../helpers.js'; //eslint-disable-line
+import 'url-polyfill';
 import './styles/global.less';
 import FastClick from 'fastclick';
-import { wxConfig, appConfig } from './config';
-import { fundebugApiKey, BaiduStatID } from './constant';
-import { registerInterceptor } from 'utils/api';
-import { clientJWTInterceptor } from 'utils/JWTInterceptor';
-import ClientDetect from 'rc-useragent/ClientDetect';
-
-require.ensure([], (require) => {
-  const fundebug = require('fundebug-javascript');
-  fundebug.apikey = fundebugApiKey;
-  fundebug.releasestage = process.env.NODE_ENV;
-  fundebug.sampleRate = 0.3;
-  fundebug.silentHttp = true;
-  fundebug.filters = [
-    {
-      message: /^Script error\.$/,
-    },
-    {
-      message: /Network Error/,
-    },
-    {
-      message: /JSBridge/,
-    },
-    {
-      target: {
-        tagName: /^IMG$/,
-      },
-    },
-  ];
-}, console.log, 'fundebug');
-
-if (/debug/.test(location.href)) {
-  require.ensure([], (require) => {
-    const eruda = require('eruda');
-    eruda.init();
-  }, console.log, 'eruda');
-}
+import { fundebugApiKey, BaiduStatKey } from './constant';
 
 FastClick.attach(document.body);
 
-const client = ClientDetect.getInstance();
-
-document.documentElement.setAttribute('data-platform', client.checkDeviceType());
-
-// 请求拦截器,获取token并添加到请求参数中
-registerInterceptor(clientJWTInterceptor);
-
-const shareData = {
-  url: `${location.origin}${location.pathname}#/`,
-  link: `${location.origin}${location.pathname}#/`,
-  title: '测试标题',
-  desc: '测试描述',
-  'image-url': require('./assets/share_cover.jpg'),
-  imgUrl: require('./assets/share_cover.jpg'),
-};
-
-if (client.isLizhiFM) {
-  appConfig();
-  lz.ready(() => {
-    LizhiJSBridge.call(
-      'configShareUrl',
-      shareData,
-      (ret) => {
-        console.log(ret);
+require.ensure(
+  [],
+  require => {
+    const fundebug = require('fundebug-javascript');
+    fundebug.apikey = fundebugApiKey;
+    fundebug.releasestage = process.env.NODE_ENV;
+    fundebug.sampleRate = 0.3;
+    fundebug.silentHttp = true;
+    fundebug.filters = [
+      {
+        message: /^Script error\.$/,
       },
-    );
-  });
-}
+      {
+        message: /Network Error/,
+      },
+      {
+        message: /JSBridge/,
+      },
+      {
+        target: {
+          tagName: /^IMG$/,
+        },
+      },
+    ];
+  },
+  console.log,
+  'fundebug'
+);
 
-if (client.isWeiXin) {
-  function onBridgeReady() {
-    wxConfig();
-    wx.ready(() => {
-      wx.onMenuShareAppMessage(shareData);
-      wx.onMenuShareTimeline(shareData);
-    });
-  }
-  if (typeof WeixinJSBridge === 'undefined') {
-    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-  } else {
-    onBridgeReady();
-  }
+if (/debug/.test(window.location.href)) {
+  require.ensure(
+    [],
+    require => {
+      const eruda = require('eruda');
+      eruda.init();
+    },
+    console.log,
+    'eruda'
+  );
 }
 
 window._hmt = window._hmt || [];
-(function () {
+(function() {
   const hm = document.createElement('script');
-  hm.src = `https://hm.baidu.com/hm.js?${BaiduStatID}`;
+  hm.src = `https://hm.baidu.com/hm.js?${BaiduStatKey}`;
   const s = document.getElementsByTagName('script')[0];
   s.parentNode.insertBefore(hm, s);
-}());
+})();

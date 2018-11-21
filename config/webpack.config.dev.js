@@ -2,7 +2,7 @@
 const webpack = require('webpack');
 const baseConfig = require('./webpack.config.base');
 const merge = require('webpack-merge');
-const { common, dev } = require('./build.config');
+const { common } = require('./build.config');
 const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -44,13 +44,12 @@ module.exports = merge(baseConfig, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     /** 生成入口html文件* */
-    new HtmlWebpackPlugin(Object.assign(info.app, {
-      template: common.index,
-      filename: 'index.html',
-      isomorphic: RENDER_MODE === 'ssr',
-    })),
-    new webpack.DefinePlugin({
-      'process.env.SERVER_URL': JSON.stringify(dev.SERVER_URL),
-    }),
+    new HtmlWebpackPlugin(
+      Object.assign(info.app, {
+        template: common.index,
+        filename: 'index.html',
+        isomorphic: RENDER_MODE === 'ssr',
+      })
+    ),
   ],
 });

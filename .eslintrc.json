@@ -1,62 +1,30 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb",
-  "plugins": [
-    "react",
-    "babel"
-  ],
-  "env": {
-    "jquery": true,
-    "browser": true,
-    "node": true,
-    "es6": true
-  },
-  "settings": {
-    "import/resolver": {
-      "webpack": {
-        "config": "config/webpack.config.base.js"
-      }
+    "parser": "babel-eslint",
+    "extends": [
+        "react-app",
+        "plugin:prettier/recommended",
+        "prettier/react",
+        "prettier/standard"
+    ],
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "settings": {
+        "import/resolver": {
+            "webpack": {
+                "config": "config/webpack.config.base.js"
+            }
+        }
+    },
+    "rules": {
+        "no-restricted-properties": "off",
+        "spaced-comment":"error"
+    },
+    "globals": {
+        "_hmt": true,
+        "fundebug": true,
+        "__ISOMORPHIC__": true
     }
-  },
-  "rules": {
-    "indent": ["error", 2],
-    "react/jsx-filename-extension": [1, {
-      "extensions": [".js", ".jsx"]
-    }],
-    "jsx-a11y/anchor-is-valid": 0,
-    "react/jsx-closing-tag-location": 0,
-    "react/no-did-mount-set-state": 0,
-    "react/no-array-index-key": 0,
-    "react/prop-types": 0,
-    "react/no-multi-comp": 0,
-    "no-console": 0,
-    "import/no-extraneous-dependencies": 0,
-    "func-names": 0,
-    "no-param-reassign": 0,
-    "guard-for-in": 1,
-    "no-restricted-syntax": 1,
-    "no-loop-func": 1,
-    "jsx-a11y/click-events-have-key-events": 0,
-    "jsx-a11y/no-noninteractive-element-interactions": 0,
-    "jsx-a11y/no-static-element-interactions": 0,
-    "no-useless-constructor": 0,
-    "import/first": 0,
-    "react/forbid-prop-types": 0,
-    "no-alert": 0,
-    "no-underscore-dangle": 0,
-    "no-restricted-globals": 0,
-    "no-unused-expressions": 0,
-    "import/prefer-default-export": 0,
-    "global-require": 0,
-    "no-inner-declarations": 0,
-    "no-useless-escape": 0,
-    "class-methods-use-this": 0
-  },
-  "globals": {
-    "wx": true,
-    "lz": true,
-    "_hmt": true,
-    "LizhiJSBridge": true,
-    "fundebug": true
-  }
 }

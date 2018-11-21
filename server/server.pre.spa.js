@@ -7,7 +7,7 @@ const app = express();
 const { dev } = require('../config/build.config');
 
 // proxy api requests
-Object.keys(proxyTable).forEach((context) => {
+Object.keys(proxyTable).forEach(context => {
   const options = proxyTable[context];
   app.use(context, proxyMiddleware(options));
 });

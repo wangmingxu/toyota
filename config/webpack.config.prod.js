@@ -20,7 +20,11 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const { RENDER_MODE } = process.env;
 
 const clientConfig = merge(baseConfig, {
-  entry: build.usePWA ? { registerSW: path.resolve(common.clientPath, 'registerServiceWorker.js') } : {},
+  entry: build.usePWA
+    ? {
+        registerSW: path.resolve(common.clientPath, 'registerServiceWorker.js'),
+      }
+    : {},
   mode: 'production',
   optimization: {
     runtimeChunk: {
@@ -28,26 +32,31 @@ const clientConfig = merge(baseConfig, {
     },
     minimize: true, // [new UglifyJsPlugin({...})]
     splitChunks: {
-      cacheGroups: Object.assign({
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          chunks: 'initial',
-          name: 'vendor',
+      cacheGroups: Object.assign(
+        {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'initial',
+            name: 'vendor',
+          },
+          'async-vendor': {
+            // test: /[\\/]node_modules[\\/]/,
+            minChunks: 2,
+            chunks: 'async',
+            name: 'async-vendor',
+          },
         },
-        'async-vendor': {
-          // test: /[\\/]node_modules[\\/]/,
-          minChunks: 2,
-          chunks: 'async',
-          name: 'async-vendor',
-        },
-      }, build.mergeCssChunks ? {
-        styles: {
-          name: 'styles',
-          test: /\.less|css$/,
-          chunks: 'all', // merge all the css chunk to one file
-          enforce: true,
-        },
-      } : {}),
+        build.mergeCssChunks
+          ? {
+              styles: {
+                name: 'styles',
+                test: /\.less|css$/,
+                chunks: 'all', // merge all the css chunk to one file
+                enforce: true,
+              },
+            }
+          : {}
+      ),
     },
   },
   devtool: 'source-map',
@@ -71,18 +80,19 @@ const clientConfig = merge(baseConfig, {
           'less-loader',
         ],
       },
-    ].concat(RENDER_MODE === 'spa' && build.codeSplit ? [{
-      test: /\.js$/,
-      include: path.join(common.clientPath, 'Page'),
-      use: ['bundle-loader?lazy', 'babel-loader'],
-    }] : []),
+    ],
   },
   plugins: [
-    new HtmlWebpackPlugin(Object.assign(info.app, {
-      template: common.index,
-      filename: RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
-      isomorphic: RENDER_MODE === 'ssr',
-    })),
+    new HtmlWebpackPlugin(
+      Object.assign(info.app, {
+        template: common.index,
+        filename:
+          RENDER_MODE === 'ssr'
+            ? path.join(common.viewPath, 'prod/index.html')
+            : 'index.html',
+        isomorphic: RENDER_MODE === 'ssr',
+      })
+    ),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.NamedChunksPlugin(),
     new CrossOriginPlugin(),
@@ -93,34 +103,48 @@ const clientConfig = merge(baseConfig, {
     new CleanWebpackPlugin([common.distPath], {
       root: common.rootPath,
     }),
-  ].concat(build.bundleAnalyzerReport ? [
-    /** 分析打包情况* */
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      analyzerPort: build.analyzerPort,
-      openAnalyzer: false,
-      reportFilename: 'report.html',
+    new webpack.DefinePlugin({
+      'process.env.BASE_PATH': JSON.stringify(build.BASE_PATH),
     }),
-  ] : []).concat(RENDER_MODE === 'spa' && build.usePWA ? [
-    new WorkboxPlugin.GenerateSW({
-      swDest: 'service-worker.js',
-      importWorkboxFrom: 'local',
-      clientsClaim: true,
-      skipWaiting: true,
-      exclude: [/\.map\?\w+/],
-      dontCacheBustUrlsMatching: /\?\w{8,20}$/, // 不用插件的revision,而是通过URL中的版本戳进行唯一版本化,减少precache带来的带宽消耗
-      runtimeCaching: [
-        {
-          urlPattern: build.cacheApiRegular, // 匹配url
-          handler: 'networkFirst', // 网络优先
-        },
-        {
-          urlPattern: /\.(js|css)\?\w+/, // 匹配url
-          handler: 'networkFirst', // 网络优先
-        },
-      ],
-    }),
-  ] : []),
+  ]
+    .concat(
+      build.bundleAnalyzerReport
+        ? [
+            /** 分析打包情况* */
+            new BundleAnalyzerPlugin({
+              analyzerMode: 'static',
+              analyzerPort: build.analyzerPort,
+              openAnalyzer: false,
+              reportFilename: 'report.html',
+              excludeAssets: [/eruda/, /fundebug/],
+            }),
+          ]
+        : []
+    )
+    .concat(
+      RENDER_MODE === 'spa' && build.usePWA
+        ? [
+            new WorkboxPlugin.GenerateSW({
+              swDest: 'service-worker.js',
+              importWorkboxFrom: 'local',
+              clientsClaim: true,
+              skipWaiting: true,
+              exclude: [/\.map\?\w+/],
+              dontCacheBustUrlsMatching: /\?\w{8,20}$/, // 不用插件的revision,而是通过URL中的版本戳进行唯一版本化,减少precache带来的带宽消耗
+              runtimeCaching: [
+                {
+                  urlPattern: build.cacheApiRegular, // 匹配url
+                  handler: 'networkFirst', // 网络优先
+                },
+                {
+                  urlPattern: /\.(js|css)\?\w+/, // 匹配url
+                  handler: 'networkFirst', // 网络优先
+                },
+              ],
+            }),
+          ]
+        : []
+    ),
 });
 
 const serverConfig = {
@@ -142,34 +166,34 @@ const serverConfig = {
   },
   resolve: {
     modules: [common.clientPath, 'node_modules'],
-    extensions: [
-      '.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs',
-    ], // 当requrie的模块找不到时，添加这些后缀
+    extensions: ['.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs'], // 当requrie的模块找不到时，添加这些后缀
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [['@babel/preset-env', {
-              modules: 'commonjs',
-              useBuiltIns: 'usage',
-            }]],
-            plugins: [
-              'dynamic-import-node',
-            ],
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    modules: 'commonjs',
+                    useBuiltIns: 'usage',
+                  },
+                ],
+              ],
+              plugins: ['dynamic-import-node'],
+            },
           },
-        }],
+        ],
       },
       {
         test: /\.(css|less)$/,
-        use: [
-          'css-loader',
-          'less-loader',
-        ],
+        use: ['css-loader', 'less-loader'],
       },
       {
         test: /\.(gif|jpg|png|woff|svg|eot|ttf)$/,
@@ -187,11 +211,12 @@ const serverConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.SERVER_URL': JSON.stringify(build.SERVER_URL),
+      'process.env.BASE_PATH': JSON.stringify(build.BASE_PATH),
     }),
   ],
 };
 
-const prodConfig = RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
+const prodConfig =
+  RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
 
 module.exports = prodConfig;

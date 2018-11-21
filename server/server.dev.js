@@ -8,14 +8,22 @@ require('source-map-support').install();
 
 // Javascript require hook
 require('@babel/register')({
-  presets: [['@babel/preset-env', {
-    modules: 'commonjs',
-  }]],
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        modules: 'commonjs',
+      },
+    ],
+  ],
   plugins: [
-    ['module-resolver', {
-      extensions: ['.jsx', '.js', '.tsx', '.ts'],
-      root: ['client'],
-    }],
+    [
+      'module-resolver',
+      {
+        extensions: ['.jsx', '.js', '.tsx', '.ts'],
+        root: ['client'],
+      },
+    ],
     'dynamic-import-node',
   ],
 });
@@ -47,13 +55,12 @@ const { common, dev } = require('../config/build.config');
 const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const proxyMiddleware = require('proxy-middleware');
-const cookiesMiddleware = require('universal-cookie-express');
 const useragent = require('express-useragent');
 const chokidar = require('chokidar');
 
 const { RENDER_MODE } = process.env;
 
-process.env.SERVER_URL = dev.SERVER_URL;
+global.__ISOMORPHIC__ = process.env.RENDER_MODE === 'ssr';
 
 const compiler = webpack(config);
 
@@ -63,7 +70,7 @@ compiler.plugin('emit', (compilation, callback) => {
   let file;
   let data;
 
-  Object.keys(assets).forEach((key) => {
+  Object.keys(assets).forEach(key => {
     if (key.match(/\.html$/)) {
       file = path.join(common.viewPath, 'dev', key);
       data = assets[key].source();
@@ -75,31 +82,35 @@ compiler.plugin('emit', (compilation, callback) => {
 });
 
 // mock api requests
-Object.keys(mockTable).forEach((context) => {
+Object.keys(mockTable).forEach(context => {
   app.use(context, mockTable[context]);
 });
 
 // proxy api requests
-Object.keys(proxyTable).forEach((context) => {
+Object.keys(proxyTable).forEach(context => {
   const options = proxyTable[context];
   app.use(context, proxyMiddleware(options));
 });
 
-app.use(webpackHotMiddleware(compiler, {
-  path: '/__webpack_hmr',
-  heartbeat: 10 * 1000,
-}));
+app.use(
+  webpackHotMiddleware(compiler, {
+    path: '/__webpack_hmr',
+    heartbeat: 10 * 1000,
+  })
+);
 
 // Tell express to use the webpack-dev-middleware and use the webpack.config.js
 // configuration file as a base.
-app.get('/:path?/:filename(*.*)', webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-  hot: true,
-  noInfo: true,
-}));
+app.get(
+  '/:path?/:filename(*.*)',
+  webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+    hot: true,
+    noInfo: true,
+  })
+);
 
 if (RENDER_MODE === 'ssr') {
-  app.use(cookiesMiddleware());
   app.use(useragent.express());
 
   app.set('views', path.resolve(__dirname, '../views/dev'));
@@ -134,9 +145,9 @@ const watchConfig = {
   dir: [path.join(__dirname, '../client')],
   options: {},
 };
-chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (_path) => {
+chokidar.watch(watchConfig.dir, watchConfig.options).on('change', _path => {
   console.log(`${_path} changed`);
-  Object.keys(require.cache).forEach((cachePath) => {
+  Object.keys(require.cache).forEach(cachePath => {
     if (/[\/\\]client[\/\\]/.test(cachePath)) {
       cleanCache(cachePath);
     }
