@@ -1,9 +1,7 @@
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import reducers from 'Reducer';
+import rootReducer from 'Reducer';
 import Injector from '../Service';
-
-export const rootReducer = combineReducers(reducers);
 
 let middleware;
 

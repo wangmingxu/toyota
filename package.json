@@ -11,7 +11,6 @@
     "pre:spa": "better-npm-run pre:spa",
     "build:ssr": "better-npm-run build:ssr",
     "build:spa": "better-npm-run build:spa",
-    "upload": "node config/ftp.js",
     "tinypng": "gulp --gulpfile config/tinypng.js tinypng",
     "upload:map": "node config/mapFileUpload.js"
   },
@@ -69,7 +68,7 @@
     "@babel/polyfill": "^7.0.0-rc.1",
     "@lizhife/lz-market-service": "^1.0.5",
     "antd-mobile": "^2.0.0",
-    "axios": "^0.17.0",
+    "axios": "^0.18.0",
     "classnames": "^2.2.5",
     "di-sdk": "^1.0.5",
     "eruda": "^1.5.3",
@@ -93,7 +92,6 @@
     "redux-thunk": "^2.2.0",
     "reflect-metadata": "^0.1.12",
     "serialize-javascript": "^1.4.0",
-    "universal-cookie": "^3.0.4",
     "url-polyfill": "^1.1.0"
   },
   "devDependencies": {
@@ -156,8 +154,6 @@
     "style-loader": "^0.13.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "url-loader": "^0.5.7",
-    "vinyl-fs": "^2.4.4",
-    "vinyl-ftp": "^0.6.0",
     "webpack": "^4.8.3",
     "webpack-bundle-analyzer": "^2.11.1",
     "webpack-cli": "^2.1.3",
