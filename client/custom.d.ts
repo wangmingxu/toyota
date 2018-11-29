@@ -8,5 +8,3 @@ declare var PUBLIC_URL: string;
 declare var process: NodeJS.Process;
 
 declare var fundebug: any;
-
-declare var _hmt: any;
