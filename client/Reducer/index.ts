@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
-import Global, { GlobalStateType } from './Global';
+import Global, { IGlobalState } from './Global';
+import Injector from './Injector';
 
-export interface ApplicationState {
-  Global: GlobalStateType;
+export interface IApplicationState {
+  Global: IGlobalState;
+  Injector: any;
 }
 
-const rootReducer = combineReducers({
+const rootReducer = combineReducers<IApplicationState>({
   Global,
+  Injector
 });
 
 export default rootReducer;

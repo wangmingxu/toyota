@@ -1,24 +1,21 @@
-import { checkLogin, applyLogin } from 'utils/auth';
-
-export function toggleAuthStatus(isLogin: boolean) {
+export function toggleAuthStatus(isLogin) {
   return {
     type: 'toggleAuthStatus',
     isLogin,
   };
 }
-
-export const checkAuthStatus = (client?, cookies?) => async (dispatch) => {
-  const isLogin = await checkLogin(client, cookies);
+export const checkAuthStatus = () => async (dispatch, getState) => {
+  const { Injector } = getState();
+  const isLogin = await Injector.get('AuthServ').checkLogin();
   dispatch(toggleAuthStatus(isLogin));
   return isLogin;
 };
-
-export const login = () => async (dispatch) => {
-  await applyLogin();
+export const login = () => async (dispatch, getState) => {
+  const { Injector } = getState();
+  await Injector.get('AuthServ').applyLogin();
   dispatch(toggleAuthStatus(true));
 };
-
-export function collectErrMsg(msg: string) {
+export function collectErrMsg(msg) {
   return {
     type: 'errMsg',
     msg,

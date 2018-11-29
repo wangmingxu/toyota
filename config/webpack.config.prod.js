@@ -3,8 +3,6 @@
  */
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const baseConfig = require('./webpack.config.base');
-const info = require('./info');
 const utils = require('./utils');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -16,6 +14,8 @@ const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const info = require('./info');
+const baseConfig = require('./webpack.config.base');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const { RENDER_MODE } = process.env;
@@ -72,11 +72,7 @@ const clientConfig = merge(baseConfig, {
           'less-loader',
         ],
       },
-    ].concat(RENDER_MODE === 'spa' && build.codeSplit ? [{
-      test: /\.js$/,
-      include: path.join(common.clientPath, 'Page'),
-      use: ['bundle-loader?lazy', 'babel-loader'],
-    }] : []),
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin(Object.assign(info.app, {
@@ -104,6 +100,7 @@ const clientConfig = merge(baseConfig, {
       analyzerPort: build.analyzerPort,
       openAnalyzer: false,
       reportFilename: 'report.html',
+      excludeAssets: [/eruda/, /fundebug/],
     }),
   ] : []).concat(RENDER_MODE === 'spa' && build.usePWA ? [
     new WorkboxPlugin.GenerateSW({
@@ -205,7 +202,7 @@ const serverConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.SERVER_URL': JSON.stringify(build.SERVER_URL),
+      'process.env.BASE_PATH': JSON.stringify(build.BASE_PATH),
     }),
     new ForkTsCheckerWebpackPlugin({
       tsconfig: '../tsconfig.json',

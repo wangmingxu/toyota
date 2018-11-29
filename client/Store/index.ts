@@ -1,18 +1,23 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import rootReducer from 'Reducer';
+import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { createLogger } from 'redux-logger';
-import rootReducer from '../Reducer';
+import Injector from '../Service';
 
-const logger = createLogger();
+let middleware;
 
-const middleware = [thunk, logger];
+if (process.env.NODE_ENV === 'development') {
+  // tslint:disable-next-line:no-var-requires
+  middleware = [thunk, require('redux-logger').createLogger()];
+} else {
+  middleware = [thunk];
+}
 
-const initState = typeof window === 'object' ? window.REDUX_STATE : {};
+const ssrState = typeof window === 'object' ? (window as any).REDUX_STATE : {};
 
-export const configureStore = (state) => {
+export const configureStore = (state = {}) => {
   const store = createStore(
     rootReducer,
-    state || {},
+    { ...state, ...ssrState },
     compose(applyMiddleware(...middleware)),
   );
 
@@ -24,4 +29,4 @@ export const configureStore = (state) => {
   return store;
 };
 
-export default configureStore(initState);
+export default configureStore({ Injector });

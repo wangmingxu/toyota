@@ -1,19 +1,23 @@
+import logo from 'assets/logo.svg';
 import * as React from 'react';
-import api from 'utils/api';
 import '../styles/test.less';
-import { AuthRequestConfig } from 'utils/JWTInterceptor';
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
-    api.getCity<AuthRequestConfig>({test: 1}, {needAuth: false}).then((res) => {
-      console.log(res.data);
-    });
-  }
-  render() {
-    return (<div styleName='demo'>如需查看demo项目，请切换分支到singleDog分支</div>);
+  public render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p className="App-intro">
+          To get started, edit <code>src/App.tsx</code> and save to reload.
+        </p>
+      </div>
+    );
   }
 }
 

@@ -1,27 +1,27 @@
-export interface GlobalStateType {
+export interface IGlobalState {
   isLogin: boolean;
   errMsg: string[];
 }
 
-const initState: GlobalStateType = {
+const initState: IGlobalState = {
   isLogin: false,
   errMsg: [],
 };
 
 const Global = (state = initState, action) => {
   switch (action.type) {
-  case 'toggleAuthStatus':
-    return {
-      ...state,
-      isLogin: action.isLogin,
-    };
-  case 'errMsg':
-    return {
-      ...state,
-      errMsg: [...state.errMsg, action.msg],
-    };
-  default:
-    return state;
+    case 'toggleAuthStatus':
+      return {
+        ...state,
+        isLogin: action.isLogin,
+      };
+    case 'errMsg':
+      return {
+        ...state,
+        errMsg: [...state.errMsg, action.msg],
+      };
+    default:
+      return state;
   }
 };
 

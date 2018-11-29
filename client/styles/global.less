@@ -1,4 +1,3 @@
-@import "./antd-fix.less";
 :global {
   p {
     -webkit-margin-before: 0px;
@@ -43,7 +42,7 @@
   .left-leave {
     transform: translate3d(0, 0, 0);
   }
-  .left-leave.left-exit-active,
+  .left-exit.left-exit-active,
   .left-leave.left-leave-active {
     transform: translate3d(-100%, 0, 0);
     transition: 0.5s;
@@ -60,7 +59,7 @@
   .right-leave {
     transform: translate3d(0, 0, 0);
   }
-  .right-leave.right-exit-active,
+  .right-exit.right-exit-active,
   .right-leave.right-leave-active {
     transform: translate3d(100%, 0, 0);
     transition: 0.5s;
@@ -77,23 +76,16 @@
   .fade-leave {
     opacity: 1;
   }
-  .fade-leave.fade-exit-active,
+  .fade-exit.fade-exit-active,
   .fade-leave.fade-leave-active {
     opacity: 0;
     transition: all .5s ease-out;
   }
-  .routerWrapper {
+  .route-container {
     height: 100%;
     width: 100%;
     position: absolute;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-  }
-  .lz-logo {
-    position: absolute;
-    left: 25px;
-    top: 12px;
-    width: 157px;
-    height: 52px;
   }
 }

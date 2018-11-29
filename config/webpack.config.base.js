@@ -94,7 +94,7 @@ const baseConfig = {
     new webpack.ContextReplacementPlugin(/^\.\/locale$/, /zh-cn/),
     new ProgressBarPlugin(),
     new webpack.DefinePlugin({
-      __isomorphic__: RENDER_MODE === 'ssr',
+      __ISOMORPHIC__: RENDER_MODE === 'ssr',
       PUBLIC_URL: JSON.stringify(publicPath.slice(0, -1)),
     }),
     /** 抽取css文件* */

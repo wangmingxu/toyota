@@ -1,6 +1,21 @@
 const lessParser = require('postcss-less').parse;
-const utils = require('../config/utils');
 const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+
+const app = express();
+const config = require('../config/webpack.config.dev');
+const { common, dev } = require('../config/build.config');
+const proxyTable = require('../proxy/dev/proxyTable');
+const mockTable = require('../proxy/dev/mockTable');
+const proxyMiddleware = require('proxy-middleware');
+const useragent = require('express-useragent');
+const chokidar = require('chokidar');
+const utils = require('../config/utils');
+
 // Provide custom regenerator runtime and core-js
 require('@babel/polyfill');
 
@@ -38,25 +53,9 @@ require('asset-require-hook')({
   name: `/${utils.assetsPath('assets/[name].[ext]?[hash]')}`,
 });
 
-const fs = require('fs');
-const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-
-const app = express();
-const config = require('../config/webpack.config.dev');
-const { common, dev } = require('../config/build.config');
-const proxyTable = require('../proxy/dev/proxyTable');
-const mockTable = require('../proxy/dev/mockTable');
-const proxyMiddleware = require('proxy-middleware');
-const cookiesMiddleware = require('universal-cookie-express');
-const useragent = require('express-useragent');
-const chokidar = require('chokidar');
-
 const { RENDER_MODE } = process.env;
 
-process.env.SERVER_URL = dev.SERVER_URL;
+global.__ISOMORPHIC__ = process.env.RENDER_MODE === 'ssr';
 
 const compiler = webpack(config);
 
@@ -103,7 +102,6 @@ app.get('/:path?/:filename(*.*)', webpackDevMiddleware(compiler, {
 }));
 
 if (RENDER_MODE === 'ssr') {
-  app.use(cookiesMiddleware());
   app.use(useragent.express());
 
   app.set('views', path.resolve(__dirname, '../views/dev'));

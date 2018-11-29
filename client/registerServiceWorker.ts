@@ -59,8 +59,8 @@ const isLocalhost = Boolean(
         console.log('SW registered: ', registration);
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
-          installingWorker.onstatechange = () => {
-            if (installingWorker.state === 'installed') {
+          installingWorker!.onstatechange = () => {
+            if (installingWorker!.state === 'installed') {
               if (navigator.serviceWorker.controller) {
                 // At this point, the old content will have been purged and
                 // the fresh content will have been added to the cache.
@@ -89,7 +89,7 @@ const isLocalhost = Boolean(
         // Ensure service worker exists, and that we really are getting a JS file.
         if (
           response.status === 404 ||
-          response.headers.get('content-type').indexOf('javascript') === -1
+          response.headers.get('content-type')!.indexOf('javascript') === -1
         ) {
           // No service worker found. Probably a different app. Reload the page.
           navigator.serviceWorker.ready.then(registration => {

@@ -1,8 +1,8 @@
 // 开发构建配置
 const webpack = require('webpack');
-const baseConfig = require('./webpack.config.base');
 const merge = require('webpack-merge');
-const { common, dev } = require('./build.config');
+const baseConfig = require('./webpack.config.base');
+const { common } = require('./build.config');
 const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -49,8 +49,5 @@ module.exports = merge(baseConfig, {
       filename: 'index.html',
       isomorphic: RENDER_MODE === 'ssr',
     })),
-    new webpack.DefinePlugin({
-      'process.env.SERVER_URL': JSON.stringify(dev.SERVER_URL),
-    }),
   ],
 });
