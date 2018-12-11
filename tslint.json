@@ -30,6 +30,7 @@
     "object-literal-sort-keys":false,
     "jsx-no-lambda":false,
     "no-unused-expression":false,
-    "no-console":false
+    "no-console":false,
+    "semicolon":true
   }
 }

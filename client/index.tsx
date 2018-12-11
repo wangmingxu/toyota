@@ -1,7 +1,9 @@
+import routes from '@/Route';
+import store from '@/Store/index';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import store from 'Store/index';
+import { matchRoutes } from 'react-router-config';
 import App from './App';
 import './common';
 
@@ -18,7 +20,18 @@ const bootstrap = AppComponent => {
   );
 };
 
-bootstrap(App);
+if (__ISOMORPHIC__) {
+  const currentRoute = matchRoutes(routes, location.pathname)[0];
+  if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) {
+    (currentRoute.route.component as any).preload().then(() => {
+      bootstrap(App);
+    });
+  } else {
+    bootstrap(App);
+  }
+} else {
+  bootstrap(App);
+}
 
 if (module.hot) {
   module.hot.accept('./Store', () => {

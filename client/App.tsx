@@ -1,17 +1,17 @@
-import ShareService from '@lizhife/lz-market-service/package/ShareService';
-import * as GlobalActions from 'Action/Global';
+import * as GlobalActions from '@/Action/Global';
+import RouteWrapper from '@/Component/RouteWrapper';
+import { IApplicationState } from '@/Reducer';
+import routes from '@/Route';
+import ShareService from '@lz-service/ShareService';
 import { ActivityIndicator } from 'antd-mobile';
-import RouteWrapper from 'Component/RouteWrapper';
-import React, { Suspense } from 'react';
+import React, { PureComponent, Suspense } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { BrowserRouter, HashRouter, Route } from 'react-router-dom';
-import { IApplicationState } from 'Reducer';
 import { bindActionCreators, compose } from 'redux';
-import routes from 'Route';
 
-const Router = __ISOMORPHIC__ ? BrowserRouter : HashRouter;
+const Router: any = __ISOMORPHIC__ ? BrowserRouter : HashRouter;
 
 const basename = process.env.BASE_PATH || '';
 
@@ -20,7 +20,7 @@ interface IProps {
   shareServ: ShareService;
 }
 
-class App extends React.Component<IProps> {
+class App extends PureComponent<IProps> {
   public componentDidMount() {
     this.props.checkAuthStatus();
     this.props.shareServ.configShareInfo();
@@ -38,7 +38,13 @@ class App extends React.Component<IProps> {
     return (
       <Router basename={basename}>
         <Suspense fallback={<ActivityIndicator toast={true} text="Loading..." />}>
-          <Route render={props => <RouteWrapper {...props}>{renderRoutes(routes)}</RouteWrapper>} />
+          <Route
+            render={props => (
+              <RouteWrapper {...props}>
+                {renderRoutes(routes, null, { location: props.location })}
+              </RouteWrapper>
+            )}
+          />
         </Suspense>
       </Router>
     );

@@ -1,11 +1,11 @@
 // 开发构建配置
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const baseConfig = require('./webpack.config.base');
-const { common } = require('./build.config');
-const info = require('./info');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const info = require('./info');
+const { common } = require('./build.config');
+const baseConfig = require('./webpack.config.base');
 
 const { RENDER_MODE } = process.env;
 

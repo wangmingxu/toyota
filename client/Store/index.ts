@@ -1,5 +1,5 @@
-import rootReducer from 'Reducer';
-import { applyMiddleware, compose, createStore } from 'redux';
+import rootReducer from '@/Reducer';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import Injector from '../Service';
 
@@ -12,13 +12,13 @@ if (process.env.NODE_ENV === 'development') {
   middleware = [thunk];
 }
 
-const ssrState = typeof window === 'object' ? (window as any).REDUX_STATE : {};
+const ssrState = typeof window === 'object' ? window.REDUX_STATE : {};
 
 export const configureStore = (state = {}) => {
   const store = createStore(
     rootReducer,
     { ...state, ...ssrState },
-    compose(applyMiddleware(...middleware)),
+    applyMiddleware(...middleware),
   );
 
   if (module.hot) {
