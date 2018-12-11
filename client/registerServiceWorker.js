@@ -71,7 +71,7 @@ function checkValidServiceWorker(swUrl) {
     });
 }
 
-export default function register() {
+export default function registerServiceWorker() {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(PUBLIC_URL, window.location);//eslint-disable-line
@@ -83,7 +83,7 @@ export default function register() {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = '/service-worker.js';
+      const swUrl = './service-worker.js';
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
@@ -113,4 +113,4 @@ export function unregister() {
   }
 }
 
-register();
+registerServiceWorker();

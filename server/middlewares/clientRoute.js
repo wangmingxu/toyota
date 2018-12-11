@@ -1,23 +1,20 @@
 import express from 'express';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { configureStore } from 'Store';
+import { configureStore } from '@/Store';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter, Route } from 'react-router';
-import routes from 'Route';
+import routes from '@/Route';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 import serialize from 'serialize-javascript';
-import { collectErrMsg } from 'Action/Global';
-import { createInjector } from 'Service';
-import { COOKIE_STR_TOKEN } from 'di-sdk/package/CookieService';
-import { APP_USERAGENT_TOKEN } from 'di-sdk/package/ClientDetectService';
-import UseragentInterceptor from 'di-sdk/package/WithUAReqInterceptor';
-import {
-  URL_INJECT_TOKEN,
-  LocationService,
-} from 'di-sdk/package/LocationService';
-import RelPathInterceptor from 'di-sdk/package/RelpathReqInterceptor';
-import { HTTP_REQUEST_INTERCEPTORS } from 'di-sdk/package/HttpService';
+import { collectErrMsg } from '@/Action/Global';
+import { createInjector } from '@/Service';
+import { COOKIE_STR_TOKEN } from '@common-service/CookieService';
+import { APP_USERAGENT_TOKEN } from '@common-service/ClientDetectService';
+import UseragentInterceptor from '@common-service/WithUAReqInterceptor';
+import { URL_INJECT_TOKEN, LocationService } from '@common-service/LocationService';
+import RelPathInterceptor from '@common-service/RelpathReqInterceptor';
+import { HTTP_REQUEST_INTERCEPTORS } from '@common-service/HttpService';
 import omit from 'lodash/omit';
 import url from 'url';
 
@@ -32,9 +29,7 @@ router.use(async (req, res) => {
   } = req;
   // Todo:如果有Nginx代理层,url可能会有异常
   const host = req.get('host');
-  const hostname = /localhost/.test(host)
-    ? host.replace('localhost', '127.0.0.1')
-    : host;
+  const hostname = /localhost/.test(host) ? host.replace('localhost', '127.0.0.1') : host;
   const reqUrl = `${protocol}://${hostname}${originalUrl}`;
   const Injector = createInjector([
     { provide: COOKIE_STR_TOKEN, useValue: cookie },
@@ -53,10 +48,7 @@ router.use(async (req, res) => {
     },
   ]);
   const store = configureStore({ Injector });
-  const currentRoute = matchRoutes(
-    routes,
-    originalUrl.replace(url.parse(originalUrl).search, '')
-  );
+  const currentRoute = matchRoutes(routes, originalUrl.replace(url.parse(originalUrl).search, ''));
   // console.log(currentRoute);
 
   // 通过组件上的getInitialProps静态方法获取数据
@@ -74,11 +66,7 @@ router.use(async (req, res) => {
     const context = {};
     const html = ReactDOMServer.renderToString(
       <Provider store={store}>
-        <StaticRouter
-          location={req.originalUrl}
-          context={context}
-          basename={basename}
-        >
+        <StaticRouter location={req.originalUrl} context={context} basename={basename}>
           <Route render={() => renderRoutes(routes)} />
         </StaticRouter>
       </Provider>

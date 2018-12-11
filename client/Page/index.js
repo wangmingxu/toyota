@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchPosition } from 'Action/Demo';
+import { fetchPosition } from '@/Action/Demo';
 import '../styles/demo.less';
 import PropTypes from 'prop-types';
 

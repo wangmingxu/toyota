@@ -7,8 +7,7 @@ const { theme } = require('../package.json');
 
 const { NODE_ENV, RENDER_MODE } = process.env;
 
-const publicPath =
-  NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
+const publicPath = NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
 
 const baseConfig = {
   context: common.clientPath,
@@ -26,10 +25,13 @@ const baseConfig = {
     crossOriginLoading: NODE_ENV === 'production' ? 'anonymous' : false, // 只有按需加载chunk时才会加这个属性
   },
   resolve: {
-    modules: [common.clientPath, 'node_modules'],
+    modules: ['node_modules'],
     extensions: ['.js', '.jsx', '.json', '.scss', '.less'], // 当requrie的模块找不到时，添加这些后缀
     alias: {
       '@': common.clientPath,
+      '@lz-component': '@lizhife/lz-market-component/lib',
+      '@lz-service': '@lizhife/lz-market-service/package',
+      '@common-service': 'di-sdk/package',
     },
   },
   module: {

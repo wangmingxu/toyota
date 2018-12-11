@@ -1,5 +1,5 @@
 import React from 'react';
-import Injector from '../Service';
+import Injector from '@/Service';
 
 const ServiceContext = React.createContext(Injector);
 

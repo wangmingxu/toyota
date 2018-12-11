@@ -6,6 +6,7 @@ const fs = require('fs');
 const config = require('./build.config');
 const os = require('os');
 const { exec } = require('child_process');
+
 // 自动获取入口配置
 exports.getEntrys = function(dirname) {
   return fs.readdirSync(dirname).reduce((entries, dir) => {
@@ -21,6 +22,7 @@ exports.getEntrys = function(dirname) {
     return entries;
   }, {});
 };
+
 // 获取本地IP
 exports.getIP = function() {
   const ifaces = os.networkInterfaces();
@@ -32,6 +34,7 @@ exports.getIP = function() {
   });
   return ip;
 };
+
 // 自动打开浏览器
 exports.open = function(url) {
   let cmd;
@@ -44,6 +47,7 @@ exports.open = function(url) {
   }
   exec(`${cmd} "${url}"`);
 };
+
 // 设置输出路径
 exports.assetsPath = function(_path) {
   const assetsSubDirectory =

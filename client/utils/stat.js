@@ -1,4 +1,4 @@
-import { BaiduStatKey, fundebugApiKey } from 'constant';
+import { BaiduStatKey, fundebugApiKey } from '@/constant';
 
 export const initBaiduStat = () => {
   window._hmt = window._hmt || [];

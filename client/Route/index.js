@@ -1,4 +1,10 @@
-import { lazy } from 'react';
+import { lazyWithPreload } from '@/utils/preload';
+import index from '@/Page/index';
+
+const createComponent = Component =>
+  Component.displayName || Component.name
+    ? Component
+    : lazyWithPreload(() => new Promise(resolve => Component(resolve)));
 
 // 如果需要执行前后端通用的应用级初始化启动逻辑(比如登录状态检查)
 // 可以在routes建一个根节点Root,
@@ -6,7 +12,7 @@ import { lazy } from 'react';
 const routes = [
   {
     path: '/',
-    component: __ISOMORPHIC__ ? require('Page/index').default : lazy(() => import('Page/index')),
+    component: createComponent(index),
     exact: true,
   },
 ];

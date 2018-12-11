@@ -80,16 +80,34 @@ const clientConfig = merge(baseConfig, {
           'less-loader',
         ],
       },
-    ],
+    ].concat(
+      build.codeSplit
+        ? [
+            {
+              test: /\.(ts|tsx)$/,
+              include: path.join(common.clientPath, 'Page'),
+              use: [
+                'bundle-loader?lazy',
+                'babel-loader?cacheDirectory',
+                {
+                  loader: 'awesome-typescript-loader',
+                  options: {
+                    // disable type checker - we will use it in fork plugin
+                    transpileOnly: true,
+                  },
+                },
+              ],
+            },
+          ]
+        : []
+    ),
   },
   plugins: [
     new HtmlWebpackPlugin(
       Object.assign(info.app, {
         template: common.index,
         filename:
-          RENDER_MODE === 'ssr'
-            ? path.join(common.viewPath, 'prod/index.html')
-            : 'index.html',
+          RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
         isomorphic: RENDER_MODE === 'ssr',
       })
     ),
@@ -129,7 +147,8 @@ const clientConfig = merge(baseConfig, {
               importWorkboxFrom: 'local',
               clientsClaim: true,
               skipWaiting: true,
-              exclude: [/\.map\?\w+/],
+              exclude: [/\.map\?\w+/, /\.html$/], // 如果不需要离线访问功能建议不缓存html
+              // ignoreUrlParametersMatching: [/./],//查找缓存时忽略查询参数
               dontCacheBustUrlsMatching: /\?\w{8,20}$/, // 不用插件的revision,而是通过URL中的版本戳进行唯一版本化,减少precache带来的带宽消耗
               runtimeCaching: [
                 {
@@ -167,6 +186,7 @@ const serverConfig = {
   resolve: {
     modules: [common.clientPath, 'node_modules'],
     extensions: ['.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs'], // 当requrie的模块找不到时，添加这些后缀
+    alias: baseConfig.resolve.alias,
   },
   module: {
     rules: [
@@ -216,7 +236,6 @@ const serverConfig = {
   ],
 };
 
-const prodConfig =
-  RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
+const prodConfig = RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
 
 module.exports = prodConfig;

@@ -1,14 +1,14 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, PureComponent } from 'react';
 import { BrowserRouter, HashRouter, Route } from 'react-router-dom';
-import routes from 'Route';
-import RouteWrapper from 'Component/RouteWrapper';
+import routes from '@/Route';
+import RouteWrapper from '@/Component/RouteWrapper';
 import { renderRoutes } from 'react-router-config';
 import { hot } from 'react-hot-loader';
 import { ActivityIndicator } from 'antd-mobile';
-import ServiceContext from './Context/ServiceContext';
+import ServiceContext from '@/Context/ServiceContext';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as GlobalActions from 'Action/Global';
+import * as GlobalActions from '@/Action/Global';
 
 const Router = __ISOMORPHIC__ ? BrowserRouter : HashRouter;
 const basename = process.env.BASE_PATH || '';
@@ -18,7 +18,7 @@ const basename = process.env.BASE_PATH || '';
   state => ({ shareServ: state.Injector.get('shareServ') }),
   dispatch => bindActionCreators(GlobalActions, dispatch)
 )
-class App extends React.Component {
+class App extends PureComponent {
   static contextType = ServiceContext;
   componentDidMount() {
     this.props.checkAuthStatus();
@@ -35,7 +35,13 @@ class App extends React.Component {
     return (
       <Router basename={basename}>
         <Suspense fallback={<ActivityIndicator toast text="Loading..." />}>
-          <Route render={props => <RouteWrapper {...props}>{renderRoutes(routes)}</RouteWrapper>} />
+          <Route
+            render={props => (
+              <RouteWrapper {...props}>
+                {renderRoutes(routes, null, { location: props.location })}
+              </RouteWrapper>
+            )}
+          />
         </Suspense>
       </Router>
     );
