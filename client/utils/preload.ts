@@ -1,4 +1,6 @@
+import routes from '@/Route';
 import { ComponentType, lazy, LazyExoticComponent } from 'react';
+import { matchRoutes } from 'react-router-config';
 
 enum LazyComponentStatus {
     Pending  = -1,
@@ -33,4 +35,11 @@ export const lazyWithPreload = (factory): ILazyComponent => {
         return mod;
     };
     return Component;
+};
+
+export const preloadRoute = async (pathname: string) => {
+    const currentRoute = matchRoutes(routes, pathname)[0];
+    if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) { 
+        await (currentRoute.route.component as any).preload();
+    }
 };

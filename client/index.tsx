@@ -1,9 +1,8 @@
-import routes from '@/Route';
 import store from '@/Store/index';
+import { preloadRoute } from '@/utils/preload';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { matchRoutes } from 'react-router-config';
 import App from './App';
 import './common';
 
@@ -21,14 +20,9 @@ const bootstrap = AppComponent => {
 };
 
 if (__ISOMORPHIC__) {
-  const currentRoute = matchRoutes(routes, location.pathname)[0];
-  if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) {
-    (currentRoute.route.component as any).preload().then(() => {
-      bootstrap(App);
-    });
-  } else {
+  preloadRoute(location.pathname).then(() => {
     bootstrap(App);
-  }
+  });
 } else {
   bootstrap(App);
 }
