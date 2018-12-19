@@ -1,6 +1,5 @@
 import { lazy } from 'react';
 import { matchRoutes } from 'react-router-config';
-import routes from '@/Route';
 
 export const preloadResource = url => {
   const isPreload = checkIsPreloaded(url);
@@ -28,7 +27,7 @@ export const lazyWithPreload = factory => {
   return Component;
 };
 
-export const preloadRoute = async pathname => {
+export const preloadRoute = async (pathname, routes) => {
   const currentRoute = matchRoutes(routes, pathname)[0];
   if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) {
     await currentRoute.route.component.preload();
