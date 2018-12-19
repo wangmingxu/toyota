@@ -1,3 +1,4 @@
+import routes from '@/Route';
 import store from '@/Store/index';
 import { preloadRoute } from '@/utils/preload';
 import React from 'react';
@@ -20,7 +21,7 @@ const bootstrap = AppComponent => {
 };
 
 if (__ISOMORPHIC__) {
-  preloadRoute(location.pathname).then(() => {
+  preloadRoute(location.pathname, routes).then(() => {
     bootstrap(App);
   });
 } else {
@@ -28,7 +29,7 @@ if (__ISOMORPHIC__) {
 }
 
 if (module.hot) {
-  module.hot.accept('./Store', () => {
+  module.hot.accept(['./Store', './Route'], () => {
     ReactDOM.unmountComponentAtNode(root as HTMLElement);
     bootstrap(App);
   });

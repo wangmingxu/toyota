@@ -1,7 +1,4 @@
-export interface IGlobalState {
-  isLogin: boolean;
-  errMsg: string[];
-}
+import { IGlobalState } from '@/types';
 
 const initState: IGlobalState = {
   isLogin: false,
