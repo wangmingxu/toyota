@@ -29,7 +29,7 @@ if (__ISOMORPHIC__) {
 }
 
 if (module.hot) {
-  module.hot.accept(['./Store', './Route'], () => {
+  module.hot.accept(['./Store', './Route', './App'], () => {
     ReactDOM.unmountComponentAtNode(root);
     bootstrap(App);
   });

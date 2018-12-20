@@ -7,7 +7,8 @@ const { theme } = require('../package.json');
 
 const { NODE_ENV, RENDER_MODE } = process.env;
 
-const publicPath = NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
+const publicPath =
+  NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
 
 const baseConfig = {
   context: common.clientPath,

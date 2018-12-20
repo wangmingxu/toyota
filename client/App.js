@@ -3,7 +3,6 @@ import { BrowserRouter, HashRouter, Route } from 'react-router-dom';
 import routes from '@/Route';
 import RouteWrapper from '@/Component/RouteWrapper';
 import { renderRoutes } from 'react-router-config';
-import { hot } from 'react-hot-loader';
 import { ActivityIndicator } from 'antd-mobile';
 import ServiceContext from '@/Context/ServiceContext';
 import { connect } from 'react-redux';
@@ -13,7 +12,6 @@ import * as GlobalActions from '@/Action/Global';
 const Router = __ISOMORPHIC__ ? BrowserRouter : HashRouter;
 const basename = process.env.BASE_PATH || '';
 
-@hot(module)
 @connect(
   state => ({ shareServ: state.Injector.get('shareServ') }),
   dispatch => bindActionCreators(GlobalActions, dispatch)

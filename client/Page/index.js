@@ -4,7 +4,6 @@ import { fetchPosition } from '@/Action/Demo';
 import '../styles/demo.less';
 import PropTypes from 'prop-types';
 
-@connect(state => ({ position: state.Demo.position }))
 class Index extends React.Component {
   static getInitialProps = async dispatch => {
     await dispatch(fetchPosition());
@@ -27,4 +26,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default connect(state => ({ position: state.Demo.position }))(Index);

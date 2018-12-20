@@ -107,7 +107,9 @@ const clientConfig = merge(baseConfig, {
       Object.assign(info.app, {
         template: common.index,
         filename:
-          RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
+          RENDER_MODE === 'ssr'
+            ? path.join(common.viewPath, 'prod/index.html')
+            : 'index.html',
         isomorphic: RENDER_MODE === 'ssr',
       })
     ),
@@ -236,6 +238,7 @@ const serverConfig = {
   ],
 };
 
-const prodConfig = RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
+const prodConfig =
+  RENDER_MODE === 'ssr' ? [clientConfig, serverConfig] : clientConfig;
 
 module.exports = prodConfig;
