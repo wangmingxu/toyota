@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
 const info = require('./info');
 const { common } = require('./build.config');
 const baseConfig = require('./webpack.config.base');
@@ -13,11 +14,16 @@ module.exports = merge(baseConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   entry: [
-    'react-hot-loader/patch',
+    path.resolve(common.clientPath, 'rhlConfig.ts'),
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     'webpack/hot/only-dev-server',
     baseConfig.entry.app,
   ],
+  resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
+  },
   module: {
     rules: [
       {
