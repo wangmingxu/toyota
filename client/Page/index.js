@@ -1,29 +1,40 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchPosition } from '@/Action/Demo';
+import AsyncRender from '@/Component/AsyncRender';
+import ServiceContext from '@/Context/ServiceContext';
+import withAsyncData from '@/Hoc/withAsyncData';
 import '../styles/demo.less';
-import PropTypes from 'prop-types';
 
 class Index extends React.Component {
-  static getInitialProps = async dispatch => {
-    await dispatch(fetchPosition());
-  };
-  static propTypes = {
-    position: PropTypes.string.isRequired,
-    dispatch: PropTypes.func.isRequired,
-  };
-  componentDidMount() {
-    this.constructor.getInitialProps(this.props.dispatch);
+  static contextType = ServiceContext;
+
+  static async getInitialProps({ injector }) {
+    const data = await new Promise(resolve => {
+      setTimeout(() => {
+        resolve('Hello World');
+      }, 1000);
+    });
+    return { initialData: data };
   }
+  
+  authServ = this.context.get('authServ');
+
   render() {
-    const { position } = this.props;
     return (
-      <div styleName="demo">
-        当前所在的城市为:
-        {position}
+      <div className="App">
+        <header className="App-header">
+          <img src={require('@/assets/logo.svg')} className="App-logo" alt="logo" />
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+        <p>{this.props.initialData}</p>
+        <AsyncRender observable={this.authServ.getAuthStatus()}>
+          {isLogin => <p>{isLogin ? '已登陆' : '未登录'}</p>}
+        </AsyncRender>
       </div>
     );
   }
 }
 
-export default connect(state => ({ position: state.Demo.position }))(Index);
+export default withAsyncData()(Index);

@@ -5,23 +5,14 @@ import RouteWrapper from '@/Component/RouteWrapper';
 import { renderRoutes } from 'react-router-config';
 import { ActivityIndicator } from 'antd-mobile';
 import ServiceContext from '@/Context/ServiceContext';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as GlobalActions from '@/Action/Global';
 
 const Router = __ISOMORPHIC__ ? BrowserRouter : HashRouter;
+
 const basename = process.env.BASE_PATH || '';
 
-@connect(
-  state => ({ shareServ: state.Injector.get('shareServ') }),
-  dispatch => bindActionCreators(GlobalActions, dispatch)
-)
 class App extends PureComponent {
   static contextType = ServiceContext;
-  componentDidMount() {
-    this.props.checkAuthStatus();
-    this.props.shareServ.configShareInfo();
-  }
+
   componentDidCatch(error, info) {
     fundebug.notifyError(error, {
       metaData: {
@@ -29,14 +20,20 @@ class App extends PureComponent {
       },
     });
   }
+
   render() {
+    const { initialData } = this.props;
     return (
       <Router basename={basename}>
         <Suspense fallback={<ActivityIndicator toast text="Loading..." />}>
           <Route
             render={props => (
               <RouteWrapper {...props}>
-                {renderRoutes(routes, null, { location: props.location })}
+                {renderRoutes(
+                  routes,
+                  { __initialData__: initialData },
+                  { location: props.location }
+                )}
               </RouteWrapper>
             )}
           />

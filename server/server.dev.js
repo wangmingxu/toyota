@@ -1,6 +1,10 @@
+// Provide custom regenerator runtime and core-js
+require('@babel/polyfill');
+// polyfill for injection-js
+require('reflect-metadata');
+
 const lessParser = require('postcss-less').parse;
 const utils = require('../config/utils');
-
 const path = require('path');
 const fs = require('fs');
 const express = require('express');
@@ -8,24 +12,21 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const proxyMiddleware = require('proxy-middleware');
-const useragent = require('express-useragent');
 const chokidar = require('chokidar');
-
-const app = express();
 const config = require('../config/webpack.config.dev');
 const { common, dev } = require('../config/build.config');
 const proxyTable = require('../proxy/dev/proxyTable');
 const mockTable = require('../proxy/dev/mockTable');
 const baseWebpackConfig = require('../config/webpack.config.base');
 
-// Provide custom regenerator runtime and core-js
-require('@babel/polyfill');
+const app = express();
 
 // Node babel source map support
 require('source-map-support').install();
 
 // Javascript require hook
 require('@babel/register')({
+  ignore: [/node_modules\/(?!.+\/package\/)/],
   presets: [
     [
       '@babel/preset-env',
@@ -38,7 +39,7 @@ require('@babel/register')({
     [
       'module-resolver',
       {
-        extensions: ['.jsx', '.js', '.tsx', '.ts'],
+        extensions: ['.jsx', '.js'],
         root: ['../'],
         alias: baseWebpackConfig.resolve.alias,
       },
@@ -114,15 +115,13 @@ app.get(
 );
 
 if (RENDER_MODE === 'ssr') {
-  app.use(useragent.express());
-
   app.set('views', path.resolve(__dirname, '../views/dev'));
   app.set('view engine', 'html');
   // app.engine('html', require('ejs').renderFile);
   app.engine('html', require('hbs').__express);
 
   app.use((req, res, next) => {
-    require('./middlewares/clientRoute')(req, res, next);
+    require('./middlewares/clientRoute').default(req, res, next);
   });
 } else {
   app.get('/', (req, res) => {
@@ -148,8 +147,8 @@ const watchConfig = {
   dir: [path.join(__dirname, '../client')],
   options: {},
 };
-chokidar.watch(watchConfig.dir, watchConfig.options).on('change', _path => {
-  console.log(`${_path} changed`);
+chokidar.watch(watchConfig.dir, watchConfig.options).on('change', fileName => {
+  console.log(`${fileName} changed`);
   Object.keys(require.cache).forEach(cachePath => {
     if (/[\/\\]client[\/\\]/.test(cachePath)) {
       cleanCache(cachePath);

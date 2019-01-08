@@ -1,20 +1,18 @@
-const path = require('path');
-const express = require('express');
-const useragent = require('express-useragent');
-const clientRoute = require('./middlewares/clientRoute');
-const proxyMiddleware = require('proxy-middleware');
-const proxyTable = require('../proxy/prod/proxyTable');
+import 'reflect-metadata';
+import express from 'express';
+import path from 'path';
+import proxyMiddleware from 'proxy-middleware';
+import { build } from '../config/build.config';
+import * as proxyTable from '../proxy/prod/proxyTable';
+import clientRoute from './middlewares/clientRoute';
 
 const app = express();
-const { build } = require('../config/build.config');
 
 // proxy api requests
 Object.keys(proxyTable).forEach(context => {
   const options = proxyTable[context];
   app.use(context, proxyMiddleware(options));
 });
-
-app.use(useragent.express());
 
 app.use(express.static(path.resolve(__dirname, '../../dist')));
 // console.log(common.distPath);

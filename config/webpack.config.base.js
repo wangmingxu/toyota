@@ -7,14 +7,11 @@ const { theme } = require('../package.json');
 
 const { NODE_ENV, RENDER_MODE } = process.env;
 
-const publicPath =
-  NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
+const publicPath = NODE_ENV === 'production' ? build.assetsPublicPath : dev.assetsPublicPath;
 
 const baseConfig = {
   context: common.clientPath,
-  entry: {
-    app: common.entry,
-  },
+  entry: [common.polyfill, common.entry],
   output: {
     path: common.distPath,
     filename:
@@ -33,6 +30,7 @@ const baseConfig = {
       '@lz-component': '@lizhife/lz-market-component/lib',
       '@lz-service': '@lizhife/lz-market-service/package',
       '@common-service': 'di-sdk/package',
+      'babel-runtime': '@babel/runtime',
     },
   },
   module: {

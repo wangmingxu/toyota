@@ -28,8 +28,13 @@ export const lazyWithPreload = factory => {
 };
 
 export const preloadRoute = async (pathname, routes) => {
-  const currentRoute = matchRoutes(routes, pathname)[0];
-  if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) {
-    await currentRoute.route.component.preload();
-  }
+  const currentRoute = matchRoutes(routes, pathname);
+  const preloadTask = currentRoute
+    .filter(({ route }) => {
+      return Object.prototype.hasOwnProperty.call(route.component, 'preload');
+    })
+    .map(({ route }) => {
+      return route.component.preload();
+    });
+  await Promise.all(preloadTask);
 };

@@ -17,7 +17,6 @@ module.exports = merge(baseConfig, {
     path.resolve(common.clientPath, 'rhlConfig.js'),
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     'webpack/hot/only-dev-server',
-    baseConfig.entry.app,
   ],
   resolve: {
     alias: {
@@ -54,7 +53,6 @@ module.exports = merge(baseConfig, {
       Object.assign(info.app, {
         template: common.index,
         filename: 'index.html',
-        isomorphic: RENDER_MODE === 'ssr',
       })
     ),
   ],

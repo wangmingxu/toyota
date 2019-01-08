@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { ReflectiveInjector } from 'injection-js';
 // import { ClientDetectService, APP_USERAGENT_TOKEN } from '@common-service/ClientDetectService';
 import {
@@ -26,7 +25,7 @@ const defaultProvider = [
   { provide: 'cdServ', useExisting: ClientDetectService },
   { provide: '$http', useExisting: HttpService },
   { provide: 'cookieServ', useExisting: CookieService },
-  { provide: 'AuthServ', useExisting: AuthService },
+  { provide: 'authServ', useExisting: AuthService },
   { provide: APP_CONFIG_TOKEN, useValue: config },
   {
     provide: HTTP_RESPONSE_INTERCEPTORS,
