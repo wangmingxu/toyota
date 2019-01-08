@@ -5,7 +5,7 @@
     "jsx": "preserve",
     "allowJs": false,
     "pretty": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -21,7 +21,7 @@
     "noUnusedLocals": true,
     "downlevelIteration": true,
     "typeRoots": ["node_modules/@types"],
-    "types": ["webpack-env", "react-css-modules"],
+    "types": ["webpack-env", "react-css-modules", "node"],
     "lib": ["es6", "es2017", "dom", "es2018"],
     "baseUrl": "./",
     "paths": {
@@ -31,6 +31,5 @@
       "@common-service/*": ["node_modules/di-sdk/package/*"]
     }
   },
-  "include": ["client"],
-  "exclude": ["node_modules", "dist", "./config", "./proxy", "./server"]
+  "exclude": ["node_modules", "dist", "./config", "./proxy"]
 }

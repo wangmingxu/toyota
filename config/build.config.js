@@ -8,6 +8,7 @@ const DIST_PATH = path.join(ROOT_PATH, 'dist'); // 输出目录
 const SERVER_PATH = path.join(ROOT_PATH, 'server'); // 输出目录
 module.exports = {
   common: {
+    polyfill: path.resolve(CLIENT_PATH, 'polyfill.ts'),
     entry: path.resolve(CLIENT_PATH, 'index.tsx'), // js入口
     index: path.resolve(VIEW_PATH, 'tpl/index.html'), // html入口
     rootPath: ROOT_PATH,
@@ -18,7 +19,7 @@ module.exports = {
   },
   build: {
     port: 8080,
-    BASE_PATH: '/', // 用于React-Router的basename
+    BASE_PATH: '', // 用于React-Router的basename
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'client', // 单独创建一个目录存放静态资源，方便upload
     assetsPublicPath: `https://bizadv.lizhi.fm/festatic/${name}/`,
@@ -27,7 +28,8 @@ module.exports = {
     analyzerPort: 7777,
     tinyApiKey: '6i9NPe1a2nU6YN1k5tjrTEQyK4h3-ZDU',
     mergeCssChunks: true,
-    usePWA: true, // 是否启用PWA,如果已经开启了服务端渲染,则此选项不会生效
+    usePWA: false, // 是否启用PWA
+    PWAEntry: path.resolve(CLIENT_PATH, 'registerServiceWorker.ts'), // js入口
     cacheApiRegular: /hangzhou\/singleDog/, // 正则匹配需要缓存的api链接,用于离线应用
   },
   dev: {

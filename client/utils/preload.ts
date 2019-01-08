@@ -37,8 +37,11 @@ export const lazyWithPreload = (factory): ILazyComponent => {
 };
 
 export const preloadRoute = async (pathname: string, routes: RouteConfig[]) => {
-    const currentRoute = matchRoutes(routes, pathname)[0];
-    if (Object.prototype.hasOwnProperty.call(currentRoute.route.component, 'preload')) { 
-        await (currentRoute.route.component as any).preload();
-    }
+    const currentRoute = matchRoutes(routes, pathname);
+    const preloadTask = currentRoute.filter(({route}) => {
+        return Object.prototype.hasOwnProperty.call(route.component, 'preload');
+    }).map(({route}) => {
+        return (route.component as any).preload();
+    });
+    await Promise.all(preloadTask);
 };

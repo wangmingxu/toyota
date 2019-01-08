@@ -1,12 +1,14 @@
-const path = require('path');
-const express = require('express');
-const useragent = require('express-useragent');
-const proxyMiddleware = require('proxy-middleware');
-const clientRoute = require('./middlewares/clientRoute');
-const proxyTable = require('../proxy/prod/proxyTable');
+import 'reflect-metadata';
+
+import express from 'express';
+import hbs from 'hbs';
+import path from 'path';
+import proxyMiddleware from 'proxy-middleware';
+import { build } from '../config/build.config';
+import * as proxyTable from '../proxy/prod/proxyTable';
+import clientRoute from './middlewares/clientRoute';
 
 const app = express();
-const { build } = require('../config/build.config');
 
 // proxy api requests
 Object.keys(proxyTable).forEach((context) => {
@@ -14,14 +16,12 @@ Object.keys(proxyTable).forEach((context) => {
   app.use(context, proxyMiddleware(options));
 });
 
-app.use(useragent.express());
-
 app.use(express.static(path.resolve(__dirname, '../../dist')));
 // console.log(common.distPath);
 
 app.set('views', path.resolve(__dirname, '../../views/prod'));
 app.set('view engine', 'html');
-app.engine('html', require('hbs').__express);
+app.engine('html', hbs.__express);
 
 app.use(clientRoute);
 

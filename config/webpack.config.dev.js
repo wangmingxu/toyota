@@ -8,8 +8,6 @@ const info = require('./info');
 const { common } = require('./build.config');
 const baseConfig = require('./webpack.config.base');
 
-const { RENDER_MODE } = process.env;
-
 module.exports = merge(baseConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
@@ -17,7 +15,6 @@ module.exports = merge(baseConfig, {
     path.resolve(common.clientPath, 'rhlConfig.ts'),
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     'webpack/hot/only-dev-server',
-    baseConfig.entry.app,
   ],
   resolve: {
     alias: {
@@ -53,7 +50,6 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
       filename: 'index.html',
-      isomorphic: RENDER_MODE === 'ssr',
     })),
   ],
 });

@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import { COOKIE_STR_TOKEN, CookieService } from '@common-service/CookieService';
 // import { ClientDetectService, APP_USERAGENT_TOKEN } from '@common-service/ClientDetectService';
 import {
@@ -9,10 +7,7 @@ import {
   HttpService,
 } from '@common-service/HttpService';
 import AuthService from '@lz-service/AuthService';
-import {
-  APP_USERAGENT_TOKEN,
-  ClientDetectService,
-} from '@lz-service/ClientDetectService';
+import { APP_USERAGENT_TOKEN, ClientDetectService } from '@lz-service/ClientDetectService';
 import { APP_CONFIG_TOKEN } from '@lz-service/ConfigService';
 import DefaultResInterceptor from '@lz-service/DefaultResInterceptor';
 import JsBridgeService, { JSB_SERVICE_TOKEN } from '@lz-service/JsBridgeService';
@@ -30,7 +25,7 @@ const defaultProvider: Provider[] = [
   { provide: 'cdServ', useExisting: ClientDetectService },
   { provide: '$http', useExisting: HttpService },
   { provide: 'cookieServ', useExisting: CookieService },
-  { provide: 'AuthServ', useExisting: AuthService },
+  { provide: 'authServ', useExisting: AuthService },
   { provide: APP_CONFIG_TOKEN, useValue: config },
   {
     provide: HTTP_RESPONSE_INTERCEPTORS,
@@ -57,7 +52,7 @@ const injector: ReflectiveInjector = typeof window === 'object'
   ? createInjector([
     { provide: APP_USERAGENT_TOKEN, useValue: navigator.userAgent },
     { provide: COOKIE_STR_TOKEN, useValue: document.cookie },
-    {provide: JSB_SERVICE_TOKEN, useClass: JsBridgeService},
+    { provide: JSB_SERVICE_TOKEN, useClass: JsBridgeService },
     { provide: 'jsbServ', useExisting: JSB_SERVICE_TOKEN },
     ShareService,
     { provide: 'shareServ', useExisting: ShareService },

@@ -1,36 +1,41 @@
-const lessParser = require('postcss-less').parse;
-const path = require('path');
-const fs = require('fs');
-const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-const proxyMiddleware = require('proxy-middleware');
-const useragent = require('express-useragent');
-const chokidar = require('chokidar');
+import '@babel/polyfill';
+import 'reflect-metadata';
+
+import * as assetRequireHook from 'asset-require-hook';
+import * as chokidar from 'chokidar';
+import * as cssModulesRequireHook from 'css-modules-require-hook';
+import * as express from 'express';
+import * as fs from 'fs';
+import * as hbs from 'hbs';
+import * as path from 'path';
+import { parse as lessParser } from 'postcss-less';
+import * as proxyMiddleware from 'proxy-middleware';
+import * as sourceMapSupport from 'source-map-support';
+import * as webpack from 'webpack';
+import * as webpackDevMiddleware from 'webpack-dev-middleware';
+import * as webpackHotMiddleware from 'webpack-hot-middleware';
+import { common, dev } from '../config/build.config';
+import * as utils from '../config/utils';
+import * as baseWebpackConfig from '../config/webpack.config.base';
+import * as config from '../config/webpack.config.dev';
+import * as mockTable from '../proxy/dev/mockTable';
+import * as proxyTable from '../proxy/dev/proxyTable';
 
 const app = express();
-const config = require('../config/webpack.config.dev');
-const { common, dev } = require('../config/build.config');
-const proxyTable = require('../proxy/dev/proxyTable');
-const mockTable = require('../proxy/dev/mockTable');
-const utils = require('../config/utils');
-const baseWebpackConfig = require('../config/webpack.config.base');
-
-// Provide custom regenerator runtime and core-js
-require('@babel/polyfill');
 
 // Node babel source map support
-require('source-map-support').install();
+sourceMapSupport.install();
 
 // Javascript require hook
+// tslint:disable-next-line:no-var-requires
 require('@babel/register')({
+  ignore: [/node_modules\/(?!.+\/package\/)/],
   extensions: ['.jsx', '.js', '.tsx', '.ts'],
-  presets: [['@babel/preset-typescript', {
-    jsxPragma: 'preserve',
-  }], ['@babel/preset-env', {
-    modules: 'commonjs',
-  }]],
+  presets: [
+    ['@babel/preset-env', {
+      modules: 'commonjs',
+    }],
+  ],
   plugins: [
     ['module-resolver', {
       extensions: ['.jsx', '.js', '.tsx', '.ts'],
@@ -42,14 +47,14 @@ require('@babel/register')({
 });
 
 // Css require hook
-require('css-modules-require-hook')({
+cssModulesRequireHook({
   extensions: ['.less', '.css'],
   processorOpts: { parser: lessParser },
   generateScopedName: '[name]__[local]--[hash:base64:5]',
 });
 
 // Image require hook
-require('asset-require-hook')({
+assetRequireHook({
   extensions: ['jpg', 'png', 'gif', 'webp', 'svg'],
   limit: 8192,
   name: `/${utils.assetsPath('assets/[name].[ext]?[hash]')}`,
@@ -104,16 +109,14 @@ app.get('/:path?/:filename(*.*)', webpackDevMiddleware(compiler, {
 }));
 
 if (RENDER_MODE === 'ssr') {
-  app.use(useragent.express());
-
   app.set('views', path.resolve(__dirname, '../views/dev'));
   app.set('view engine', 'html');
   // app.engine('html', require('ejs').renderFile);
-  app.engine('html', require('hbs').__express);
+  app.engine('html', hbs.__express);
 
   // '/'会默认跳到webpack-dev-server的index.html
   app.use((req, res, next) => {
-    require('./middlewares/clientRoute')(req, res, next);
+    require('./middlewares/clientRoute').default(req, res, next);
   });
 } else {
   app.get('/', (req, res) => {
@@ -139,8 +142,8 @@ const watchConfig = {
   dir: [path.join(__dirname, '../client')],
   options: {},
 };
-chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (_path) => {
-  console.log(`${_path} changed`);
+chokidar.watch(watchConfig.dir, watchConfig.options).on('change', (fileName) => {
+  console.log(`${fileName} changed`);
   Object.keys(require.cache).forEach((cachePath) => {
     if (/[/\\]client[/\\]/.test(cachePath)) {
       cleanCache(cachePath);

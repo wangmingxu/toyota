@@ -12,6 +12,7 @@ const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const WebpackAssetsManifest = require('webpack-manifest-plugin');
 const { common, build } = require('./build.config');
 const utils = require('./utils');
 const info = require('./info');
@@ -21,7 +22,7 @@ const baseConfig = require('./webpack.config.base');
 const { RENDER_MODE } = process.env;
 
 const clientConfig = merge(baseConfig, {
-  entry: build.usePWA ? { registerSW: path.resolve(common.clientPath, 'registerServiceWorker.ts') } : {},
+  entry: build.usePWA ? [build.PWAEntry] : [],
   mode: 'production',
   optimization: {
     runtimeChunk: {
@@ -30,10 +31,17 @@ const clientConfig = merge(baseConfig, {
     minimize: true, // [new UglifyJsPlugin({...})]
     splitChunks: {
       cacheGroups: Object.assign({
+        polyfill: {
+          test: /[\\/]node_modules[\\/](core-js|.+polyfill)[\\/]/,
+          name: 'polyfill',
+          chunks: 'all',
+          priority: 2,
+        },
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           chunks: 'initial',
           name: 'vendor',
+          priority: 1,
         },
         'async-vendor': {
           // test: /[\\/]node_modules[\\/]/,
@@ -92,7 +100,6 @@ const clientConfig = merge(baseConfig, {
     new HtmlWebpackPlugin(Object.assign(info.app, {
       template: common.index,
       filename: RENDER_MODE === 'ssr' ? path.join(common.viewPath, 'prod/index.html') : 'index.html',
-      isomorphic: RENDER_MODE === 'ssr',
     })),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.NamedChunksPlugin(),
@@ -107,6 +114,7 @@ const clientConfig = merge(baseConfig, {
     new CleanWebpackPlugin([common.distPath], {
       root: common.rootPath,
     }),
+    new WebpackAssetsManifest(),
   ].concat(build.bundleAnalyzerReport ? [
     /** 分析打包情况* */
     new BundleAnalyzerPlugin({
@@ -221,6 +229,7 @@ const serverConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
+      __ISOMORPHIC__: RENDER_MODE === 'ssr',
       'process.env.BASE_PATH': JSON.stringify(build.BASE_PATH),
     }),
     new ForkTsCheckerWebpackPlugin({

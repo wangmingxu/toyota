@@ -11,9 +11,7 @@ const publicPath = NODE_ENV === 'production' ? build.assetsPublicPath : dev.asse
 
 const baseConfig = {
   context: common.clientPath,
-  entry: {
-    app: common.entry,
-  },
+  entry: [common.polyfill, common.entry],
   output: {
     path: common.distPath,
     filename: NODE_ENV === 'production'
@@ -33,6 +31,7 @@ const baseConfig = {
       '@lz-component': '@lizhife/lz-market-component/lib',
       '@lz-service': '@lizhife/lz-market-service/package',
       '@common-service': 'di-sdk/package',
+      'babel-runtime': '@babel/runtime',
     },
   },
   module: {
