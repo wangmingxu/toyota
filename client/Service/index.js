@@ -4,7 +4,6 @@ import {
   HttpService,
   HTTP_REQUEST_INTERCEPTORS,
   HTTP_RESPONSE_INTERCEPTORS,
-  HTTP_ALIAS_TOKEN,
 } from '@common-service/HttpService';
 import { CookieService, COOKIE_STR_TOKEN } from '@common-service/CookieService';
 import { ClientDetectService, APP_USERAGENT_TOKEN } from '@lz-service/ClientDetectService';
@@ -15,7 +14,6 @@ import { APP_CONFIG_TOKEN } from '@lz-service/ConfigService';
 import ShareService from '@lz-service/ShareService';
 import JsBridgeService, { JSB_SERVICE_TOKEN } from '@lz-service/JsBridgeService';
 import config from './config';
-import httpAlias from './http-alias';
 
 const defaultProvider = [
   ClientDetectService,
@@ -36,10 +34,6 @@ const defaultProvider = [
     provide: HTTP_REQUEST_INTERCEPTORS,
     useClass: JWTReqInterceptor,
     multi: true,
-  },
-  {
-    provide: HTTP_ALIAS_TOKEN,
-    useValue: httpAlias,
   },
 ];
 
