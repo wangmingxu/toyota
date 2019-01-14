@@ -1,12 +1,12 @@
 import { PureComponent } from 'react';
 
-class AsyncRender extends PureComponent {
+class AsyncPipe extends PureComponent {
   state = {
     value: this.props.initialValue,
   };
 
   componentDidMount() {
-    this.subscription = this.props.observable.subscribe(value => {
+    this.subscription = this.props.stream.subscribe(value => {
       this.setState({ value });
     });
   }
@@ -20,4 +20,4 @@ class AsyncRender extends PureComponent {
   }
 }
 
-export default AsyncRender;
+export default AsyncPipe;

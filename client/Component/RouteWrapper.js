@@ -15,7 +15,7 @@ class RouteWrapper extends Component {
   componentDidUpdate(prevProps) {
     window.scrollTo(0, 0);
   }
-  
+
   render() {
     const { location, history } = this.props;
     const animateClsMap = {

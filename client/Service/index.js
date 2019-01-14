@@ -15,13 +15,13 @@ import ShareService from '@lz-service/ShareService';
 import JsBridgeService, { JSB_SERVICE_TOKEN } from '@lz-service/JsBridgeService';
 import config from './config';
 
-const defaultProvider = [
+export const CommonService = [
   ClientDetectService,
   HttpService,
   CookieService,
   AuthService,
   { provide: 'cdServ', useExisting: ClientDetectService },
-  { provide: '$http', useExisting: HttpService },
+  { provide: 'http', useExisting: HttpService },
   { provide: 'cookieServ', useExisting: CookieService },
   { provide: 'authServ', useExisting: AuthService },
   { provide: APP_CONFIG_TOKEN, useValue: config },
@@ -37,23 +37,21 @@ const defaultProvider = [
   },
 ];
 
-const createInjector = (provider = []) => {
-  const injector = ReflectiveInjector.resolveAndCreate([...defaultProvider, ...provider]);
-  return injector;
-};
-
-const injector =
+export const ClientService =
   typeof window === 'object'
-    ? createInjector([
+    ? [
         { provide: APP_USERAGENT_TOKEN, useValue: navigator.userAgent },
         { provide: COOKIE_STR_TOKEN, useValue: document.cookie },
         { provide: JSB_SERVICE_TOKEN, useClass: JsBridgeService },
         { provide: 'jsbServ', useExisting: JSB_SERVICE_TOKEN },
         ShareService,
         { provide: 'shareServ', useExisting: ShareService },
-      ])
-    : {};
+      ]
+    : [];
 
-export { createInjector };
+const injector =
+  typeof window === 'object'
+    ? ReflectiveInjector.resolveAndCreate([...CommonService, ...ClientService])
+    : {};
 
 export default injector;

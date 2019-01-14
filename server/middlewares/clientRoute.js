@@ -13,17 +13,14 @@ const router = express.Router();
 router.use(async (req, res) => {
   const { query, originalUrl } = req;
   const injector = createInjectorWithReq(req);
-  const currentRoute = matchRoutes(
-    routes,
-    originalUrl.replace(url.parse(originalUrl).search, ''),
-  );
+  const currentRoute = matchRoutes(routes, originalUrl.replace(url.parse(originalUrl).search, ''));
   // console.log(currentRoute);
   // 通过组件上的getInitialProps静态方法获取数据
   const promises = currentRoute
-    .map(
-      ({ route, match }) => (route.component.getInitialProps
+    .map(({ route, match }) =>
+      route.component.getInitialProps
         ? route.component.getInitialProps({ injector, match, query })
-        : null),
+        : null
     )
     .filter(item => !!item);
   try {
@@ -36,13 +33,13 @@ router.use(async (req, res) => {
         injector={injector}
         assets={genHtmlAssets()}
         originalUrl={req.originalUrl}
-      />,
+      />
     );
     stream.pipe(
       res,
       {
         end: false,
-      },
+      }
     );
     stream.on('end', () => {
       if (context.url) {
