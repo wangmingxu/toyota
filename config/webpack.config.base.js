@@ -27,8 +27,6 @@ const baseConfig = {
     extensions: ['.js', '.jsx', '.json', '.scss', '.less'], // 当requrie的模块找不到时，添加这些后缀
     alias: {
       '@': common.clientPath,
-      '@lz-component': '@lizhife/lz-market-component/lib',
-      '@lz-service': '@lizhife/lz-market-service/package',
       '@common-service': 'di-sdk/package',
       'babel-runtime': '@babel/runtime',
     },
