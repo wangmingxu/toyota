@@ -16,6 +16,7 @@ const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-manifest-plugin');
+const nodeExternals = require('webpack-node-externals');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const { RENDER_MODE } = process.env;
@@ -192,6 +193,7 @@ const serverConfig = {
     extensions: ['.js', '.jsx', '.json', '.scss', '.less', '.html', '.ejs'], // 当requrie的模块找不到时，添加这些后缀
     alias: baseConfig.resolve.alias,
   },
+  externals: [nodeExternals()],
   module: {
     rules: [
       {
@@ -199,7 +201,7 @@ const serverConfig = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader?cacheDirectory',
             options: {
               presets: [
                 [
@@ -210,14 +212,23 @@ const serverConfig = {
                   },
                 ],
               ],
-              plugins: ['dynamic-import-node'],
+              plugins: [
+                'dynamic-import-node',
+                [
+                  'import',
+                  {
+                    libraryName: 'antd-mobile',
+                    style: false,
+                  },
+                ],
+              ],
             },
           },
         ],
       },
       {
         test: /\.(css|less)$/,
-        use: ['css-loader', 'less-loader'],
+        use: 'null-loader',
       },
       {
         test: /\.(gif|jpg|png|woff|svg|eot|ttf)$/,

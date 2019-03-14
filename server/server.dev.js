@@ -117,7 +117,7 @@ app.get(
 if (RENDER_MODE === 'ssr') {
   app.set('views', path.resolve(__dirname, '../views/dev'));
   app.set('view engine', 'html');
-  // app.engine('html', require('ejs').renderFile);
+
   app.engine('html', require('hbs').__express);
 
   app.use((req, res, next) => {

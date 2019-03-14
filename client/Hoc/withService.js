@@ -1,12 +1,12 @@
 import ServiceContext from '@/Context/ServiceContext';
 import * as React from 'react';
 
-const withService = mapFn => WrappedComponent => {
+const withService = mapServiceToProps => WrappedComponent => {
   class Enhance extends React.Component {
     contextType = ServiceContext;
 
     render() {
-      return <WrappedComponent {...mapFn(this.context)} {...this.props} />;
+      return <WrappedComponent {...mapServiceToProps(this.context)} {...this.props} />;
     }
   }
   require('hoist-non-react-statics')(Enhance, WrappedComponent);

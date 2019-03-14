@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const ProgressBarPlugin = require('webpackbar');
 const { common, dev, build } = require('./build.config');
 const utils = require('./utils');
 const { theme } = require('../package.json');

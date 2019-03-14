@@ -30,9 +30,9 @@ const withAsyncData = ({
     }
 
     async componentDidMount() {
+      const isNotSsrOrFirstRender = !__ISOMORPHIC__ || this.state.data === void 0;
       const isNeedFetchRepeated =
         WrappedComponent._dataStatus === void 0 || strategy === LoadDataStrategy.Always;
-      const isNotSsrOrFirstRender = !__ISOMORPHIC__ || this.state.data === void 0;
       if (
         isNotSsrOrFirstRender &&
         WrappedComponent.getInitialProps !== void 0 &&
