@@ -145,7 +145,7 @@ const clientConfig = merge(baseConfig, {
         : []
     )
     .concat(
-      RENDER_MODE === 'spa' && build.usePWA
+      RENDER_MODE === 'csr' && build.usePWA
         ? [
             new WorkboxPlugin.GenerateSW({
               swDest: 'service-worker.js',

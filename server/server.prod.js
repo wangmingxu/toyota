@@ -2,11 +2,14 @@ import 'reflect-metadata';
 import express from 'express';
 import path from 'path';
 import proxyMiddleware from 'proxy-middleware';
+import morgan from 'morgan';
 import { build } from '../config/build.config';
 import * as proxyTable from '../proxy/prod/proxyTable';
 import clientRoute from './middlewares/clientRoute';
 
 const app = express();
+
+app.use(morgan('tiny'));
 
 // proxy api requests
 Object.keys(proxyTable).forEach(context => {
