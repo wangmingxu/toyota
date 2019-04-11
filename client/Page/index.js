@@ -1,6 +1,6 @@
 import React from 'react';
 import ServiceContext from '@/Context/ServiceContext';
-import withAsyncData, { LoadDataStrategy } from '@/Hoc/withAsyncData';
+import withAsyncData from '@/Hoc/withAsyncData';
 import '../styles/demo.less';
 
 class Index extends React.Component {
@@ -31,4 +31,4 @@ class Index extends React.Component {
   }
 }
 
-export default withAsyncData({ strategy: LoadDataStrategy.OnlyFirstTime })(Index);
+export default withAsyncData()(Index);
