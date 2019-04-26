@@ -2,13 +2,12 @@ module.exports = {
   apps: [
     {
       name: 'dev-server',
-      script: './server/server.dev.ts',
+      script: './server/server.dev.js',
       watch: ['server', 'config', 'proxy'],
       // instances: 'max',
       // exec_mode: 'cluster',
       autorestart: true,
       max_memory_restart: '1G',
-      interpreter: './node_modules/.bin/ts-node',
       env_csr: {
         NODE_ENV: 'development',
         RENDER_MODE: 'csr',
@@ -17,7 +16,6 @@ module.exports = {
         NODE_ENV: 'development',
         RENDER_MODE: 'ssr',
       },
-      node_args: '--project ./tsconfig.node.json --transpileOnly',
     },
   ],
 
