@@ -11,12 +11,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { common, build } = require('./build.config');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const PreloadWebpackPlugin = require('preload-webpack-plugin-fork');
-const CrossOriginPlugin = require('script-crossorigin-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const WebpackAssetsManifest = require('webpack-manifest-plugin');
 const nodeExternals = require('webpack-node-externals');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const { RENDER_MODE } = process.env;
@@ -117,9 +116,16 @@ const clientConfig = merge(baseConfig, {
     ),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.NamedChunksPlugin(),
-    new CrossOriginPlugin(),
-    new PreloadWebpackPlugin({
-      rel: 'prefetch',
+    new ScriptExtHtmlWebpackPlugin({
+      custom: {
+        test: /\.js/,
+        attribute: 'crossorigin',
+        value: 'anonymous',
+      },
+      prefetch: {
+        test: /\.js(?!\.map)/,
+        chunks: 'async',
+      },
     }),
     /** 清空dist目录* */
     new CleanWebpackPlugin([common.distPath], {
